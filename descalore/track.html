@@ -1,0 +1,460 @@
+<html>
+
+<head>
+	<title>DESCALORE</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/w3.css">
+	<link rel="stylesheet" href="../assets/css/font.css">
+	<link rel="stylesheet" href="../assets/css/track.css">
+	    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+	<script src="../assets/js/calculation.js"></script>
+	<style>
+
+body {
+  background-image: url('../AAAS/images/bannerphone.png'); 
+	background-attachment: fixed; 
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+/* For screen yang big big: */
+@media only screen and (min-width: 700px) {
+  body { 
+     background-image: url('../assets/img/banner.png');
+	background-attachment: fixed; 
+	background-repeat: repeat;
+	background-size: 78% 100%;
+	background-position: right; 
+  }
+}
+
+  @media print {
+      h1, div, p,td, tr, input, strong {
+        color: black;
+      }
+
+      @media print and (-webkit-min-device-pixel-ratio:0) {
+        h1, div, p,td, tr, input, strong {
+          color: black;
+        }
+      }
+   }
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+</style>
+</head>
+
+<body >
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">Close Menu</a>
+  <div class="w3-container" href="#meal">
+    <a href="index.html" style="text-decoration: none;"><h3 class="w3-padding-64" href="#meal"><b>Dietary<br>Expert System<br>with Calories Estimation</b></h3></a>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#user" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">User Details</a>     
+	<a href="#summary" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Dietitian Advice</a> 
+    <a href="#print" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Print Details</a>
+
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
+  <a href="javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
+  <span>DESCALORE</span>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+    <!-- Services -->
+  <div class="w3-container" id="user" style="margin-top:75px; height:100vh;"> 
+    <h1 class="w3-xxxlarge w3-text-red"><b>User Details.
+    <hr style="width:50px;border:5px solid red" class="w3-round"></b></h1><br>
+			<div class="center">
+				<form style="width:100%" class="center">
+					<div class="txt_field">
+						<input type="text" id="name" style="color: black;" required>
+						<span></span>
+						<label>Name</label>
+					</div>
+
+					<div class="txt_field">
+						<input type="number" id="age" maxlength="10" style="color: black;"required>
+						<span></span>
+						<label>Age</label>
+					</div>
+
+						<label for="gender" style="color: black;"required>Gender</label>
+						<select id="gender" name="gender" style="color: black;"required>
+							<option value="">Choose your gender: </option>
+							<option value="Male">Male</option>
+							<option value="Female">Female</option>
+						</select>
+
+					<div class="txt_field">
+						<input type="number" id="weight" maxlength="10" style="color: black;"required>
+						<span></span>
+						<label>Weight (kg)</label>
+					</div>
+
+					<div class="txt_field">
+						<input type="number" id="height" maxlength="10" style="color: black;"required>
+						<span></span>
+						<label>Height (cm)</label>
+					</div>
+
+						<label for="activity" style="color: black;"required>Activity Rate</label>
+							<select id="acti" name="activity" style="color: black;"required>
+								<option value="">Choose activity rate:</option>
+								<option value="sedentary">Sedentary</option>
+								<option value="lightly">Lightly Active</option>
+								<option value="moderate">Moderately Active</option>
+								<option value="very">Very Active</option>
+								<option value="extra">Extra Active</option>
+							</select> <br><br>
+
+						<label for="bp" style="color: black;" required>Do you have High-Blood Pressure?</label>
+							<select id="bp" name="bp" style="color: black;" required>
+							  <option value="">Choose:</option>
+							  <option value="Yes">Yes</option>
+							  <option value="No">No</option>
+							</select> <br><br>
+						
+						<label for="diabetes" style="color: black;"required>Do you have Diabetes?</label>
+							<select id="diabetes" name="db" style="color: black;"required>
+								<option value="">Choose:</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select> <br><br>
+							
+						<label for="cholesterol" style="color: black;"required>Do you have Cholesterol?</label>
+							<select id="cholesterol" name="ch" style="color: black;"required>
+								<option value="">Choose:</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select> <br><br>
+
+						<label for="vegetarian" style="color: black;"required>Are you vegetarian?</label>
+							<select id="vegetarian" name="vege" style="color: black;"required>
+								<option value="">Choose:</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select> <br><br>
+
+						<label for="lactose" style="color: black;"required>Are you lactose intolerance?</label>
+							<select id="lactose" name="lact" style="color: black;"required>
+								<option value="">Choose:</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select> <br><br>
+				</form>
+				<input type="submit" value="Submit" onclick="calcAll()">
+			</div>
+		</div>
+		<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+  <!-- Summary -->
+  <div class="w3-container" id="summary" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Dietitian Advice.</b></h1>
+    <p style="color: black;"required>This summary section will analyze user's: 
+		<ul>
+			<li>Body Mass Index (BMI)</li>
+			<li>Status BMI</li>
+			<li>Basal Metabolic Rate (BMR)</li>
+			<li>Basal Metabolic Rate with Activity Rate (BMRA)</li>
+			<li>Advice from Dietitian</li>
+		</ul>
+	</p>
+ </div>
+
+ <div class="w3-full">
+	<ul class="w3-ul w3-light-grey">
+		<li class="w3-black w3-xlarge w3-padding-32">Summary</li>
+	  	<li class="w3-padding-16"><p style="color: black;" id="resultBMI"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="statusBMI"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultBMR"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultBMRA"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultBP"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultDIABETES"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultCHOLESTEROL"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultVEGETARIAN"></p></li>
+		<li class="w3-padding-16"><p style="color: black;" id="resultLACTOSE"></p></li>
+	</ul>
+  </div>
+
+  <div class="w3-full">
+	<div class="w3-container" style="margin-top:50px">
+		<p>Please click the button advice down there to get the advice. Note that, only those who get overweight and obese will get the expert advise.</p>
+		<button onclick="Advice(gender, activity, bmi, bloodpressure, vege, ch, lact)" align="center">Advice</button> <br><br>
+	</div>
+
+	<div class="w3-full">
+		<ul class="w3-ul w3-light-grey">
+			<li class="w3-black w3-xlarge w3-padding-32">Dietitian Advice</li>
+			<li class="w3-padding-16"><p style="color: black;" id="adv"></p></li>
+		</ul>
+	</div>
+  </div> <br><br><br>
+
+  	
+
+  <!-- Print Details -->
+	<div id="printableArea">
+  <div class="w3-container" id="print" style="margin-top:75px">
+    <h1 class="w3-xxxlarge w3-text-red"><b>Print Details.</b></h1>
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    		<title>
+			Calories Recommendation
+		</title>
+		
+		<style>
+			input
+			{
+				border: 0;
+				text-align: center;
+				width: 5%;
+				color: rgb(0, 0, 0);
+			}
+		</style>
+
+		<table border="0" align="center">
+		
+			<tr>
+				<td width="100%">
+				  <table border="0" align="center">
+					<tr>
+						<a href="#" class="nav__logo" style="text-decoration: none;">
+							<img valign="middle" src="assets/img/logo.png" alt="" width="20" class="nav__logo-img">
+							<strong>DESCALORE</strong>
+						</a>
+					</tr> <br>
+					<tr>
+					  <td colspan="2"><div align="center">DIETARY RESULT<br/></div></td>
+					</tr>
+				  </table>
+				</td>
+			</tr>
+			
+			<table align="center"> 
+				<td>
+					<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bordercolor="#6699FF">
+						<tr> 
+							<td width="100%">
+								<table width="100%" border=0 align="center" cellpadding=2 cellspacing=0>
+									<tbody>
+										<tr> 
+											<td nowrap>
+												<div align="center">
+													<button onclick="printDiv('printableArea')">Print Advise & Prediction</button>
+													
+												</div><br>
+
+												
+												<tr>
+													<td>
+														<table cellspacing="0" cellpadding="0" width="100%">
+															<tbody>
+																<tr>
+																	<td>
+																		<table cellspacing="0" cellpadding="0" width="100%" border="0">
+																			<tbody>
+																				<tr bgcolor="#E9E9E9">
+																					<td>
+																						<table style="BORDER-COLLAPSE: collapse" bordercolor="#cccccc" height="100%" cellspacing="0" cellpadding="0" width="100%" border="1">
+																							<tbody>
+																								<tr>
+																									<td height="24"><div align="center"><strong> DIETARY EXPERT SYSTEM WITH CALORIES ESTIMATION </strong></div></td>
+																								</tr>
+																								<tr>
+																									<td>
+																										<table style="BORDER-COLLAPSE: collapse" bordercolor="#cccccc" height="100%" cellspacing="0" cellpadding="2" width="100%" border="1">
+																											<tr style="color: rgb(0, 0, 0);">
+																												<td width="79%" valign="top">
+																													<table style="BORDER-COLLAPSE: collapse" bordercolor="#cccccc"  cellspacing="0"  cellpadding="2" width="100%" border="1">
+																													  <tr>
+																														<td width="17%" ><div align="right">Name: </div></td>
+																														<td width="62%"><p id="username"></td> 
+																													  </tr>
+																													  <tr>
+																														<td ><div align="right">Gender : </div></td>
+																														<td><p id="usergender"></td>
+																													  </tr>
+																													</table>
+																												</td>
+																											</tr>
+
+																											<tr bgcolor="#E9E9E9">
+																												<td valign="top">
+																													<table width="100%" border="0" cellspacing="0" cellpadding="0">
+																														<tr style="color: rgb(0, 0, 0);" >
+																															<td>
+																																<table style="BORDER-COLLAPSE: collapse" bordercolor="#cccccc" height="100%" cellspacing="0" cellpadding="2" width="100%" border="1">
+																																	<tr style="color: rgb(0, 0, 0);">
+																																		<td width="22%" valign="top"><div align="right">Height : </div></td>
+																																		<td colspan="3" valign="top"><p id="userheight"></p></td>
+																																	</tr>
+																																
+																																	<tr style="color: rgb(0, 0, 0);" bgcolor="#E9E9E9">
+																																		<td valign="top"><div align="right">Weight :</div></td>
+																																		<td width="29%" valign="top"><p id="userweight"></p></td>
+
+																																		<td width="16%" valign="top"><div align="right">BMI :</div></td>
+																																		<td width="33%" valign="top"><p id="userbmi"></p></td>
+																																	</tr>
+
+																																	<tr style="color: rgb(0, 0, 0);">
+																																		<td width="22%" valign="top"><div align="right">Status : </div></td>
+																																		<td colspan="3" valign="top"><p id="userstatus"></p></td>
+																																	</tr>
+
+																																	<tr bgcolor="#E9E9E9" style="color: rgb(0, 0, 0);">
+																																		<td valign="top"><div align="right">BMR :</div></td>
+																																		<td width="29%" valign="top"><p id="userbmr"></p></td>
+																																		<td width="16%" valign="top"><div align="right">BMRA :</div></td>
+																																		<td width="33%" valign="top"><p id="userbmra"></p></td>
+																																	</tr>
+																																</table>
+																															</td>
+																														</tr>
+																													</table>
+																												</td>
+																											</tr>
+																										</table>
+																									</td>
+																								</tr>
+																							</tbody>
+																						</table>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+									</td>
+								</tr>
+									
+										
+										<tr> 
+											<td nowrap>
+												<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" bordercolor="#999999">
+													<tr bgcolor="#E9E9E9"> 
+														<td>
+															<table style="BORDER-COLLAPSE: collapse" bordercolor="#999999" height="100%" cellspacing="0" cellpadding="2" width="100%" border="1">
+																<tr>
+																	<td width="20%" bgcolor="#E9E9E9" align="center">Meal</td>
+																	<td width="30%" bgcolor="#E9E9E9" align="center" colspan="3">BMR(Calories)</td>
+																	<td width="30%" bgcolor="#E9E9E9" align="center" colspan="3">BMRA(Calories)</td>
+																</tr>
+																<tr>
+																	<td bgcolor="#E9E9E9">
+																		<td bgcolor="#E9E9E9" align="center">Recommend</td>
+																		<td bgcolor="#E9E9E9" align="center">Min</td>
+																		<td bgcolor="#E9E9E9" align="center">Max</td>
+																		<td bgcolor="#E9E9E9" align="center">Recommend</td>
+																		<td bgcolor="#E9E9E9" align="center">Min</td>
+																		<td bgcolor="#E9E9E9" align="center">Max</td>
+																	</td>
+																</tr>
+																<tr>
+																	<td bgcolor="#E9E9E9"><div align="center">Breakfast</div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrb"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrminb"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmaxb"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrab"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmraminb"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramaxb"></p></div></td>
+																</tr>
+																<tr>
+																	<td bgcolor="#E9E9E9"><div align="center">Morning Snack</div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrms"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrminms"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmaxms"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrams"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmraminms"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramaxms"></p></div></td>
+																</tr>
+																<tr>
+																	<td bgcolor="#E9E9E9"><div align="center">Lunch</div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrl"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrminl"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmaxl"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmral"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmraminl"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramaxl"></p></div></td>
+																</tr>
+																<tr>
+																	<td bgcolor="#E9E9E9"><div align="center">Tea Time</div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrtt"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmintt"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmaxtt"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmratt"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramintt"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramaxtt"></p></div></td>
+																</tr>
+																<tr>
+																	<td bgcolor="#E9E9E9"><div align="center">Dinner</div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrd"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmind"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmrmaxd"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="tbmrad"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramind"></p></div></td>
+																	<td bgcolor="#E9E9E9"><div align="center"><p id="bmramaxd"></p></div></td>
+																</tr>
+                                                                    <td colspan=5><div align="center"><p id=""></div></td>
+                                                                </tr>
+															</table>
+                                                             
+														</td>
+													</tr>
+
+													<tr> 
+														<td>
+															<table width="100%" border="0">
+																<tr>
+																	<td width="100%"><font color="#FF0000">1.	This information displayed is for VIEW ONLY. <br/></font></td>
+																</tr>  
+																<!--- cuba try test ---->
+																<div hidden>
+																test test score gpa:<div><p id="gpaisp500"><p id="gpaisp542"><p id="gpaisp543"><p id="gpaict501"><p id="gpactu552"><p id="gpaelc501"><p id="gpa3rdl"></div>
+																</div>
+																</div> 
+															</table>
+															
+														</td>
+													</tr>
+                     
+												</table>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+  </div>
+ </div>
+</div>
+<div class="w3-black w3-container w3-padding-32" style="margin-top:75px;padding-right:58px; color: black;"><p class="w3-right">Copyright &copy; Dietary Expert System with Calories Estimation | Powered by <a style="color: grey;">Syaqirah</a></p></div>
+</body>
+</html>
