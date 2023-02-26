@@ -1,66 +1,604 @@
-<html>
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syaqi's Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
-    <script src="script.js"></script>
-<script>
-function myFunction() {
-   var element = document.body;
-   element.classList.toggle("dark-mode");
-}
-</script>
+  <!-- Meta Tags -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Page Title -->
+  <title>Syaqi's Portfolio'</title>
+  <!-- Favicon Icon -->
+  <link rel="icon" href="assets/img/favicon.png" />
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/fontawesome.css" />
+  <link rel="stylesheet" href="assets/css/slick.css" />
+  <link rel="stylesheet" href="assets/css/lightgallery.min.css" />
+  <link rel="stylesheet" href="assets/css/animate.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
-<body>
-    <div class="scroll-up-btn">
-        <i class="fas fa-angle-up"></i>
-    </div>
-    <nav class="navbar">
-        <div class="max-width">
-            <div class="logo"><a href="index.html">Sya<span>qi.</span></a></div>
-            <ul class="menu">
-                <li><a href="index.html" class="menu-btn">Home</a></li>
-                <li><a href="about.html" class="menu-btn">About</a></li>
-                <li><a href="music.html" class="menu-btn"> &#9835; &nbsp; AND &nbsp; <i class="fa">&#xf04b;</i></a></li>
-                <li><a href="contact.html" class="menu-btn">Contact</a></li>
-                <li><a href="grade.html" class="menu-btn">Grading</a></li>
-            </ul>
-            <div class="menu-btn">
-                <i class="fas fa-bars"></i>
+
+<body id="home">
+  <!-- Start Header Section -->
+  <header class="st-site-header st-style1 st-sticky-header">
+    <div class="st-main-header">
+      <div class="container">
+        <div class="st-main-header-in">
+          <div class="st-main-header-left">
+            <a class="st-site-branding" href="index.html"><img src="assets/img/logo.png" alt="Syaqi"></a>
+          </div>
+          <div class="st-main-header-right">
+            <div class="st-nav">
+              <ul class="st-nav-list st-onepage-nav">
+                <li><a href="#home" class="st-smooth-move">Home</a></li>
+                <li><a href="#about" class="st-smooth-move">About</a></li>
+                <li><a href="#resume" class="st-smooth-move">Resume</a></li>
+                <li><a href="#portfolio" class="st-smooth-move">Portfolio</a></li>
+                <li><a href="#contact" class="st-smooth-move">Contact</a></li>
+              </ul>
+              <div class="sp-phone">
+                <svg viewBox="0 0 513.64 513.64">
+                  <g>
+                    <g>
+                      <path d="M499.66,376.96l-71.68-71.68c-25.6-25.6-69.12-15.359-79.36,17.92c-7.68,23.041-33.28,35.841-56.32,30.72c-51.2-12.8-120.32-79.36-133.12-133.12c-7.68-23.041,7.68-48.641,30.72-56.32c33.28-10.24,43.52-53.76,17.92-79.36l-71.68-71.68c-20.48-17.92-51.2-17.92-69.12,0l-48.64,48.64c-48.64,51.2,5.12,186.88,125.44,307.2c120.32,120.32,256,176.641,307.2,125.44l48.64-48.64C517.581,425.6,517.581,394.88,499.66,376.96z" />
+                    </g>
+                  </g>
+                </svg>
+                <div class="sp-phone-no">+6017 525 6535</div>
+              </div>
             </div>
+          </div>
         </div>
-    </nav>
+      </div>
+    </div>
+  </header>
+  <!-- End Header Section -->
 
-    <!-- home section start -->
-    <div class="home" id="home">
-        <div class="max-width">
-            <div class="home-content"><br><br>
-                <div class="text-1">Hello, my name is</div>
-                <div class="text-2">SITI NURSYAQIRAH</div>
-                <div class="text-3">And I'm a <span class="typing"></span></div>
-				<a href="music.html">Who Are You?</a>
-            </div>
+  <!-- Start Hero Seciton -->
+  <div class="st-height-b80 st-height-lg-b80"></div>
+  <section class="st-hero-wrap st-parallax">
+    <div class="st-hero st-style1 st-ripple-version">
+      <div class="container">
+        <div class="st-hero-text">
+          <h3>Hello, I’m</h3>
+          <h1 style="font-size: 80px;">Siti <br>Nursyaqirah</h1>
+          <h2>Internship</h2>
+          <div class="st-hero-btn">
+            <a href="#contact" class="st-btn st-style1 st-color1 st-smooth-move">Hire me</a>
+          </div>
         </div>
-		
-		<div class="container">
-		<div class="logo">
-			<marquee direction="left" scrollamount="8" behavior="alternate">This picture is Lisa from <span> Blackpink</span>, it is for illustration purpose only.</marquee>
-		</div>
-		</div>
+      </div>
+    </div>
+    <!-- Hero Image - Social Link Group -->
+    <div class="st-hero-img st-to-right">
+      <img class="wow fadeInRight" src="assets/img/section/hero-img.jpg" alt="Hero">
+      <div class="st-social-group wow fadeInLeft">
+        <div class="st-social-link">
+          <a href="https://github.com/snsyaqirah" class="st-social-btn active">
+            <span class="st-social-icon"><i class="fab fa-github"></i></span>
+            <span class="st-icon-name">Github</span>
+          </a>
+          <a href="https://www.linkedin.com/in/syaqi" class="st-social-btn">
+            <span class="st-social-icon"><i class="fab fa-linkedin"></i></span>
+            <span class="st-icon-name">LinkedIn</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="particles-js"></div>
+  </section>
+  <!-- End Hero Seciton -->
+
+  <!-- Start About Seciton -->
+  <section id="about" class="st-about-wrap">
+    <div class="st-height-b100 st-height-lg-b80"></div>
+    <div class="container">
+      <div class="st-section-heading st-style1">
+        <h4 class="st-section-heading-title">ABOUT ME</h4>
+        <h2 class="st-section-heading-subtitle">ABOUT ME</h2>
+      </div>
+      <div class="st-height-b25 st-height-lg-b25"></div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 wow fadeInLeft">
+          <div class="st-about-img-wrap">
+            <div class="st-about-img st-dynamic-bg st-bg" data-src="assets/img/section/about.jpg"></div>
+          </div>
+          <div class="st-height-b0 st-height-lg-b30"></div>
+        </div>
+        <div class="col-lg-6">
+          <div class="st-vertical-middle">
+            <div class="st-vertical-middle-in">
+              <div class="st-text-block st-style1">
+                <h2 class="st-text-block-title">Hi There! I'm Siti Nursyaqirah</h2>
+                <h4 class="st-text-block-subtitle">Internship</h4>
+                <div class="st-text-block-text">
+                  <p>I am a final-year student of Bachelor of Information Systems (Hons.) Intelligent Systems Engineering at Universiti Teknologi Mara (UiTM) Shah Alam. I am currently looking for a company for an internship, and I am interested in any field related to my courses.</p>
+                </div>
+                <ul class="st-text-block-details st-mp0">
+                  <li><span>Birthday</span> : <span>March 24, 2000</span></li>
+                  <li><span>Phone</span> : <span>+6017 525 6535</span></li>
+                  <li><span>Email</span> : <span>snsyaqirah@gmail.com</span></li>
+                  <li><span>From</span> : <span>Shah Alam, Selangor</span></li>
+                  <li><span>Language</span> : <span>Malay, English</span></li>
+                  <li><span>Internship</span> : <span>Available</span></li>
+                </ul>
+                <div class="st-text-block-btn">
+                  <a href="#" class="st-btn st-style1 st-color1">Download CV</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End About Seciton -->
+
+  <!-- Start Resume Seciton -->
+  <section id="resume" class="st-dark-bg">
+    <div class="st-height-b100 st-height-lg-b80"></div>
+    <div class="container">
+      <div class="st-section-heading st-style1">
+        <h4 class="st-section-heading-title">RESUME</h4>
+        <h2 class="st-section-heading-subtitle">RESUME</h2>
+      </div>
+      <div class="st-height-b25 st-height-lg-b25"></div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <!-- Experience -->
+        <div class="col-lg-6">
+          <div class="st-resume-wrap">
+            <div class="st-resume-heading">
+              <img src="assets/img/icon/resume-icon1.png" alt="resume-icon">
+              <h2 class="st-resume-heading-title">Experience</h2>
+            </div>
+
+            <div class="st-height-b50 st-height-lg-b30"></div>
+
+            <div class="st-resume-timeline-wrap">
+              <div class="st-resume-timeline">
+                <h3 class="st-resume-timeline-title">Cashier (Concession)</h3>
+                <div class="st-resume-timeline-duration">Nov 2016 – Dec 2016</div>
+                <h4 class="st-resume-timeline-subtitle">mmCineplexes Prangin Mall</h4>
+                <div class="st-resume-timeline-text">
+                  <ul>
+                    <li>Processed customer transactions and provided excellent customer service</li>
+                    <li>Assisted customers with questions and concerns about their orders</li>
+                    <li>Ensured the concession area was clean and well-stocked</li>
+                    <li>Developed skills in customer service, cash handling, and teamwork</li>
+                  </ul> 
+                </div>
+              </div> <!-- st-resume-timeline -->
+              <div class="st-height-b50 st-height-lg-b30"></div>
+              <div class="st-resume-timeline">
+                <h3 class="st-resume-timeline-title">Cashier (Box Office)</h3>
+                <div class="st-resume-timeline-duration">Jan 2018 – Feb 2018</div>
+                <h4 class="st-resume-timeline-subtitle">mmCineplexes Prangin Mall</h4>
+                <div class="st-resume-timeline-text">
+                  <ul>
+                    <li>Answered phone calls and assisted customers with inquiries and requests</li>
+                    <li>Developed strong communication and customer service skills</li>
+                    <li>Learned to handle cash and credit card payments</li>
+                  </ul>                </div>
+              </div> <!-- st-resume-timeline -->
+              <div class="st-height-b50 st-height-lg-b30"></div>
+              <div class="st-resume-timeline">
+                <h3 class="st-resume-timeline-title">Web Developer (Internship)</h3>
+                <div class="st-resume-timeline-duration">Aug 2020 – Sept 2020</div>
+                <h4 class="st-resume-timeline-subtitle">UiTM Kedah</h4>
+                <div class="st-resume-timeline-text">
+                  <ul>
+                    <li>Utilized related technologies such as MySQL, HTML, CSS, and JavaScript</li>
+                    <li>Coded and tested new features, fixed bugs, and optimized application performance</li>
+                    <li>Developed strong skills in PHP programming, database management, and team collaboration</li>
+                    <li>Ensured projects were delivered on time and met supervisor requirements</li>
+                  </ul>
+                </div>
+              </div> <!-- st-resume-timeline -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="col-lg-6">
+
+          <div class="st-height-b0 st-height-lg-b50"></div>
+          <div class="st-resume-wrap">
+            <div class="st-resume-heading">
+              <img src="assets/img/icon/resume-icon2.png" alt="resume-icon">
+              <h2 class="st-resume-heading-title">Education</h2>
+            </div>
+            <div class="st-height-b50 st-height-lg-b30"></div>
+
+            <div class="st-resume-timeline-wrap">
+              </div> <!-- st-resume-timeline -->
+              <div class="st-height-b50 st-height-lg-b30"></div>
+              <div class="st-resume-timeline">
+                <h3 class="st-resume-timeline-title">Bachelor of Information Systems (Hons.) Intelligent Systems Engineering</h3>
+                <div class="st-resume-timeline-duration">2021 - 2023</div>
+                <h4 class="st-resume-timeline-subtitle">UiTM Shah Alam</h4>
+                <div class="st-resume-timeline-text">
+                  <p>I gained comprehensive knowledge and skills in areas such as artificial intelligence, machine learning, data mining, and software development. 
+                    Through this program, I gained hands-on experience with various tools and technologies used in the field of intelligent systems engineering. 
+                  </p>
+                </div>
+              </div> <!-- st-resume-timeline -->
+              <div class="st-height-b50 st-height-lg-b30"></div>
+              <div class="st-resume-timeline">
+                <h3 class="st-resume-timeline-title">Diploma in Computer Science</h3>
+                <div class="st-resume-timeline-duration">2018 - 2021</div>
+                <h4 class="st-resume-timeline-subtitle">UiTM Kedah</h4>
+                <div class="st-resume-timeline-text">
+                  <p>I gained comprehensive knowledge and skills in computer programming, software engineering, database management, and networking.
+                    This educational background has provided me with a strong foundation about this field.</p>
+                </div>
+              </div> <!-- st-resume-timeline -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="st-height-b100 st-height-lg-b80"></div>
+  </section>
+  <!-- End Resume Seciton -->
+
+  <!-- Start Skill Seciton -->
+  <section class="st-dark-bg">
+    <div class="st-height-b100 st-height-lg-b80"></div>
+    <div class="container">
+      <div class="st-section-heading st-style1">
+        <h4 class="st-section-heading-title">MY SKILLS</h4>
+        <h2 class="st-section-heading-subtitle">MY SKILLS</h2>
+      </div>
+      <div class="st-height-b25 st-height-lg-b25"></div>
     </div>
 
-    
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="st-skill-wrap">
+            <div class="st-skill-heading">
+              <div class="st-resume-heading">
+                <img src="assets/img/icon/resume-icon1.png" alt="resume-icon">
+                <h2 class="st-resume-heading-title">Language</h2>
+              </div> <br><br>
+              <div class="st-skill-subtitle">
+                <h3 class="st-resume-timeline-title">Malay</h3>
+                <div class="st-resume-timeline-duration">Speaking   :  Advanced</div>
+                <div class="st-resume-timeline-duration">Writing    :  Advanced</div>
+                <div class="st-resume-timeline-duration">Reading    :  Advanced</div>
+                <br>
+                <h3 class="st-resume-timeline-title">English</h3>
+                <div class="st-resume-timeline-duration">Speaking   :  Intermediate</div>
+                <div class="st-resume-timeline-duration">Writing    :  Advanced</div>
+                <div class="st-resume-timeline-duration">Reading    :  Advanced</div>
+              </div>
+            </div><!-- .st-skill-heading -->
+          </div>
+        </div>
+          <!-- Skills -->
+        <div class="col-lg-6">
+          <div class="st-resume-wrap">
+            <div class="st-resume-heading">
+              <img src="assets/img/icon/resume-icon1.png" alt="resume-icon">
+              <h2 class="st-resume-heading-title">Skills</h2>
+            </div>
 
-    <!-- footer section start -->
-    <footer>
-        <span>Created By <a>Syaqi</a> | <span class="far fa-copyright"></span> 2020 All rights reserved.</span>
-    </footer>
+            <div class="st-height-b50 st-height-lg-b30"></div>
+
+            <div class="st-resume-timeline-wrap">
+              <div class="st-resume-timeline">
+                <h3 class="st-resume-timeline-title">Web Design</h3>
+              </div> <!-- st-resume-timeline -->
+
+              <div class="st-height-b50 st-height-lg-b30"></div>
+                <div class="st-resume-timeline">
+                  <h3 class="st-resume-timeline-title">Database Management</h3>
+                </div>
+
+                <div class="st-height-b50 st-height-lg-b30"></div>
+                <div class="st-resume-timeline">
+                  <h3 class="st-resume-timeline-title">Adobe XD, Figma</h3>
+                </div>
+
+                <div class="st-height-b50 st-height-lg-b30"></div>
+                <div class="st-resume-timeline">
+                  <h3 class="st-resume-timeline-title">UX Design</h3>
+                </div>
+
+                <div class="st-height-b50 st-height-lg-b30"></div>
+                <div class="st-resume-timeline">
+                  <h3 class="st-resume-timeline-title">HTML, CSS, JS</h3>
+                </div>
+
+                <div class="st-height-b50 st-height-lg-b30"></div>
+                <div class="st-resume-timeline">
+                  <h3 class="st-resume-timeline-title">Problem-solving</h3>
+                </div>
+              </div> <!-- st-resume-timeline -->
+              </div> <!-- st-resume-timeline -->
+              </div> <!-- st-resume-timeline -->
+              </div> <!-- st-resume-timeline -->
+              </div> <!-- st-resume-timeline -->
+            </div>
+          </div>
+        </div>
+        </div>
+    </div>
+  </section>
+  <!-- End Skill Seciton -->
+
+  <!-- Start Portfolio Seciton -->
+  <section id="portfolio">
+    <div class="st-height-b100 st-height-lg-b80"></div>
+    <div class="container">
+      <div class="st-section-heading st-style1">
+        <h4 class="st-section-heading-title">PORTFOLIOS</h4>
+        <h2 class="st-section-heading-subtitle">PORTFOLIOS</h2>
+      </div>
+      <div class="st-height-b25 st-height-lg-b25"></div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio1_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio1.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 20px;">Hotel Booking System</h5>
+                  <p>C++</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio2_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio2.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 15px;">Sign Language Recognition</h5>
+                  <p>Python</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio3_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio3.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 15px;">Optimization Food Ingredient</h5>
+                  <p>Python</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio5_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio5.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 20px;">Travelocal</h5>
+                  <p>UI (Framer/Figma)</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio6_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio6.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 15px;">Student Mental Health Status</h5>
+                  <p>UI (Figma)</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio6_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio6.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 20px;">MyCarryMark</h5>
+                  <p>HTML, CSS, JavaScript, PHP</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio6_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio6.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 15px;">Academic Advisory System</h5>
+                  <p>HTML, CSS, JavaScript</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio6_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio6.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 13px;">Dietary Expert System with Calories Estimation</h5>
+                  <p>HTML, CSS, JavaScript</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+          <div class="st-portfolio-single st-style1 st-lightgallery">
+            <div class="st-portfolio-item">
+              <a href="assets/img/portfolio/portfolio4_lg.jpg" class="st-portfolio st-zoom st-lightbox-item">
+                <div class="st-portfolio-img st-zoom-in">
+                  <img src="assets/img/portfolio/portfolio4.jpg" alt="portfolio">
+                </div>
+                <div class="st-portfolio-item-hover">
+                  <i class="fas fa-plus-circle"></i>
+                  <h5 style="font-size: 20px;">YG Family</h5>
+                  <p>HTML, CSS, JavaScript</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 text-center">
+        </div>
+      </div>
+    </div>
+    <div class="st-height-b100 st-height-lg-b80"></div>
+  </section>
+  <!-- End Portfolio Seciton -->
+
+  <!-- Start Contact Seciton -->
+  <section id="contact" class="st-dark-bg">
+    <div class="st-height-b100 st-height-lg-b80"></div>
+    <div class="container">
+      <div class="st-section-heading st-style1">
+        <h4 class="st-section-heading-title">CONTACT ME</h4>
+        <h2 class="st-section-heading-subtitle">CONTACT ME</h2>
+      </div>
+      <div class="st-height-b25 st-height-lg-b25"></div>
+    </div>
+
+    <!-- Contact Container -->
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <h3 class="st-contact-title">Just say Hello</h3>
+          <div id="st-alert"></div>
+          <form action="#" method="POST" class="st-contact-form" id="contact-form">
+            <div class="st-form-field">
+              <input type="text" id="name" name="name" placeholder="Your Name" required>
+            </div>
+            <div class="st-form-field">
+              <input type="text" id="email" name="email" placeholder="Your Email" required>
+            </div>
+            <div class="st-form-field">
+              <input type="text" id="subject" name="subject" placeholder="Your Subject" required>
+            </div>
+            <div class="st-form-field">
+              <textarea cols="30" rows="10" id="msg" name="msg" placeholder="Your Message" required></textarea>
+            </div>
+            <button class="st-btn st-style1 st-color1" type="submit" id="submit" name="submit">Send message</button>
+          </form>
+        </div>
+        <div class="st-height-b0 st-height-lg-b30"></div>
+
+        <div class="col-lg-6">
+          <div class="st-height-b0 st-height-lg-b40"></div>
+          <h3 class="st-contact-title">Contact Info</h3>
+          <div class="st-contact-text">
+            If you have any questions or would like to get in touch with me, please feel free to reach out through the following channels:
+          </div>
+          <div class="st-contact-info-wrap">
+            <div class="st-single-contact-info">
+              <i class="fas fa-envelope"></i>
+              <div class="st-single-info-details">
+                <h4>Email</h4>
+                <a href="#">snsyaqirah@gmail.com</a>
+              </div>
+            </div>
+            <div class="st-single-contact-info">
+              <i class="fas fa-phone-alt"></i>
+              <div class="st-single-info-details">
+                <h4>Phone</h4>
+                <span>+6017 525 6535</span>
+              </div>
+            </div>
+            <div class="st-single-contact-info">
+              <i class="fas fa-map-marker-alt"></i>
+              <div class="st-single-info-details">
+                <h4>Address</h4>
+                <span>Shah Alam, <br>Selangor</span>
+              </div>
+            </div>
+            <div class="st-social-info">
+              <div class="st-social-text">Visit my social profile and get connected</div>
+              <div class="st-social-link">
+                <a href="https://github.com/snsyaqirah" class="st-social-btn">
+                  <span class="st-social-icon"><i class="fab fa-github"></i></span>
+                  <span class="st-icon-name">Github</span>
+                </a>
+                <a href="https://www.linkedin.com/in/syaqi" class="st-social-btn">
+                  <span class="st-social-icon"><i class="fab fa-linkedin"></i></span>
+                  <span class="st-icon-name">LinkedIn</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="st-height-b100 st-height-lg-b80"></div>
+  </section>
+  <!-- End Contact Seciton -->
+
+  <!-- Start Footer Seciton -->
+  <footer>
+    <div class="container">
+      <div class="st-copyright-wrap text-center">
+        <div class="st-copyright-text">© 2023. Designed by Syaqi.</div>
+      </div>
+    </div>
+  </footer>
+  <!-- End Footer Seciton -->
+
+  <!-- Scripts -->
+  <script src="assets/js/jquery-1.12.4.min.js"></script>
+  <script src="assets/js/jquery.slick.min.js"></script>
+  <script src="assets/js/lightgallery.min.js"></script>
+  <script src="assets/js/wow.min.js"></script>
+  <script src="assets/js/ripples.min.js"></script>
+  <script src="assets/js/particles.min.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
+
 </html>
