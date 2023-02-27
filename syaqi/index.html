@@ -521,24 +521,38 @@
         <div class="col-lg-6">
           <h3 class="st-contact-title">Just say Hello</h3>
           <div id="st-alert"></div>
-          <form action="mailto:snsyaqirah@gmail.com" method="POST" class="st-contact-form" id="contact-form">
+          <form name="sendMail" id="sendMailForm">
             <div class="st-form-field">
-              <input type="text" id="name" name="name" placeholder="Your Name" required>
+              <label for="name" class="sr-only">Name</label>
+              <input type="text" class="form-control" required="" id="name" name="name" placeholder="Your Name">
             </div>
             <div class="st-form-field">
-              <input type="text" id="email" name="email" placeholder="Your Email" required>
+              <label for="email" class="sr-only">Email</label>
+              <input type="email" class="form-control" required="" id="email" name="email" placeholder="Your Email">
             </div>
             <div class="st-form-field">
-              <input type="text" id="subject" name="subject" placeholder="Your Subject" required>
+              <label for="subject" class="sr-only">Subject</label>
+              <input type="text" class="form-control" required="" id="sub" name="subject" placeholder="Your Subject">
             </div>
             <div class="st-form-field">
-              <textarea cols="30" rows="10" id="msg" name="msg" placeholder="Your Message" required></textarea>
+              <label for="message" class="sr-only">Message</label>
+              <textarea class="form-control" required="" id="message" name="msg" placeholder="Your Message"></textarea>
             </div>
-            <button class="st-btn st-style1 st-color1" id="submit" name="submit" >Send message</button>
+            <!-- Notifications for 'error' Or 'successfully'-->
+            <div class="col-md-12 mailResponse" style="display:none;">
+              <div class="alert alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <p class="mailResponseText"></p>
+              </div>
+            </div>
+            <!-- submit button -->
+            <button type="submit" class="btn btn-primary st-btn st-style1 st-color1" id="submit" name="submit">Send message</button>
           </form>
+  
         </div>
         <div class="st-height-b0 st-height-lg-b30"></div>
 
+        
         <div class="col-lg-6">
           <div class="st-height-b0 st-height-lg-b40"></div>
           <h3 class="st-contact-title">Contact Info</h3>
@@ -550,7 +564,7 @@
               <i class="fas fa-envelope"></i>
               <div class="st-single-info-details">
                 <h4>Email</h4>
-                <a href="#">snsyaqirah@gmail.com</a>
+                <a href="mailto: snsyaqirah@gmail.com">snsyaqirah@gmail.com</a>
               </div>
             </div>
             <div class="st-single-contact-info">
