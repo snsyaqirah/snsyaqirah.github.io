@@ -3040,3 +3040,19 @@ canvas {
       -ms-flex-align: center;
           align-items: center;
 }
+
+.imageBox {
+  position: relative;
+  float: left;
+}
+
+.imageBox .hoverImg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+}
+
+.imageBox:hover .hoverImg {
+  display: block;
+}
