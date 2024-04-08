@@ -96,6 +96,7 @@
     }
     .credit{
         margin-bottom: 10px;
+		color: white;
     }
 }
 @media only screen and (max-width: 767px){
@@ -137,6 +138,7 @@
 	
     .credit{
         margin-bottom: 10px;
+		color: white;
     }
 }
 .credit a{
