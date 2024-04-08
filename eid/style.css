@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@200;400&family=Mukta:wght@300&family=Nunito+Sans:opsz,wght@6..12,300&family=Satisfy&display=swap');
+*{
+    box-sizing: border-box;
+}
+
+/* For desktop devices */
+@media only screen and (min-width: 768px) {
+    body {
+        background: url('img/eid_landscape.gif');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+}
+.container{
+    min-height: 100vh;
+    max-height:fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+}
+.container-card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width:900px;
+    height:350px;
+}
+.left-container-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:300px;
+    height:350px;
+    border-radius:10px;
+}
+.left-container-card img{
+    width:300px;
+    height:350px;
+    border-radius:10px;
+}
+.right-container-card{
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter:blur(25px);
+    background-color:rgba(255,255,255,0.1);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width:600px;
+    height:350px;
+    margin:1vw  ;
+    border-radius:10px;
+	color: white;
+}
+.right-container-card h1{
+    font-family: 'Satisfy', cursive;
+    margin:10px;
+    padding:10px;
+    font-size:45px;
+}
+.right-container-card p{
+    font-family: 'Fira Sans', sans-serif;
+    text-align:center;
+    margin:35px;
+    padding:0px 30px;
+    font-size:18px;
+}
+@media only screen and (max-width: 1024px){
+    .container-card{
+        display: flex;
+        flex-direction:column;
+        width:450px;
+        height:auto;
+    }
+    .left-container-card{
+        width:450px;
+        height:300px;
+    }
+    .left-container-card img{
+        width:450px;
+        height:350px;
+    }
+    .right-container-card{
+        width:450px;
+        height:400px;
+        margin:1vh;
+    }
+    .right-container-card p{
+        margin:20px;
+        padding:20px;
+    }
+    .credit{
+        margin-bottom: 10px;
+    }
+}
+@media only screen and (max-width: 767px){
+	body {
+        background: url('img/eid_portrait.gif');
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+	
+	.left-container-card {
+        display: none !important;
+    }
+	
+    .container-card{
+        display: flex;
+        flex-direction:column;
+        width:100%;
+        height:fit-content;
+    }
+	
+    .right-container-card{
+        width:95%;
+        height:300px;
+        margin:1vh;
+    }
+	
+    .right-container-card h1{
+        margin:10px;
+        padding:10px;
+        font-size:25px;
+    }
+	
+    .right-container-card p{
+        margin:10px;
+        padding:10px;
+    }
+	
+    .credit{
+        margin-bottom: 10px;
+    }
+}
+.credit a{
+    text-decoration: none;
+    color: #000;
+    font-weight: 800;
+}
+.credit{
+    color: #000;
+    text-align: center;
+    margin-top: 10px;
+    font-family: Verdana,Geneva,Tahoma,sans-serif;
+}
+.credit span{
+    color:tomato;
+    font-size:20px;
+}
