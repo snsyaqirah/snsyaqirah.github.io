@@ -1,13 +1,14 @@
-// Global variables for the epic 3D scene
+// Global variables for the EPIC SPACE SCENE 🚀
 let scene, camera, renderer;
-let particleSystem, crystalCore;
+let solarSystem, sun, planets = [];
+let asteroidBelt, nebula, starField;
 let mouseX = 0, mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 let time = 0;
 let isHovered = false;
 
-// Initialize the mind-blowing Three.js scene
+// Initialize the MIND-BLOWING Solar System scene
 function initThree() {
     const canvas = document.getElementById('three-canvas');
     if (!canvas) {
@@ -17,9 +18,9 @@ function initThree() {
     
     const container = canvas.parentElement;
     
-    // Scene setup with fog for depth
+    // Scene setup for deep space
     scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x000000, 10, 100);
+    scene.fog = new THREE.Fog(0x000000, 50, 200);
     
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ 
@@ -29,27 +30,31 @@ function initThree() {
         powerPreference: "high-performance"
     });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearColor(0x000011, 1);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     
-    // Create the main attraction: Morphing Crystal Core
-    createCrystalCore();
+    // Create the solar system
+    createSolarSystem();
     
-    // Add floating energy particles
-    createEnergyParticles();
+    // Add cosmic background
+    createStarField();
     
-    // Create holographic rings
-    createHolographicRings();
+    // Create nebula clouds
+    createNebula();
     
-    // Add floating geometric elements
-    createFloatingElements();
+    // Add asteroid belt
+    createAsteroidBelt();
     
-    // Setup dynamic lighting
-    setupLighting();
+    // Add shooting stars
+    createShootingStars();
+    
+    // Setup space lighting
+    setupSpaceLighting();
     
     // Position camera
-    camera.position.set(0, 0, 15);
+    camera.position.set(0, 20, 40);
+    camera.lookAt(0, 0, 0);
     
     // Add mouse interaction listeners
     canvas.addEventListener('mouseenter', () => { isHovered = true; });
@@ -68,107 +73,174 @@ function initThree() {
         windowHalfY = window.innerHeight / 2;
     });
     
-    // Mouse movement for parallax effect
+    // Mouse movement for camera control
     document.addEventListener('mousemove', (event) => {
         mouseX = (event.clientX - windowHalfX) / windowHalfX;
         mouseY = (event.clientY - windowHalfY) / windowHalfY;
     });
 }
 
-// Create the morphing crystal core - the centerpiece!
-function createCrystalCore() {
-    const geometry = new THREE.IcosahedronGeometry(3, 2);
+// Create the amazing solar system
+function createSolarSystem() {
+    solarSystem = new THREE.Group();
     
-    // Create a custom shader material for the crystal effect
-    const vertexShader = `
-        varying vec3 vPosition;
-        varying vec3 vNormal;
-        varying vec2 vUv;
-        uniform float uTime;
-        uniform float uHover;
-        
-        void main() {
-            vPosition = position;
-            vNormal = normal;
-            vUv = uv;
-            
-            vec3 newPosition = position;
-            
-            // Add morphing effect
-            float morphStrength = 0.5 + sin(uTime * 2.0 + position.x) * 0.3;
-            morphStrength += sin(uTime * 1.5 + position.y) * 0.2;
-            morphStrength *= (1.0 + uHover * 0.5);
-            
-            newPosition += normal * morphStrength;
-            
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-        }
-    `;
-    
-    const fragmentShader = `
-        varying vec3 vPosition;
-        varying vec3 vNormal;
-        varying vec2 vUv;
-        uniform float uTime;
-        uniform float uHover;
-        uniform vec3 uColor1;
-        uniform vec3 uColor2;
-        uniform vec3 uColor3;
-        
-        void main() {
-            vec3 color = mix(uColor1, uColor2, sin(uTime + vPosition.x) * 0.5 + 0.5);
-            color = mix(color, uColor3, sin(uTime * 0.8 + vPosition.y) * 0.5 + 0.5);
-            
-            // Add fresnel effect
-            float fresnel = dot(vNormal, vec3(0.0, 0.0, 1.0));
-            fresnel = 1.0 - fresnel;
-            fresnel = pow(fresnel, 2.0);
-            
-            // Add hover glow
-            color += vec3(1.0, 0.8, 0.2) * fresnel * (0.3 + uHover * 0.7);
-            
-            // Add pulsing effect
-            float pulse = sin(uTime * 3.0) * 0.1 + 0.9;
-            color *= pulse;
-            
-            gl_FragColor = vec4(color, 0.9 + fresnel * 0.1);
-        }
-    `;
-    
-    const material = new THREE.ShaderMaterial({
-        vertexShader,
-        fragmentShader,
+    // Create the SUN - the centerpiece!
+    const sunGeometry = new THREE.SphereGeometry(3, 32, 32);
+    const sunMaterial = new THREE.ShaderMaterial({
         uniforms: {
             uTime: { value: 0 },
-            uHover: { value: 0 },
-            uColor1: { value: new THREE.Color(0xFCC24D) }, // Your golden color
-            uColor2: { value: new THREE.Color(0xFFD700) },
-            uColor3: { value: new THREE.Color(0xFF6B35) }
+            uIntensity: { value: 1.0 }
         },
-        transparent: true,
-        side: THREE.DoubleSide
+        vertexShader: `
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            uniform float uTime;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                vec3 newPosition = position;
+                newPosition += normal * sin(uTime * 2.0 + position.x * 3.0) * 0.1;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `,
+        fragmentShader: `
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            uniform float uTime;
+            uniform float uIntensity;
+            
+            void main() {
+                vec2 center = vec2(0.5, 0.5);
+                float dist = distance(vUv, center);
+                
+                // Solar flares effect
+                float flare = sin(uTime * 3.0 + dist * 10.0) * 0.1 + 0.9;
+                
+                // Sun colors
+                vec3 color1 = vec3(1.0, 0.8, 0.0); // Yellow
+                vec3 color2 = vec3(1.0, 0.4, 0.0); // Orange
+                vec3 color3 = vec3(1.0, 0.2, 0.0); // Red
+                
+                vec3 color = mix(color1, color2, sin(uTime + vPosition.x) * 0.5 + 0.5);
+                color = mix(color, color3, sin(uTime * 0.7 + vPosition.y) * 0.3 + 0.3);
+                
+                color *= flare * uIntensity;
+                
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `
     });
     
-    crystalCore = new THREE.Mesh(geometry, material);
-    crystalCore.position.set(0, 0, 0);
-    scene.add(crystalCore);
+    sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    solarSystem.add(sun);
+    
+    // Planet data (distance, size, color, speed)
+    const planetData = [
+        { dist: 6, size: 0.4, color: 0x8C7853, speed: 0.02, name: "Mercury" },
+        { dist: 8, size: 0.7, color: 0xFFC649, speed: 0.015, name: "Venus" },
+        { dist: 10, size: 0.8, color: 0x6B93D6, speed: 0.01, name: "Earth" },
+        { dist: 12, size: 0.6, color: 0xCD5C5C, speed: 0.008, name: "Mars" },
+        { dist: 16, size: 1.8, color: 0xD2691E, speed: 0.005, name: "Jupiter" },
+        { dist: 20, size: 1.5, color: 0xFAD5A5, speed: 0.003, name: "Saturn" },
+        { dist: 24, size: 1.0, color: 0x4FD0E7, speed: 0.002, name: "Uranus" },
+        { dist: 28, size: 0.9, color: 0x4B70DD, speed: 0.001, name: "Neptune" }
+    ];
+    
+    // Create planets with orbital paths
+    planetData.forEach((data, index) => {
+        const planetGroup = new THREE.Group();
+        
+        // Create orbital path (ring)
+        const orbitGeometry = new THREE.RingGeometry(data.dist - 0.1, data.dist + 0.1, 64);
+        const orbitMaterial = new THREE.MeshBasicMaterial({
+            color: 0xFCC24D,
+            transparent: true,
+            opacity: 0.1,
+            side: THREE.DoubleSide
+        });
+        const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
+        orbit.rotation.x = Math.PI / 2;
+        solarSystem.add(orbit);
+        
+        // Create planet
+        const planetGeometry = new THREE.SphereGeometry(data.size, 16, 16);
+        const planetMaterial = new THREE.MeshPhongMaterial({
+            color: data.color,
+            transparent: true,
+            opacity: 0.9
+        });
+        
+        const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+        planet.position.x = data.dist;
+        planet.castShadow = true;
+        planet.receiveShadow = true;
+        
+        // Add planet glow
+        const glowGeometry = new THREE.SphereGeometry(data.size * 1.2, 16, 16);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: data.color,
+            transparent: true,
+            opacity: 0.2,
+            blending: THREE.AdditiveBlending
+        });
+        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+        planet.add(glow);
+        
+        // Special effects for special planets
+        if (data.name === "Saturn") {
+            // Add Saturn's rings
+            const ringGeometry = new THREE.RingGeometry(data.size * 1.5, data.size * 2.5, 32);
+            const ringMaterial = new THREE.MeshBasicMaterial({
+                color: 0xDAA520,
+                transparent: true,
+                opacity: 0.6,
+                side: THREE.DoubleSide
+            });
+            const rings = new THREE.Mesh(ringGeometry, ringMaterial);
+            rings.rotation.x = Math.PI / 2;
+            planet.add(rings);
+        }
+        
+        if (data.name === "Earth") {
+            // Add Earth's moon
+            const moonGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+            const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xC0C0C0 });
+            const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+            moon.position.x = 2;
+            planet.add(moon);
+        }
+        
+        planetGroup.add(planet);
+        planetGroup.userData = {
+            speed: data.speed,
+            distance: data.dist,
+            planet: planet,
+            angle: Math.random() * Math.PI * 2
+        };
+        
+        solarSystem.add(planetGroup);
+        planets.push(planetGroup);
+    });
+    
+    scene.add(solarSystem);
 }
 
-// Create mesmerizing energy particles
-function createEnergyParticles() {
-    const particleCount = 1000;
+// Create epic star field background
+function createStarField() {
+    const starCount = 2000;
     const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-    const sizes = new Float32Array(particleCount);
+    const positions = new Float32Array(starCount * 3);
+    const colors = new Float32Array(starCount * 3);
+    const sizes = new Float32Array(starCount);
     
-    const color = new THREE.Color();
-    
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < starCount; i++) {
         const i3 = i * 3;
         
-        // Create spherical distribution
-        const radius = Math.random() * 25 + 5;
+        // Random positions in a large sphere
+        const radius = 100 + Math.random() * 100;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
         
@@ -176,17 +248,13 @@ function createEnergyParticles() {
         positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
         positions[i3 + 2] = radius * Math.cos(phi);
         
-        // Random colors in golden spectrum
-        const hue = 0.1 + Math.random() * 0.1; // Golden hues
-        const saturation = 0.7 + Math.random() * 0.3;
-        const lightness = 0.5 + Math.random() * 0.5;
-        color.setHSL(hue, saturation, lightness);
+        // Star colors (white to blue-white)
+        const intensity = 0.5 + Math.random() * 0.5;
+        colors[i3] = intensity;
+        colors[i3 + 1] = intensity;
+        colors[i3 + 2] = intensity + Math.random() * 0.2;
         
-        colors[i3] = color.r;
-        colors[i3 + 1] = color.g;
-        colors[i3 + 2] = color.b;
-        
-        sizes[i] = Math.random() * 3 + 1;
+        sizes[i] = Math.random() * 2 + 0.5;
     }
     
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -195,39 +263,33 @@ function createEnergyParticles() {
     
     const material = new THREE.ShaderMaterial({
         uniforms: {
-            uTime: { value: 0 },
-            uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) }
+            uTime: { value: 0 }
         },
         vertexShader: `
             attribute float size;
             varying vec3 vColor;
             uniform float uTime;
-            uniform float uPixelRatio;
             
             void main() {
                 vColor = color;
-                vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-                
-                // Add floating animation
-                modelPosition.x += sin(uTime + modelPosition.y * 0.01) * 2.0;
-                modelPosition.y += cos(uTime + modelPosition.x * 0.01) * 2.0;
-                modelPosition.z += sin(uTime + modelPosition.x * 0.01 + modelPosition.y * 0.01) * 1.0;
-                
-                vec4 viewPosition = viewMatrix * modelPosition;
-                vec4 projectedPosition = projectionMatrix * viewPosition;
-                
-                gl_Position = projectedPosition;
-                gl_PointSize = size * uPixelRatio * (1.0 / -viewPosition.z);
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                gl_PointSize = size * (300.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
             }
         `,
         fragmentShader: `
             varying vec3 vColor;
+            uniform float uTime;
             
             void main() {
                 float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
-                float strength = 0.05 / distanceToCenter - 0.1;
+                float strength = 1.0 - distanceToCenter * 2.0;
+                strength = max(strength, 0.0);
                 
-                gl_FragColor = vec4(vColor, strength);
+                // Add twinkling effect
+                float twinkle = sin(uTime * 10.0 + gl_FragCoord.x * 0.01) * 0.2 + 0.8;
+                
+                gl_FragColor = vec4(vColor * twinkle, strength);
             }
         `,
         transparent: true,
@@ -236,177 +298,273 @@ function createEnergyParticles() {
         vertexColors: true
     });
     
-    particleSystem = new THREE.Points(geometry, material);
-    scene.add(particleSystem);
+    starField = new THREE.Points(geometry, material);
+    scene.add(starField);
 }
 
-// Create holographic rings that respond to mouse
-function createHolographicRings() {
-    const ringGroup = new THREE.Group();
+// Create colorful nebula clouds
+function createNebula() {
+    const nebulaGroup = new THREE.Group();
     
-    for (let i = 0; i < 5; i++) {
-        const geometry = new THREE.RingGeometry(4 + i * 1.5, 4.2 + i * 1.5, 32);
-        const material = new THREE.MeshBasicMaterial({
-            color: new THREE.Color().setHSL(0.15, 0.8, 0.6),
+    for (let i = 0; i < 3; i++) {
+        const geometry = new THREE.SphereGeometry(15, 16, 16);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uColor: { value: new THREE.Color().setHSL(0.7 + i * 0.1, 0.8, 0.4) }
+            },
+            vertexShader: `
+                varying vec3 vPosition;
+                uniform float uTime;
+                
+                void main() {
+                    vPosition = position;
+                    vec3 newPosition = position;
+                    newPosition += sin(uTime + position.x * 0.01) * normal * 2.0;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vPosition;
+                uniform float uTime;
+                uniform vec3 uColor;
+                
+                void main() {
+                    float noise = sin(vPosition.x * 0.01 + uTime) * sin(vPosition.y * 0.01 + uTime) * sin(vPosition.z * 0.01 + uTime);
+                    noise = noise * 0.5 + 0.5;
+                    
+                    float alpha = noise * 0.1;
+                    gl_FragColor = vec4(uColor, alpha);
+                }
+            `,
             transparent: true,
-            opacity: 0.3 - i * 0.05,
-            side: THREE.DoubleSide
+            blending: THREE.AdditiveBlending,
+            side: THREE.BackSide
         });
         
-        const ring = new THREE.Mesh(geometry, material);
-        ring.rotation.x = Math.PI / 2;
-        ring.rotation.z = i * 0.2;
-        ring.userData = { originalRotationZ: ring.rotation.z };
+        const nebulaPart = new THREE.Mesh(geometry, material);
+        nebulaPart.position.set(
+            (Math.random() - 0.5) * 80,
+            (Math.random() - 0.5) * 60,
+            (Math.random() - 0.5) * 80
+        );
+        nebulaPart.userData = { speed: Math.random() * 0.001 + 0.0005 };
         
-        ringGroup.add(ring);
+        nebulaGroup.add(nebulaPart);
     }
     
-    ringGroup.position.set(0, 0, 0);
-    scene.add(ringGroup);
-    
-    // Store reference for animation
-    window.holographicRings = ringGroup;
+    scene.add(nebulaGroup);
+    window.nebulaGroup = nebulaGroup;
 }
 
-// Add floating geometric elements for extra coolness
-function createFloatingElements() {
-    const elements = [];
-    const geometries = [
-        new THREE.OctahedronGeometry(0.5),
-        new THREE.TetrahedronGeometry(0.7),
-        new THREE.DodecahedronGeometry(0.4),
-        new THREE.IcosahedronGeometry(0.6)
-    ];
+// Create asteroid belt around the solar system
+function createAsteroidBelt() {
+    const asteroidGroup = new THREE.Group();
     
-    for (let i = 0; i < 20; i++) {
-        const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+    for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 0.3 + 0.1;
+        const geometry = new THREE.DodecahedronGeometry(size);
         const material = new THREE.MeshPhongMaterial({
-            color: new THREE.Color().setHSL(0.1 + Math.random() * 0.1, 0.7, 0.6),
+            color: new THREE.Color().setHSL(0.1, 0.3, 0.4),
             transparent: true,
-            opacity: 0.6,
-            wireframe: Math.random() > 0.5
+            opacity: 0.8
         });
         
-        const element = new THREE.Mesh(geometry, material);
+        const asteroid = new THREE.Mesh(geometry, material);
         
-        // Random positioning in a sphere around the center
-        const radius = 10 + Math.random() * 15;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
+        // Position in belt between Mars and Jupiter
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 13 + Math.random() * 2;
+        const height = (Math.random() - 0.5) * 2;
         
-        element.position.x = radius * Math.sin(phi) * Math.cos(theta);
-        element.position.y = radius * Math.sin(phi) * Math.sin(theta);
-        element.position.z = radius * Math.cos(phi);
+        asteroid.position.x = Math.cos(angle) * radius;
+        asteroid.position.z = Math.sin(angle) * radius;
+        asteroid.position.y = height;
         
-        element.userData = {
-            originalPosition: element.position.clone(),
+        asteroid.userData = {
+            angle: angle,
+            radius: radius,
+            speed: Math.random() * 0.005 + 0.002,
             rotationSpeed: new THREE.Vector3(
                 (Math.random() - 0.5) * 0.02,
                 (Math.random() - 0.5) * 0.02,
                 (Math.random() - 0.5) * 0.02
-            ),
-            floatSpeed: Math.random() * 0.5 + 0.5
+            )
         };
         
-        scene.add(element);
-        elements.push(element);
+        asteroidGroup.add(asteroid);
     }
     
-    window.floatingElements = elements;
+    scene.add(asteroidGroup);
+    window.asteroidBelt = asteroidGroup;
 }
 
-// Setup dramatic lighting
-function setupLighting() {
-    // Ambient light for base illumination
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+// Create shooting stars for extra magic
+function createShootingStars() {
+    const shootingStars = [];
+    
+    for (let i = 0; i < 5; i++) {
+        const geometry = new THREE.CylinderGeometry(0.05, 0.05, 10, 8);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xFFFFFF,
+            transparent: true,
+            opacity: 0.8
+        });
+        
+        const star = new THREE.Mesh(geometry, material);
+        star.position.set(
+            (Math.random() - 0.5) * 100,
+            (Math.random() - 0.5) * 50,
+            (Math.random() - 0.5) * 100
+        );
+        
+        star.userData = {
+            velocity: new THREE.Vector3(
+                (Math.random() - 0.5) * 0.5,
+                (Math.random() - 0.5) * 0.3,
+                (Math.random() - 0.5) * 0.5
+            ),
+            life: Math.random() * 300 + 100
+        };
+        
+        scene.add(star);
+        shootingStars.push(star);
+    }
+    
+    window.shootingStars = shootingStars;
+}
+
+// Setup dramatic space lighting
+function setupSpaceLighting() {
+    // Sun light (main light source)
+    const sunLight = new THREE.PointLight(0xFFDD44, 2, 100);
+    sunLight.position.set(0, 0, 0);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 1024;
+    sunLight.shadow.mapSize.height = 1024;
+    scene.add(sunLight);
+    
+    // Ambient space light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.1);
     scene.add(ambientLight);
     
-    // Main directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 5, 5);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
+    // Distant star light
+    const starLight = new THREE.DirectionalLight(0x9999FF, 0.3);
+    starLight.position.set(50, 50, 50);
+    scene.add(starLight);
     
-    // Colored point lights for atmosphere
-    const pointLight1 = new THREE.PointLight(0xFCC24D, 2, 50);
-    pointLight1.position.set(10, 0, 10);
-    scene.add(pointLight1);
+    // Nebula lighting
+    const nebulaLight1 = new THREE.PointLight(0xFF6B9D, 0.5, 80);
+    nebulaLight1.position.set(30, 20, -30);
+    scene.add(nebulaLight1);
     
-    const pointLight2 = new THREE.PointLight(0xFF6B35, 1.5, 50);
-    pointLight2.position.set(-10, 0, 10);
-    scene.add(pointLight2);
-    
-    const pointLight3 = new THREE.PointLight(0x667eea, 1, 50);
-    pointLight3.position.set(0, 10, -10);
-    scene.add(pointLight3);
+    const nebulaLight2 = new THREE.PointLight(0x6BFFC0, 0.5, 80);
+    nebulaLight2.position.set(-30, -20, 30);
+    scene.add(nebulaLight2);
 }
 
-// The epic animation loop
+// The EPIC animation loop for space
 function animate() {
     requestAnimationFrame(animate);
     time += 0.01;
     
-    // Update crystal core
-    if (crystalCore && crystalCore.material && crystalCore.material.uniforms) {
-        crystalCore.material.uniforms.uTime.value = time;
-        crystalCore.material.uniforms.uHover.value = THREE.MathUtils.lerp(
-            crystalCore.material.uniforms.uHover.value,
-            isHovered ? 1 : 0,
-            0.05
-        );
+    // Update sun
+    if (sun && sun.material && sun.material.uniforms) {
+        sun.material.uniforms.uTime.value = time;
+        sun.material.uniforms.uIntensity.value = 1.0 + Math.sin(time * 2) * 0.1;
+        sun.rotation.y += 0.01;
+    }
+    
+    // Update planets orbiting the sun
+    planets.forEach((planetGroup, index) => {
+        planetGroup.userData.angle += planetGroup.userData.speed;
         
-        // Rotate the crystal
-        crystalCore.rotation.x += 0.005;
-        crystalCore.rotation.y += 0.01;
+        const x = Math.cos(planetGroup.userData.angle) * planetGroup.userData.distance;
+        const z = Math.sin(planetGroup.userData.angle) * planetGroup.userData.distance;
         
-        // Add hover effect
-        if (isHovered) {
-            crystalCore.scale.setScalar(1 + Math.sin(time * 5) * 0.05);
-        } else {
-            crystalCore.scale.setScalar(1);
+        planetGroup.position.x = x;
+        planetGroup.position.z = z;
+        
+        // Rotate planet on its axis
+        if (planetGroup.userData.planet) {
+            planetGroup.userData.planet.rotation.y += 0.02;
         }
+    });
+    
+    // Update star field twinkling
+    if (starField && starField.material && starField.material.uniforms) {
+        starField.material.uniforms.uTime.value = time;
+        starField.rotation.y += 0.0002;
     }
     
-    // Update particle system
-    if (particleSystem && particleSystem.material && particleSystem.material.uniforms) {
-        particleSystem.material.uniforms.uTime.value = time;
-        particleSystem.rotation.y += 0.002;
-    }
-    
-    // Update holographic rings
-    if (window.holographicRings) {
-        window.holographicRings.children.forEach((ring, index) => {
-            ring.rotation.z = ring.userData.originalRotationZ + time * (0.5 + index * 0.1);
-            ring.material.opacity = 0.3 + Math.sin(time * 2 + index) * 0.1;
+    // Update nebula
+    if (window.nebulaGroup) {
+        window.nebulaGroup.children.forEach((nebula, index) => {
+            nebula.rotation.x += nebula.userData.speed;
+            nebula.rotation.y += nebula.userData.speed * 0.7;
+            nebula.material.uniforms.uTime.value = time;
         });
-        window.holographicRings.rotation.x += 0.003;
     }
     
-    // Update floating elements
-    if (window.floatingElements) {
-        window.floatingElements.forEach((element, index) => {
-            element.rotation.add(element.userData.rotationSpeed);
+    // Update asteroid belt
+    if (window.asteroidBelt) {
+        window.asteroidBelt.children.forEach(asteroid => {
+            asteroid.userData.angle += asteroid.userData.speed;
             
-            // Floating animation
-            const floatTime = time * element.userData.floatSpeed;
-            element.position.y = element.userData.originalPosition.y + Math.sin(floatTime + index) * 2;
-            element.position.x = element.userData.originalPosition.x + Math.cos(floatTime + index * 0.5) * 1;
+            const x = Math.cos(asteroid.userData.angle) * asteroid.userData.radius;
+            const z = Math.sin(asteroid.userData.angle) * asteroid.userData.radius;
+            
+            asteroid.position.x = x;
+            asteroid.position.z = z;
+            
+            // Rotate asteroids
+            asteroid.rotation.x += asteroid.userData.rotationSpeed.x;
+            asteroid.rotation.y += asteroid.userData.rotationSpeed.y;
+            asteroid.rotation.z += asteroid.userData.rotationSpeed.z;
         });
     }
     
-    // Camera movement based on mouse position
-    const targetX = mouseX * 2;
-    const targetY = -mouseY * 2;
-    
-    camera.position.x += (targetX - camera.position.x) * 0.03;
-    camera.position.y += (targetY - camera.position.y) * 0.03;
-    camera.lookAt(scene.position);
-    
-    // Add camera shake on hover
-    if (isHovered) {
-        camera.position.x += Math.sin(time * 10) * 0.1;
-        camera.position.y += Math.cos(time * 8) * 0.1;
+    // Update shooting stars
+    if (window.shootingStars) {
+        window.shootingStars.forEach((star, index) => {
+            star.position.add(star.userData.velocity);
+            star.userData.life--;
+            
+            if (star.userData.life <= 0) {
+                // Reset shooting star
+                star.position.set(
+                    (Math.random() - 0.5) * 100,
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 100
+                );
+                star.userData.life = Math.random() * 300 + 100;
+                star.userData.velocity.set(
+                    (Math.random() - 0.5) * 0.5,
+                    (Math.random() - 0.5) * 0.3,
+                    (Math.random() - 0.5) * 0.5
+                );
+            }
+        });
     }
+    
+    // Camera movement based on mouse (space exploration feel)
+    const targetX = mouseX * 10;
+    const targetY = -mouseY * 10;
+    
+    camera.position.x += (targetX - camera.position.x) * 0.02;
+    camera.position.y += (targetY + 20 - camera.position.y) * 0.02;
+    
+    // On hover, zoom in closer to the solar system
+    if (isHovered) {
+        camera.position.z += (25 - camera.position.z) * 0.05;
+        // Add gentle camera shake for space vibration
+        camera.position.x += Math.sin(time * 5) * 0.2;
+        camera.position.y += Math.cos(time * 3) * 0.1;
+    } else {
+        camera.position.z += (40 - camera.position.z) * 0.02;
+    }
+    
+    camera.lookAt(0, 0, 0);
     
     renderer.render(scene, camera);
 }
@@ -607,9 +765,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all functionalities
     try {
         initThree();
-        console.log('Three.js initialized successfully!');
+        console.log('🚀 EPIC SOLAR SYSTEM INITIALIZED! Welcome to space! 🌌');
     } catch (error) {
-        console.error('Three.js initialization error:', error);
+        console.error('Space exploration failed:', error);
     }
     
     initNavigation();
@@ -656,6 +814,6 @@ preloadResources();
 // Service Worker for better performance (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        console.log('Service Worker support detected');
+        console.log('🛰️ Service Worker support detected - Ready for space mission!');
     });
 }
