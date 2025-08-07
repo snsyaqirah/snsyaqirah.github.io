@@ -83,7 +83,7 @@ body {
     transform: translateY(0);
 }
 
-/* Loading screen */
+ /* Loading screen */
 .loading-screen {
     position: fixed;
     top: 0;
@@ -112,29 +112,11 @@ body {
         inset -8px -8px 16px var(--shadow-light);
     animation: spin 2s linear infinite;
     margin: 0 auto 20px;
-    position: relative;
-}
-
-.loader::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    border-radius: 50%;
-    background: var(--gradient);
-    animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
 }
 
 /* Navigation */
