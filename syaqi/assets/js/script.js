@@ -1,16 +1,20 @@
 // Global variables for the epic 3D scene
-let scene, camera, renderer, composer;
-let particleSystem, hologram, crystalCore;
+let scene, camera, renderer;
+let particleSystem, crystalCore;
 let mouseX = 0, mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 let time = 0;
 let isHovered = false;
-let morphTargets = [];
 
 // Initialize the mind-blowing Three.js scene
 function initThree() {
     const canvas = document.getElementById('three-canvas');
+    if (!canvas) {
+        console.log('Canvas not found');
+        return;
+    }
+    
     const container = canvas.parentElement;
     
     // Scene setup with fog for depth
@@ -343,7 +347,7 @@ function animate() {
     time += 0.01;
     
     // Update crystal core
-    if (crystalCore) {
+    if (crystalCore && crystalCore.material && crystalCore.material.uniforms) {
         crystalCore.material.uniforms.uTime.value = time;
         crystalCore.material.uniforms.uHover.value = THREE.MathUtils.lerp(
             crystalCore.material.uniforms.uHover.value,
@@ -364,7 +368,7 @@ function animate() {
     }
     
     // Update particle system
-    if (particleSystem) {
+    if (particleSystem && particleSystem.material && particleSystem.material.uniforms) {
         particleSystem.material.uniforms.uTime.value = time;
         particleSystem.rotation.y += 0.002;
     }
@@ -407,9 +411,6 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-// Export the init function for use in your main script
-window.initEpicThree = initThree;
-
 // Navigation functionality
 function initNavigation() {
     const hamburger = document.getElementById('hamburger');
@@ -417,28 +418,32 @@ function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     const navbar = document.getElementById('navbar');
 
-    // Hamburger menu toggle
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-
-    // Close mobile menu when clicking on a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
+    if (hamburger && navMenu) {
+        // Hamburger menu toggle
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
-    });
 
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+        // Close mobile menu when clicking on a link
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+
+    if (navbar) {
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
 
     // Active navigation link
     window.addEventListener('scroll', () => {
@@ -489,67 +494,84 @@ function initSkillsAnimation() {
     let skillsAnimated = false;
 
     const skillsSection = document.getElementById('skills');
-    const skillsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !skillsAnimated) {
-                skillsAnimated = true;
-                skillBars.forEach(bar => {
-                    const width = bar.getAttribute('data-width');
-                    setTimeout(() => {
-                        bar.style.width = width + '%';
-                    }, Math.random() * 1000);
-                });
-            }
-        });
-    }, { threshold: 0.5 });
+    if (skillsSection) {
+        const skillsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !skillsAnimated) {
+                    skillsAnimated = true;
+                    skillBars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        if (width) {
+                            setTimeout(() => {
+                                bar.style.width = width + '%';
+                            }, Math.random() * 1000);
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
 
-    skillsObserver.observe(skillsSection);
+        skillsObserver.observe(skillsSection);
+    }
 }
 
 // Scroll to top functionality
 function initScrollToTop() {
     const scrollTopBtn = document.getElementById('scrollTop');
 
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-            scrollTopBtn.classList.add('visible');
-        } else {
-            scrollTopBtn.classList.remove('visible');
-        }
-    });
-
-    scrollTopBtn.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
         });
-    });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 }
 
 // Contact form
 function initContactForm() {
     const form = document.querySelector('.contact-form');
+    const status = document.getElementById('form-status');
     
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Get form data
-        const formData = new FormData(form);
-        const name = formData.get('name') || document.getElementById('name').value;
-        const email = formData.get('email') || document.getElementById('email').value;
-        const subject = formData.get('subject') || document.getElementById('subject').value;
-        const message = formData.get('message') || document.getElementById('message').value;
-        
-        // Simple validation
-        if (!name || !email || !subject || !message) {
-            alert('Please fill in all fields.');
-            return;
-        }
-        
-        // Simulate form submission
-        alert('Thank you for your message! I\'ll get back to you soon.');
-        form.reset();
-    });
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            if (status) {
+                status.textContent = 'Sending...';
+            }
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    if (status) status.textContent = 'Message sent! Thank you.';
+                    form.reset();
+                } else {
+                    return response.json().then(data => {
+                        if (data.errors) {
+                            if (status) status.textContent = data.errors.map(error => error.message).join(', ');
+                        } else {
+                            if (status) status.textContent = 'Oops! There was a problem.';
+                        }
+                    });
+                }
+            }).catch(() => {
+                if (status) status.textContent = 'Oops! There was a problem.';
+            });
+        });
+    }
 }
 
 // Smooth scrolling for navigation links
@@ -572,15 +594,24 @@ function initSmoothScrolling() {
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Hide loading screen
-    setTimeout(() => {
-        document.getElementById('loadingScreen').style.opacity = '0';
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
         setTimeout(() => {
-            document.getElementById('loadingScreen').style.display = 'none';
-        }, 500);
-    }, 1500);
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }, 1500);
+    }
 
     // Initialize all functionalities
-    initThree();
+    try {
+        initThree();
+        console.log('Three.js initialized successfully!');
+    } catch (error) {
+        console.error('Three.js initialization error:', error);
+    }
+    
     initNavigation();
     initScrollAnimations();
     initSkillsAnimation();
@@ -625,36 +656,6 @@ preloadResources();
 // Service Worker for better performance (optional)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // You can register a service worker here for better caching
         console.log('Service Worker support detected');
     });
 }
-
-const form = document.querySelector('.contact-form');
-const status = document.getElementById('form-status');
-
-form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    status.textContent = 'Sending...';
-
-    fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
-    }).then(response => {
-      if (response.ok) {
-        status.textContent = 'Message sent! Thank you.';
-        form.reset();
-      } else {
-        return response.json().then(data => {
-          if (data.errors) {
-            status.textContent = data.errors.map(error => error.message).join(', ');
-          } else {
-            status.textContent = 'Oops! There was a problem.';
-          }
-        });
-      }
-    }).catch(() => {
-      status.textContent = 'Oops! There was a problem.';
-    });
-});
