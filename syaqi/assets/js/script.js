@@ -339,24 +339,31 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Simple dropdown functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const cvButton = document.getElementById('cv-button');
-    const dropdownMenu = document.querySelector('.cv-dropdown-menu');
-    
-    cvButton.addEventListener('click', function() {
-        const isExpanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', !isExpanded);
-        dropdownMenu.style.opacity = isExpanded ? '0' : '1';
-        dropdownMenu.style.visibility = isExpanded ? 'hidden' : 'visible';
-    });
-    
-    // Close when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.cv-dropdown')) {
-            cvButton.setAttribute('aria-expanded', 'false');
-            dropdownMenu.style.opacity = '0';
-            dropdownMenu.style.visibility = 'hidden';
-        }
+const form = document.querySelector('.contact-form');
+const status = document.getElementById('form-status');
+
+form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    status.textContent = 'Sending...';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(response => {
+      if (response.ok) {
+        status.textContent = 'Message sent! Thank you.';
+        form.reset();
+      } else {
+        return response.json().then(data => {
+          if (data.errors) {
+            status.textContent = data.errors.map(error => error.message).join(', ');
+          } else {
+            status.textContent = 'Oops! There was a problem.';
+          }
+        });
+      }
+    }).catch(() => {
+      status.textContent = 'Oops! There was a problem.';
     });
 });
