@@ -540,6 +540,14 @@ body {
     color: var(--text-primary);
 }
 
+.skill-name .skill-level{
+    color: var(--text-primary);
+}
+
+.skill-name .name {
+    color: var(--accent);
+}
+
 .skill-bar {
     height: 8px;
     border-radius: 10px;
@@ -601,6 +609,13 @@ body {
     font-size: 1.5rem;
     color: var(--black);
     font-weight: 600;
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* OR use 'contain' depending on what you want */
+    border-radius: 15px;
 }
 
 .project-image::before {
@@ -933,4 +948,16 @@ body {
 
 .footer-accent {
     color: var(--accent);
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: var(--gradient);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-style: italic;
 }
