@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Siti Nursyaqirah Osman | IT Executive & Full-Stack Developer</title>
+    <meta name="description" content="IT Executive & Full-Stack Developer specializing in web development (PHP, Python, JavaScript), data analysis (Power BI, SQL), and UI/UX design (Figma, Adobe XD).">
+
+    <!-- Keywords (Google ignores these now, but some crawlers use them) -->
+    <meta name="keywords" content="Siti Nursyaqirah, Siti Nursyaqirah Osman, IT Executive Malaysia, Full-Stack Developer, Web Developer, Power BI, PHP Developer, Python, SQL, Figma, UI/UX">
+
+    <!-- Canonical URL (Helps avoid duplicate content issues) -->
+    <link rel="canonical" href="https://snsyaqirah.github.io/syaqi/" />
+
+    <!-- Open Graph / Social Media Meta Tags (For LinkedIn, WhatsApp, etc.) -->
+    <meta property="og:title" content="Siti Nursyaqirah Osman | IT Executive & Full-Stack Developer">
+    <meta property="og:description" content="Portfolio of Siti Nursyaqirah Osman - IT Executive specializing in web development, data analysis, and system management.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://snsyaqirah.github.io/syaqi/">
+    <meta property="og:image" content="https://snsyaqirah.github.io/syaqi/assets/img/front.png"> 
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Siti Nursyaqirah Osman | IT Executive & Full-Stack Developer">
+    <meta name="twitter:description" content="Portfolio of Siti Nursyaqirah Osman - IT Executive specializing in web development, data analysis, and system management.">
+    <meta name="twitter:image" content="https://snsyaqirah.github.io/syaqi/assets/img/front.png">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicon (Optional but recommended) -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Scripts -->
+    <link rel="preload" href="assets/js/script.js" as="script">
+    <script src="assets/js/script.js" defer></script>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loader"></div>
+            <p>Loading Portfolio...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">SN.Syaqirah</div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home" aria-label="Introduction Section">
+        <div class="hero-container">
+            <div class="hero-content fade-in">
+                <h1>Siti Nursyaqirah Osman</h1> <!-- Full name for better SEO -->
+                <p class="hero-subtitle">IT Executive & Full-Stack Developer | Specializing in Web Solutions, Data Analysis & UI/UX</p>
+                
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn-primary">View My Work</a>
+                    <a href="assets/CV_Siti_Nursyaqirah.pdf" download="SitiNursyaqirah_CV.pdf" class="neu-button" style="text-decoration: none">Download CV</a>
+                </div>
+                
+                <div class="social-links">
+                    <a href="https://github.com/snsyaqirah" class="social-link" aria-label="GitHub profile" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/snsyaqirah/" class="social-link" aria-label="LinkedIn profile" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:snsyaqirah@gmail.com" class="social-link" aria-label="Email me">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-visual fade-in">
+                <canvas id="three-canvas" aria-hidden="true"></canvas>
+                <!-- Optional: Add decorative image fallback -->
+                <img src="" class="visual-fallback" alt="" style="display:none;">
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>About Me</h2>
+                <p>I’m based in Malaysia, and I enjoy building clean, functional web applications that make life just a little easier. With experience in both frontend and backend development, I’ve worked on internal systems, company websites, and interactive tools using PHP (Yii2), JavaScript, Python, and SQL.</p>
+            </div>
+            <div class="about-content">
+                <div class="about-image slide-in-left">
+                    <div class="about-photo"></div>
+                </div>
+                <div class="about-text slide-in-right">
+                    <h3>Hi, I'm Syaqirah — a half-cooked Developer</h3>
+                        <p>I’m always exploring new ways to learn, improve, and create — whether that’s through side projects, hackathons, or just tinkering around with code after work. I believe good tech should be accessible, thoughtful, and user-friendly.</p>
+                        <p>Outside of code, I’m a big fan of memes, good design (I LOVEEEE to search Best Portfolio Example on gugel - whoever you are that make it on the Top yada yada I WANNA BE LIKE YALL and WHOEVER that USE THREE.JS IN THEIR PORTFOLIO YALL SO KEWLLLLLLL ILY), and figuring things out with the help of ChatGPT and friends hehe.</p>
+                    <div class="about-details">
+                        <div class="detail-item">
+                            <strong>Location:</strong> Selangor, Malaysia
+                        </div>
+                        <div class="detail-item">
+                            <strong>Experience:</strong> 2+ Years
+                        </div>
+                        <div class="detail-item">
+                            <strong>Education:</strong> B. IS & Dip. CS
+                        </div>
+                        <div class="detail-item">
+                            <strong>Languages:</strong> Malay, English
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Skills & Expertise</h2>
+                <p>Here are the technologies and tools I work with to bring ideas to life.</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category fade-in">
+                    <h3>Frontend Development</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">JavaScript</span>
+                            <span class="skill-level">Intermediate</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">HTML</span>
+                            <span class="skill-level">Intermediate</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">CSS / Bootstrap</span>
+                            <span class="skill-level">Intermediate</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">React Native</span>
+                            <span class="skill-level">Basic</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category fade-in">
+                    <h3>Backend & Database</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">PHP (Yii2)</span>
+                            <span class="skill-level">Intermediate</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">SQL / phpMyAdmin</span>
+                            <span class="skill-level">Intermediate</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">Python (Pandas, Numpy, Selenium)</span>
+                            <span class="skill-level">Basic</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category fade-in">
+                    <h3>Tools & Technologies</h3>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">Git / GitHub</span>
+                            <span class="skill-level">Basic</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">Power BI</span>
+                            <span class="skill-level">Basic</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">Figma</span>
+                            <span class="skill-level">Intermediate</span>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-name">
+                            <span class="name">Framer / Adobe XD</span>
+                            <span class="skill-level">Basic</span>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Projects Section -->
+    <section class="section" id="projects">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Featured Projects</h2>
+                <p>Here are some of the projects I've worked on, showcasing my skills and expertise.</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card fade-in">
+                    <h3 class="project-title">Content Management System (CMS)</h3>
+                    <p class="project-description">
+                        Assisted in maintaining an internal CMS for managing students and educational content, using PHP (Yii2) and MySQL.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">Yii2</span>
+                        <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">Bootstrap</span>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <h3 class="project-title">Data Analytics Report</h3>
+                    <p class="project-description">
+                        Monthly student tracking reports generated using CMS data, processed with Python and visualized in Power BI for insights on student engagement and performance.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Power BI</span>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <h3 class="project-title">SRW Website</h3>
+                    <p class="project-description">
+                        Revamped the official corporate website of 
+                        <a target="_blank" href="http://smartreader.edu.my/" style="color: var(--accent); text-decoration: none;">
+                            Smart Reader® Worldwide
+                        </a> 
+                        using WordPress, improving layout structure, responsiveness, and user experience. Handled form integrations, spam control, and visual enhancements.
+                    </p>                   
+                    <div class="project-tech">
+                        <span class="tech-tag">Wordpress</span>
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">Bootstrap</span>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <h3 class="project-title">AttendanceProof-Rewards</h3>
+                    <p class="project-description">
+                        Hackathon project: A cross-platform mobile app for verifying event attendance and rewarding participants using IOTA’s ecosystem. Features wallet integration, NFC/QR scanning, offline support, and push notifications.
+                    </p>                    
+                    <div class="project-tech">
+                        <span class="tech-tag">Figma</span>
+                        <span class="tech-tag">React Native</span>
+                        <span class="tech-tag">Move</span>
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                    </div>
+                    <div class="project-links">
+                        <a target="_blank" href="https://www.figma.com/proto/lCZA28h7o1y3hO8KfxbIvr/Hackathon?page-id=0%3A1&node-id=2-2&viewport=483%2C281%2C0.27&t=F6gNeJ3LxtiRtMUm-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=2%3A2" class="project-link primary">Protoype</a>
+                        <a target="_blank" href="https://github.com/Muffynn/AttendanceProof-Rewards" class="project-link secondary">GitHub</a>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <h3 class="project-title">Figma: Mental Health App</h3>
+                    <p class="project-description">
+                        Degree project: A mental health mobile app mockup designed using Figma. Focuses on user-friendly interfaces for mood tracking, journaling, and support resources.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Figma</span>
+                    </div>
+                    <div class="project-links">
+                        <a target="_blank" href="https://www.figma.com/proto/6FsULBGpOlzfkHRR8Y6JhP/ISP688---Prototype?page-id=94%3A412&node-id=187-13944&viewport=-617%2C-1189%2C0.12&t=xOjO1FM80NZfhBm4-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=187%3A13944" class="project-link primary">Protoype</a>
+                    </div>
+                </div>
+                <div class="project-card fade-in">
+                    <h3 class="project-title">Arjunaloka</h3>
+                    <p class="project-description">
+                        Browser‑based tool where users submit ingredients from the frontend and get processed feedback about harmful content—powered by a Python backend.<br />
+                        <em>p/s: Frontend development in progress — will be using React Native.</em>
+                    </p>                   
+                    <div class="project-tech">
+                        <span class="tech-tag">Figma</span>
+                        <span class="tech-tag">React Native</span>
+                    </div>
+                    <div class="project-links">
+                        <a target="_blank" href="https://www.figma.com/proto/WZvwqz3w2IPfw7up7O69QF/SP1?page-id=1%3A5&node-id=56-250&viewport=455%2C95%2C0.16&t=whbDnHu2LFu8RVGs-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=56%3A250&show-proto-sidebar=1" class="project-link primary">Protoype</a>
+                        <a target="_blank" href="https://github.com/MFHHS/Harmful-Ingredient-Checker" class="project-link secondary">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Get In Touch</h2>
+                <p>Ready to work together? Let's discuss your next project and bring your ideas to life.</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info slide-in-left">
+                    <h3>Let's Connect</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Location</h4>
+                            <p>Selangor, Malaysia</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>snsyaqirah@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div>
+                            <h4>LinkedIn</h4>
+                            <p>linkedin.com/in/snsyaqirah/</p>
+                        </div>
+                    </div>
+                </div>
+                <form action="https://formspree.io/f/xgvzparb" method="POST" class="contact-form slide-in-right">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" class="form-input" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" class="form-input" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" name="subject" id="subject" class="form-input" placeholder="Project Discussion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea name="message" id="message" class="form-textarea" placeholder="Tell me about your project..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+                <div id="form-status"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="section" style="padding: 50px 0; text-align: center; background: var(--bg-secondary);">
+        <div class="container">
+            <p>&copy; 2025 SN.Syaqirah — Built with ☕, and a bit of chaos.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+</body>
+</html>
