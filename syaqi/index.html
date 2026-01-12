@@ -12,67 +12,70 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #222222;
-            color: #F0F0F0;
+            background-color: #202020;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
         }
 
-        .maintenance-container {
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #202020;
+        }
+
+        #maintenance-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Fill the screen on all devices */
+        }
+
+        /* Optional: If video doesn't load, show fallback */
+        .fallback {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            color: #e0e0e0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             text-align: center;
-            padding: 2rem;
-            max-width: 600px;
+            display: none;
+            font-size: 10px;
+            opacity: 0.8;
         }
 
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+        .fallback h3 {
+            font-size: 15px;
+            margin-bottom: 0.5rem;
         }
 
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+        .fallback p {
+            margin: 0.25rem 0;
         }
 
-        .icon {
-            font-size: 5rem;
-            margin-bottom: 2rem;
-        }
-
-        .back-soon {
-            font-size: 1rem;
-            opacity: 0.7;
-            margin-top: 2rem;
-        }
-
-        /* Optional: Add a subtle animation */
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        .icon {
-            animation: pulse 2s ease-in-out infinite;
+        video:not([src]) ~ .fallback {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="maintenance-container">
-        <div class="icon">🔧</div>
-        <h1>Under Maintenance</h1>
-        <p>The site will be back soon!</p>
-        <p class="back-soon">— Syaqi</p>
+    <div class="video-container">
+        <video id="maintenance-video" autoplay muted loop playsinline>
+            <source src="assets/img/01 - Under Maintenance.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="fallback">
+            <h3>Under Maintenance</h3>
+            <p>The site will be back... only God knows when</p>
+            <p>— Syaqi</p>
+        </div>
     </div>
 </body>
 </html>
