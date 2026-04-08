@@ -10,9 +10,11 @@
 }
 
 .navigation.scrolled {
-    background-color: rgba(36, 36, 36, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-md);
+    background-color: rgba(5, 5, 16, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid var(--glass-border);
 }
 
 .nav-container {
@@ -129,7 +131,10 @@
         width: 70%;
         max-width: 300px;
         height: calc(100vh - var(--header-height));
-        background-color: var(--bg-secondary);
+        background-color: rgba(10, 10, 30, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-left: 1px solid var(--glass-border);
         flex-direction: column;
         align-items: flex-start;
         padding: var(--spacing-2xl);

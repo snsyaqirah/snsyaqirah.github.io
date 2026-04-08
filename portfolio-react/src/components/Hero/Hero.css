@@ -23,11 +23,11 @@
     width: 100%;
     height: 100%;
     background-image:
-        radial-gradient(circle, var(--color-primary) 1px, transparent 1px),
-        radial-gradient(circle, var(--color-primary) 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: 0 0, 25px 25px;
-    opacity: 0.1;
+        radial-gradient(circle, rgba(45, 255, 110, 0.4) 1px, transparent 1px),
+        radial-gradient(circle, rgba(126, 184, 255, 0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+    opacity: 0.15;
     animation: particleFloat 20s linear infinite;
 }
 
@@ -45,9 +45,10 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 50% 50%,
-            rgba(252, 194, 77, 0.1) 0%,
-            transparent 50%);
+    background:
+        radial-gradient(ellipse at 20% 80%, rgba(59, 76, 202, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(45, 255, 110, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(100, 50, 200, 0.1) 0%, transparent 60%);
 }
 
 /* Content */
@@ -109,13 +110,15 @@
     font-size: var(--font-size-6xl);
     font-weight: var(--font-weight-extrabold);
     background: linear-gradient(135deg,
-            var(--color-primary) 0%,
-            var(--color-primary-light) 100%);
+            #a8ff78 0%,
+            #78ffd6 40%,
+            #7eb8ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 0;
     animation-delay: 0.2s;
+    filter: drop-shadow(0 0 20px rgba(45, 255, 110, 0.3));
 }
 
 .hero-tagline {
@@ -171,13 +174,15 @@
 }
 
 .code-window {
-    background-color: var(--bg-secondary);
+    background: rgba(10, 10, 30, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-2xl);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 500px;
-    border: 1px solid rgba(252, 194, 77, 0.2);
+    border: 1px solid rgba(45, 255, 110, 0.15);
     animation: fadeInRight 1s ease-out;
 }
 
@@ -194,12 +199,12 @@
 }
 
 .window-header {
-    background-color: var(--color-dark);
+    background: rgba(5, 5, 16, 0.9);
     padding: var(--spacing-md);
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    border-bottom: 1px solid rgba(252, 194, 77, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .window-buttons {
@@ -249,6 +254,7 @@
     background: none;
     padding: 0;
     color: inherit;
+    border: none;
 }
 
 /* Scroll Indicator */

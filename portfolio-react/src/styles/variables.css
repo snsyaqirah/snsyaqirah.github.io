@@ -1,36 +1,45 @@
 :root {
     /* ========================================
-     COLOR SYSTEM
+     COLOR SYSTEM — Galactic Sim Theme
      ======================================== */
 
-    /* Primary Colors */
-    --color-primary: #FCC24D;
-    --color-primary-light: #fdd470;
-    --color-primary-dark: #e5af3a;
+    /* Primary Colors — Neon Green (Plumbob) */
+    --color-primary: #2dff6e;
+    --color-primary-light: #78ffd6;
+    --color-primary-dark: #1aff50;
 
-    /* Accent Colors */
-    --color-accent: #CA1D23;
-    --color-accent-light: #d63d42;
-    --color-accent-dark: #a01519;
+    /* Accent Colors — Electric Purple / Blue */
+    --color-accent: #3b4cca;
+    --color-accent-light: #7b6cf6;
+    --color-accent-dark: #2a35a0;
 
     /* Neutral Colors */
-    --color-dark: #242424;
-    --color-dark-rgb: 36, 36, 36;
-    --color-light: #DADADA;
-    --color-light-rgb: 218, 218, 218;
+    --color-dark: #e8e8f0;
+    --color-dark-rgb: 232, 232, 240;
+    --color-light: #1a1a2e;
+    --color-light-rgb: 26, 26, 46;
     --color-white: #FFFFFF;
     --color-black: #000000;
 
     /* Semantic Colors */
-    --color-success: #4CAF50;
-    --color-error: #F44336;
-    --color-warning: #FF9800;
-    --color-info: #2196F3;
+    --color-success: #2dff6e;
+    --color-error: #ff4d6a;
+    --color-warning: #ffb347;
+    --color-info: #7eb8ff;
 
     /* Background Colors */
-    --color-background: #FFFFFF;
-    --color-text: var(--color-dark);
-    --color-border: var(--color-dark);
+    --color-background: #050510;
+    --color-text: #e0e0f0;
+    --color-border: rgba(255, 255, 255, 0.12);
+
+    /* Galaxy-specific */
+    --bg-primary: #050510;
+    --bg-secondary: #0a0a1e;
+    --bg-card: rgba(255, 255, 255, 0.04);
+    --bg-glass: rgba(255, 255, 255, 0.06);
+    --text-primary: #e8e8f0;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
 
     /* ========================================
      TYPOGRAPHY
@@ -107,29 +116,30 @@
      BORDERS & RADIUS
      ======================================== */
 
-    --border-width: 4px;
-    --border-width-thick: 4px;
-    --border-color: var(--color-dark);
-    --border-bold: 4px solid var(--color-dark);
+    --border-width: 1px;
+    --border-width-thick: 2px;
+    --border-color: var(--glass-border);
+    --border-bold: 1px solid var(--glass-border);
 
-    /* Sharp corners for bold aesthetic */
-    --border-radius-sm: 0;
-    --border-radius-md: 0;
-    --border-radius-lg: 0;
-    --border-radius-xl: 0;
-    --border-radius-2xl: 0;
-    --border-radius-full: 0;
+    /* Rounded corners for glassmorphism */
+    --border-radius-sm: 6px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
+    --border-radius-2xl: 24px;
+    --border-radius-full: 9999px;
 
     /* ========================================
      SHADOWS
      ======================================== */
 
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 20px rgba(252, 194, 77, 0.5);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.5);
+    --shadow-2xl: 0 25px 60px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 20px rgba(45, 255, 110, 0.3);
+    --shadow-glow-accent: 0 0 20px rgba(59, 76, 202, 0.3);
 
     /* ========================================
      TRANSITIONS

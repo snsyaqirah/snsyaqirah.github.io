@@ -1,5 +1,5 @@
 .projects {
-    background-color: var(--bg-primary);
+    background: rgba(5, 5, 16, 0.5);
 }
 
 .section-header {
@@ -36,10 +36,10 @@
 
 .filter-btn {
     padding: var(--spacing-sm) var(--spacing-lg);
-    background-color: transparent;
+    background: transparent;
     color: var(--text-secondary);
-    border: 2px solid var(--bg-secondary);
-    border-radius: var(--border-radius-md);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-full);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
     cursor: pointer;
@@ -47,14 +47,15 @@
 }
 
 .filter-btn:hover {
-    border-color: var(--color-primary);
+    border-color: rgba(45, 255, 110, 0.3);
     color: var(--color-primary);
+    background: rgba(45, 255, 110, 0.06);
 }
 
 .filter-btn.active {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-dark);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    border-color: rgba(90, 62, 200, 0.4);
+    color: #fff;
 }
 
 /* Projects Grid */
