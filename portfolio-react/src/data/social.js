@@ -28,18 +28,18 @@ export const socialLinks = [
 
 // Personal Information
 export const personalInfo = {
-    name: "Your Name",
+    name: "Syaqirah",
     title: "Full Stack Developer",
     taglines: [
         "Full Stack Developer",
         "Problem Solver",
         "Tech Enthusiast",
-        "Code Craftsman"
+        "Sims 4 Addict"
     ],
-    bio: "I'm a passionate Full Stack Developer with expertise in building modern web applications. I love turning complex problems into simple, beautiful, and intuitive solutions. With a strong foundation in both frontend and backend technologies, I create seamless digital experiences that users love.",
+    bio: "I'm Syaqirah \u2014 a developer who lives by the \"redah dulu, stuck baru pikiaqq\" philosophy. Most of my growth happened when I jumped into the deep end without a life jacket.",
     email: "your.email@example.com",
-    location: "Your City, Country",
-    availability: "Open to opportunities",
+    location: "Malaysia",
+    availability: "Striving to be a reliable full stack dev!",
     resumeUrl: "/resume.pdf"
 };
 

@@ -3,11 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import GalaxyBackground from '../components/Landing/GalaxyBackground';
 import { personalInfo, socialLinks } from '../data/social';
 import { projects } from '../data/projects';
-import { skills, getTopSkills } from '../data/skills';
+import { skills } from '../data/skills';
 import './PortfolioPage.css';
 
 /* ── Random memoji pool ── */
-const MEMOJIS = ['🧑‍💻','👩‍💻','🧑‍🎨','👨‍🚀','🧑‍🔬','👩‍🎤','🧑‍🏫','👨‍💼','👩‍🔧','🧝‍♀️','🧙‍♂️','🦊','🐱','🐻','🤖','👾','🎃','🌸','🍄','🦄'];
+const MEMOJIS = ['👩‍💻','🧑‍💻','👨‍💻'];
 
 /* ── Category color map (flat, 4-color palette) ── */
 const CAT_COLOR = {
@@ -23,7 +23,6 @@ const TABS = [
   { id: 'home',     label: 'Home' },
   { id: 'projects', label: 'Projects' },
   { id: 'about',    label: 'About' },
-  { id: 'contact',  label: 'Contact' },
 ];
 
 /* ── Sidebar nav items ── */
@@ -31,35 +30,51 @@ const SIDEBAR_NAV = [
   { icon: '🏠', label: 'Home',       target: 'home' },
   { icon: '📂', label: 'Projects',   target: 'projects' },
   { icon: '👤', label: 'About Me',   target: 'about' },
-  { icon: '✉️', label: 'Contact Me', target: 'contact' },
 ];
 
-/* ── Feature cards for the Home section (3 boxes) ── */
+/* ── Tech marquee items for landing ── */
+const TECH_MARQUEE = [
+  'PHP', 'PYTHON', 'JAVA', 'JS', 'REACT', 'HTML', 'CSS', 'MYSQL', 'AI TOOLS', 'POWER BI',
+];
+
+/* ── Highlight cards for the Home section (3 boxes) ── */
 const HOME_CARDS = [
   {
     bg: '#3D3BC1',
-    emoji: '🚀',
-    title: 'Full Stack Dev',
-    sub: 'React · Node · MongoDB',
+    emoji: '🏆',
+    title: 'Hackathon SZN',
+    sub: 'Currently competing & building cool stuff',
   },
   {
     bg: '#3D3BC1',
-    emoji: '🎨',
-    title: 'Creative Design',
-    sub: 'Figma · CSS · Motion',
+    emoji: '🎮',
+    title: 'Sims 4 Addict',
+    sub: 'Building houses > touching grass · A Sims 4-themed portfolio (meta, I know)',
   },
   {
     bg: '#3D3BC1',
-    emoji: '⚡',
-    title: 'Fast Learner',
-    sub: 'Always exploring new tech',
+    emoji: '📚',
+    title: 'Learning Now',
+    sub: 'Oracle Learning Portal for MyDIGITAL — Free learning initiative',
   },
 ];
 
 export default function PortfolioPage() {
   const contentRef = useRef(null);
   const [activeTab, setActiveTab] = useState('home');
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [filterCat, setFilterCat] = useState('All');
+
+
+  /* Auto-generate unique categories from project data */
+  const categories = useMemo(() => {
+    const cats = [...new Set(projects.map(p => p.category))];
+    return ['All', ...cats];
+  }, []);
+
+  /* Filtered projects */
+  const filteredProjects = filterCat === 'All'
+    ? projects
+    : projects.filter(p => p.category === filterCat);
 
   /* Pick one random memoji per mount */
   const memoji = useMemo(() => MEMOJIS[Math.floor(Math.random() * MEMOJIS.length)], []);
@@ -83,9 +98,6 @@ export default function PortfolioPage() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const topSkills = getTopSkills();
-  const handleSubmit = (e) => { e.preventDefault(); setFormData({ name: '', email: '', message: '' }); };
-
   return (
     <div className="sims-portfolio">
       {/* ── 3D galaxy background ── */}
@@ -95,13 +107,38 @@ export default function PortfolioPage() {
         </Canvas>
       </div>
 
+      {/* ── Landing hero (full viewport, dark + stars) ── */}
+      <section className="landing-hero">
+        <div className="landing-hero__center">
+          <h1 className="landing-hero__name">SYAQIRAH</h1>
+          <p className="landing-hero__role">SOFTWARE DEVELOPER</p>
+          <button
+            className="landing-hero__cta"
+            onClick={() => document.getElementById('portfolio-start')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Let's Go to Portfolio
+          </button>
+        </div>
+
+        <div className="landing-hero__marquee-wrap">
+          <div className="landing-hero__marquee">
+            <span className="landing-hero__marquee-text">
+              {[...TECH_MARQUEE, ...TECH_MARQUEE].map((t, i) => (
+                <span key={i}>{t} &bull; </span>
+              ))}
+            </span>
+          </div>
+        </div>
+
+      </section>
+
       {/* ── Two-column layout ── */}
-      <div className="sims-layout">
+      <div id="portfolio-start" className="sims-layout">
 
-        {/* ═══════ LEFT: Scrollable content ═══════ */}
-        <div className="sims-content" ref={contentRef}>
+        {/* ═══════ LEFT: Content area ═══════ */}
+        <div className="sims-content">
 
-          {/* Top navigation */}
+          {/* Top navigation — fixed, not scrollable */}
           <nav className="sims-topbar">
             {TABS.map(t => (
               <button
@@ -118,19 +155,12 @@ export default function PortfolioPage() {
             </span>
           </nav>
 
+          {/* Scrollable sections area */}
+          <div className="sims-scroll-area" ref={contentRef}>
+
           {/* ══════ HOME ══════ */}
           <section id="home">
-            <div className="sims-subfilter">
-              <button className="sims-subfilter__btn sims-subfilter__btn--filled">
-                <span className="sims-subfilter__arrow">▾</span> Packs
-              </button>
-              <button className="sims-subfilter__btn sims-subfilter__btn--filled"
-                      onClick={() => scrollTo('about')}>
-                View Collections
-              </button>
-            </div>
-
-            {/* 3 featured boxes */}
+            {/* 3 highlight boxes */}
             <div className="sims-home-cards">
               {HOME_CARDS.map((c, i) => (
                 <div className="sims-home-card" key={i} style={{ background: c.bg }}>
@@ -144,12 +174,25 @@ export default function PortfolioPage() {
 
           {/* ══════ PROJECTS ══════ */}
           <section id="projects">
-            <div className="sims-section-header">
-              <h2 className="sims-section-header__title">Projects</h2>
+            <div className="sims-projects-header">
+              <div className="sims-section-header">
+                <h2 className="sims-section-header__title">Projects</h2>
+              </div>
+              <div className="sims-filter-pills">
+                {categories.map(cat => (
+                  <button
+                    key={cat}
+                    className={`sims-filter-pill${filterCat === cat ? ' sims-filter-pill--active' : ''}`}
+                    onClick={() => setFilterCat(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="sims-packs-grid">
-              {projects.map(p => (
+              {filteredProjects.map(p => (
                 <div className="sims-pack" key={p.id}>
                   <div
                     className="sims-pack__art"
@@ -190,36 +233,21 @@ export default function PortfolioPage() {
             </div>
 
             <div className="sims-about-grid">
-              {/* Bio card */}
+              {/* Bio + Quick Stats card */}
               <div className="sims-info-card">
                 <h3 className="sims-info-card__title">Who Am I?</h3>
-                <p className="sims-info-card__line">{personalInfo.bio}</p>
-                <ul className="sims-info-card__list">
-                  <li>📍 {personalInfo.location}</li>
-                  <li>✉️ {personalInfo.email}</li>
-                  <li>💼 {personalInfo.availability}</li>
+                <p className="sims-info-card__line">{personalInfo.bio} To me, everything is figure-out-able as long as there's enough coffee and documentation.</p>
+                <p className="sims-info-card__line">Software developer by day, The Sims architect by night. My design inspiration? Literally the Sims 4 menu you’re looking at right now. I’ve been a hardcore fan since I was a kid, so I figured why not turn my portfolio into a UI mod? (No regrets!).</p>
+                <p className="sims-info-card__line">I'm the type of dev who loves to explore new tech, whether it's at hackathons or building random side projects. When I’m not debugging or joining hackathons, you’ll probably find me looking up. I have a massive obsession with stargazing—basically anything up in the sky amaze, amaze, amaze! (except ghosts, we don't talk about those).</p>
+                <ul className="sims-info-card__list" style={{ marginTop: '0.7rem' }}>
+                  <li>🎯 <strong>Current Quest:</strong> Striving to be a reliable Full Stack developer.</li>
+                  <li>⚡ <strong>Vibe:</strong> 100% redah-first, figure-it-out-later.</li>
+                  <li>😩 <strong>Regrets:</strong> Not joining physical hackathons sooner! ughhh.</li>
                 </ul>
               </div>
 
-              {/* Top Skills card */}
-              <div className="sims-info-card">
-                <h3 className="sims-info-card__title">Top Skills</h3>
-                <div className="sims-skills">
-                  {topSkills.slice(0, 6).map(s => (
-                    <div className="sims-skill-row" key={s.name}>
-                      <span className="sims-skill-row__icon">{s.icon}</span>
-                      <span className="sims-skill-row__name">{s.name}</span>
-                      <div className="sims-skill-row__track">
-                        <div className="sims-skill-row__fill" style={{ width: `${s.proficiency}%` }} />
-                      </div>
-                      <span className="sims-skill-row__pct">{s.proficiency}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* All Skills breakdown */}
-              <div className="sims-info-card sims-info-card--wide">
+              <div className="sims-info-card">
                 <h3 className="sims-info-card__title">Skills Breakdown</h3>
                 <div className="sims-skills-grid">
                   {Object.entries(skills).map(([cat, list]) => (
@@ -227,7 +255,7 @@ export default function PortfolioPage() {
                       <h4 className="sims-skill-group__title">{cat}</h4>
                       <div className="sims-skill-group__items">
                         {list.map(s => (
-                          <span className="sims-skill-tag" key={s.name}>{s.icon} {s.name}</span>
+                          <span className="sims-skill-tag" key={s.name}>{s.name}</span>
                         ))}
                       </div>
                     </div>
@@ -235,59 +263,19 @@ export default function PortfolioPage() {
                 </div>
               </div>
 
-              {/* Resume card */}
-              <div className="sims-info-card">
-                <h3 className="sims-info-card__title">Resume</h3>
-                <p className="sims-info-card__line">Download my resume or view it online.</p>
-                <a href={personalInfo.resumeUrl} className="sims-resume-btn"
-                   target="_blank" rel="noopener noreferrer">
-                  📄 Download Resume
-                </a>
-              </div>
             </div>
           </section>
 
-          {/* ══════ CONTACT ══════ */}
-          <section id="contact">
-            <div className="sims-section-header">
-              <h2 className="sims-section-header__title">Contact Me</h2>
-            </div>
-
-            <div className="sims-contact-grid">
-              <div className="sims-info-card">
-                <h3 className="sims-info-card__title">Get In Touch</h3>
-                <p className="sims-info-card__line">✉️ {personalInfo.email}</p>
-                <p className="sims-info-card__line">📍 {personalInfo.location}</p>
-                <div className="sims-info-card__status">🟢 {personalInfo.availability}</div>
-                <div className="sims-info-card__socials">
-                  {socialLinks.map(l => (
-                    <a key={l.name} href={l.url} className="sims-social-circle"
-                       target="_blank" rel="noopener noreferrer" title={l.name}>
-                      {l.icon === 'github' ? '🔗' : l.icon === 'linkedin' ? '💼'
-                        : l.icon === 'twitter' ? '🐦' : '✉️'}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              <div className="sims-info-card">
-                <h3 className="sims-info-card__title">Send a Message</h3>
-                <form className="sims-form" onSubmit={handleSubmit}>
-                  <input className="sims-form__input" placeholder="Your Name"
-                    value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
-                  <input className="sims-form__input" type="email" placeholder="Your Email"
-                    value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
-                  <textarea className="sims-form__textarea" placeholder="Your Message" rows="4"
-                    value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
-                  <button className="sims-form__submit" type="submit">Send Message ▸</button>
-                </form>
-              </div>
-            </div>
-          </section>
 
           <footer className="sims-footer">
-            <p>&copy; 2025 Syaqirah — Built with React, Three.js &amp; ✨</p>
+            <div className="sims-footer__marquee">
+              <span className="sims-footer__marquee-text">
+                &copy; {new Date().getFullYear()} SITI NURSYAQIRAH BINTI OSMAN &bull; SOFTWARE DEVELOPER &bull; MALAYSIA &nbsp;&nbsp;&nbsp;&nbsp;
+                &copy; {new Date().getFullYear()} SITI NURSYAQIRAH BINTI OSMAN &bull; SOFTWARE DEVELOPER &bull; MALAYSIA &nbsp;&nbsp;&nbsp;&nbsp;
+              </span>
+            </div>
           </footer>
+          </div>{/* end sims-scroll-area */}
         </div>
 
         {/* ═══════ RIGHT: Static sidebar ═══════ */}
