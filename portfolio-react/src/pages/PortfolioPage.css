@@ -1012,40 +1012,128 @@
 }
 
 @media (max-width: 768px) {
+  /* ── Hero ── */
   .landing-hero__name { font-size: 70px; }
   .landing-hero__role { font-size: 24px; }
   .landing-hero__marquee-text { font-size: 60px; }
 
-  .sims-layout { grid-template-columns: 1fr; }
-
-  .sims-sidebar {
-    position: relative;
-    height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 1.2rem;
-    gap: 0.8rem;
-    order: -1;
+  /* ── Layout: single column, sidebar out of flow ── */
+  .sims-layout {
+    display: block;
   }
-  .sims-sidebar__logo { margin-bottom: 0; }
-  .sims-sidebar__logo-main { font-size: 1.6rem; }
-  .sims-sidebar__logo-4 { font-size: 2rem; }
-  .sims-sidebar__tooltip { display: none; }
+
+  /* ── Hide top bar — bottom nav replaces it ── */
+  .sims-topbar { display: none; }
+
+  /* ── Content area: full page scroll ── */
+  .sims-content {
+    max-height: none;
+    padding-bottom: 72px; /* clear the fixed bottom nav */
+  }
+  .sims-scroll-area {
+    overflow-y: visible;
+    max-height: none;
+    margin-right: 0;
+  }
+
+  /* ── Sidebar → fixed bottom navigation bar ── */
+  .sims-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    z-index: 200;
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Hide everything except the nav menu */
+  .sims-sidebar__logo,
+  .sims-sidebar__resume,
+  .sims-sidebar__tooltip,
+  .sims-sidebar__bottom {
+    display: none;
+  }
+
+  /* Nav menu: full-width, evenly spaced */
   .sims-sidebar__menu {
     flex-direction: row;
-    flex-wrap: wrap;
-    max-width: 100%;
-    margin-bottom: 0;
-    justify-content: center;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 420px;
+    margin: 0;
+    gap: 0;
   }
-  .sims-sidebar__btn { width: auto; padding: 0.45rem 0.8rem; font-size: 0.7rem; }
-  .sims-sidebar__resume { max-width: 160px; }
 
-  .sims-content { max-height: none; }
-  .sims-scroll-area { overflow-y: visible; }
-  .sims-home-cards { grid-template-columns: 1fr; }
-  .sims-about-grid, .sims-contact-grid { grid-template-columns: 1fr; }
+  /* Nav buttons: icon stacked above label */
+  .sims-sidebar__btn {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    flex: 1;
+    padding: 0.3rem 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    gap: 0.15rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.75);
+    box-shadow: none;
+  }
+  .sims-sidebar__btn:hover,
+  .sims-sidebar__btn:active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: none;
+    color: #fff;
+    box-shadow: none;
+  }
+  .sims-sidebar__btn-icon {
+    font-size: 1.2rem;
+    width: auto;
+    color: inherit;
+  }
+
+  /* ── Home cards → horizontal swipe ── */
+  .sims-home-cards {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75rem;
+    padding: 1rem 1rem 1.2rem;
+    grid-template-columns: unset;
+    scrollbar-width: none;
+  }
+  .sims-home-cards::-webkit-scrollbar { display: none; }
+  .sims-home-card {
+    min-width: 72vw;
+    max-width: 280px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    min-height: 140px;
+  }
+
+  /* ── Project cards → 2 col, swipeable grid ── */
+  .sims-packs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding: 0.8rem 1rem 1.2rem;
+  }
+
+  /* ── About grid: single col ── */
+  .sims-about-grid,
+  .sims-contact-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1088,22 +1176,24 @@
   .landing-hero__role { font-size: 18px; }
   .landing-hero__marquee-text { font-size: 40px; }
 
-  .sims-topbar {
-    gap: 0.15rem;
-    padding: 0.65rem 0.8rem;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  .sims-topbar__tab { font-size: 0.75rem; padding: 0.35rem 0.7rem; }
-  .sims-topbar__user { display: none; }
+  .sims-home-card { min-width: 80vw; }
 
   .sims-packs-grid {
     grid-template-columns: repeat(2, 1fr);
     padding: 0.8rem 1rem 1rem;
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
-  .sims-subfilter { padding: 0.7rem 1rem; }
-  .sims-section-header { min-width: 200px; }
+
+  .sims-section-header { min-width: 180px; }
   .sims-about-grid, .sims-contact-grid { padding: 0.8rem 1rem 1rem; }
-  .sims-home-cards { padding: 0 1rem 1rem; }
+
+  /* WIP notice: wrap text on very small screens */
+  .sims-wip-notice {
+    white-space: normal;
+    text-align: center;
+    width: 80%;
+    font-size: 0.7rem;
+    padding: 0.6rem 1rem;
+    letter-spacing: 0.8px;
+  }
 }
