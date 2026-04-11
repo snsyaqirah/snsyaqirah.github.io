@@ -80,22 +80,6 @@ export const projects = [
             "Media library management"
         ]
     },
-    {
-        id: 6,
-        title: "Mobile Fitness Tracker",
-        description: "A React Native mobile app for tracking workouts and nutrition. Features include workout logging, progress charts, and goal setting.",
-        image: "/images/projects/fitness.jpg",
-        tech: ["React Native", "Expo", "Firebase", "Redux"],
-        category: "Mobile",
-        featured: false,
-        liveUrl: null,
-        githubUrl: "https://github.com/snsyaqirah/project",
-        highlights: [
-            "Cross-platform mobile app",
-            "Offline data synchronization",
-            "Push notifications"
-        ]
-    }
 ];
 
 // Filter projects by category

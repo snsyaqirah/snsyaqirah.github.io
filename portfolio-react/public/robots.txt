@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://syaqi.dev/sitemap.xml

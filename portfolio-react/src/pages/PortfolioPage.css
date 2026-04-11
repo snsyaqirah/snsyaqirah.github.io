@@ -880,6 +880,12 @@
   background: #3fffff;
   transform: translateY(-1px);
 }
+.sims-sidebar__resume--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.4);
+}
 
 /* Tooltip */
 .sims-sidebar__tooltip {
@@ -895,6 +901,11 @@
   margin-bottom: 0.7rem;
 }
 .sims-sidebar__tooltip strong { color: #14FFFF; }
+.sims-sidebar__tooltip--dark {
+  background: rgba(0,0,0,0.55);
+  border-color: rgba(0,0,0,0.4);
+  color: rgba(255,255,255,0.7);
+}
 
 /* Nav buttons (white bg, left-aligned icons) */
 .sims-sidebar__menu {
@@ -912,10 +923,10 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.65rem 1rem;
-  background: rgba(255,255,255,0.92);
-  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 8px;
-  color: #3D3BC1;
+  color: #fff;
   font-family: inherit;
   font-size: 0.8rem;
   font-weight: 800;
@@ -927,7 +938,7 @@
 }
 
 .sims-sidebar__btn:hover {
-  background: #fff;
+  background: rgba(255,255,255,0.55);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -936,7 +947,7 @@
   font-size: 0.9rem;
   width: 20px;
   text-align: center;
-  color: #3D3BC1;
+  color: #fff;
 }
 
 .sims-sidebar__btn-text { flex: 1; }
@@ -1035,6 +1046,41 @@
   .sims-scroll-area { overflow-y: visible; }
   .sims-home-cards { grid-template-columns: 1fr; }
   .sims-about-grid, .sims-contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   WIP — blur cards + notice overlay
+   ═══════════════════════════════════════════════════════ */
+.sims-wip-wrapper {
+  position: relative;
+}
+
+.sims-wip-blur {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.sims-wip-notice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.75rem 1.8rem;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
 }
 
 @media (max-width: 480px) {

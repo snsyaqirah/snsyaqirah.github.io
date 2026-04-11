@@ -161,14 +161,19 @@ export default function PortfolioPage() {
           {/* ══════ HOME ══════ */}
           <section id="home">
             {/* 3 highlight boxes */}
-            <div className="sims-home-cards">
-              {HOME_CARDS.map((c, i) => (
-                <div className="sims-home-card" key={i} style={{ background: c.bg }}>
-                  <span className="sims-home-card__emoji">{c.emoji}</span>
-                  <h3 className="sims-home-card__title">{c.title}</h3>
-                  <p className="sims-home-card__sub">{c.sub}</p>
-                </div>
-              ))}
+            <div className="sims-wip-wrapper">
+              <div className="sims-home-cards sims-wip-blur">
+                {HOME_CARDS.map((c, i) => (
+                  <div className="sims-home-card" key={i} style={{ background: c.bg }}>
+                    <span className="sims-home-card__emoji">{c.emoji}</span>
+                    <h3 className="sims-home-card__title">{c.title}</h3>
+                    <p className="sims-home-card__sub">{c.sub}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="sims-wip-notice">
+                🚧 In Progress &nbsp;·&nbsp; Tengah Update &nbsp;·&nbsp; Sabo jap 🚧
+              </div>
             </div>
           </section>
 
@@ -191,38 +196,42 @@ export default function PortfolioPage() {
               </div>
             </div>
 
-            <div className="sims-packs-grid">
-              {filteredProjects.map(p => (
-                <div className="sims-pack" key={p.id}>
-                  <div
-                    className="sims-pack__art"
-                    style={{ background: CAT_COLOR[p.category] || CAT_COLOR.Frontend }}
-                  >
-                    {/* Hover overlay — title + category + tech + links */}
-                    <div className="sims-pack__overlay">
-                      <span className="sims-pack__overlay-title">{p.title}</span>
-                      <span className="sims-pack__overlay-cat">{p.category}</span>
-                      <span className="sims-pack__overlay-tech">
-                        {p.tech.slice(0, 3).join(' · ')}
-                      </span>
-                      <div className="sims-pack__overlay-links">
-                        {p.liveUrl && (
-                          <a href={p.liveUrl} className="sims-pack__overlay-btn sims-pack__overlay-btn--primary"
-                             target="_blank" rel="noopener noreferrer">
-                            Live Demo
-                          </a>
-                        )}
-                        {p.githubUrl && (
-                          <a href={p.githubUrl} className="sims-pack__overlay-btn"
-                             target="_blank" rel="noopener noreferrer">
-                            Source
-                          </a>
-                        )}
+            <div className="sims-wip-wrapper">
+              <div className="sims-packs-grid sims-wip-blur">
+                {filteredProjects.map(p => (
+                  <div className="sims-pack" key={p.id}>
+                    <div
+                      className="sims-pack__art"
+                      style={{ background: CAT_COLOR[p.category] || CAT_COLOR.Frontend }}
+                    >
+                      <div className="sims-pack__overlay">
+                        <span className="sims-pack__overlay-title">{p.title}</span>
+                        <span className="sims-pack__overlay-cat">{p.category}</span>
+                        <span className="sims-pack__overlay-tech">
+                          {p.tech.slice(0, 3).join(' · ')}
+                        </span>
+                        <div className="sims-pack__overlay-links">
+                          {p.liveUrl && (
+                            <a href={p.liveUrl} className="sims-pack__overlay-btn sims-pack__overlay-btn--primary"
+                               target="_blank" rel="noopener noreferrer">
+                              Live Demo
+                            </a>
+                          )}
+                          {p.githubUrl && (
+                            <a href={p.githubUrl} className="sims-pack__overlay-btn"
+                               target="_blank" rel="noopener noreferrer">
+                              Source
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div className="sims-wip-notice">
+                🚧 In Progress &nbsp;·&nbsp; Tengah Update &nbsp;·&nbsp; Sabo jap 🚧
+              </div>
             </div>
           </section>
 
@@ -283,20 +292,18 @@ export default function PortfolioPage() {
           {/* Logo */}
           <div className="sims-sidebar__logo">
             <span className="sims-sidebar__logo-the">The</span>
-            <span className="sims-sidebar__logo-main">Sims</span>
-            <span className="sims-sidebar__logo-4">4</span>
+            <span className="sims-sidebar__logo-main">Syaqirah</span>
           </div>
 
-          {/* Resume CTA */}
-          <a href={personalInfo.resumeUrl} className="sims-sidebar__resume"
-             target="_blank" rel="noopener noreferrer">
+          {/* Resume CTA — disabled for now */}
+          <span className="sims-sidebar__resume sims-sidebar__resume--disabled">
             Resume
-          </a>
+          </span>
 
           {/* Tooltip */}
-          <div className="sims-sidebar__tooltip">
-            <strong>snsyaqirah</strong>{' '}
-            saw the coolest thing somewhere between Resume and Load Game!
+          <div className="sims-sidebar__tooltip sims-sidebar__tooltip--dark">
+            <strong>Unsupervised Syaqirah?</strong>{' '}
+            Oops. you better check out what she have been up to.
           </div>
 
           {/* Navigation buttons */}
