@@ -63,6 +63,8 @@ export default function PortfolioPage() {
   const contentRef = useRef(null);
   const [activeTab, setActiveTab] = useState('home');
   const [filterCat, setFilterCat] = useState('All');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
 
   /* Auto-generate unique categories from project data */
@@ -78,6 +80,18 @@ export default function PortfolioPage() {
 
   /* Pick one random memoji per mount */
   const memoji = useMemo(() => MEMOJIS[Math.floor(Math.random() * MEMOJIS.length)], []);
+
+  /* Hide FAB on landing hero, show once scrolled past */
+  useEffect(() => {
+    const hero = document.querySelector('.landing-hero');
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setPastHero(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
 
   /* Scroll spy */
   useEffect(() => {
@@ -96,6 +110,7 @@ export default function PortfolioPage() {
   const scrollTo = (id) => {
     setActiveTab(id);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setMenuOpen(false);
   };
 
   return (
@@ -131,6 +146,22 @@ export default function PortfolioPage() {
         </div>
 
       </section>
+
+      {/* ── Mobile FAB — hidden on hero, hidden on desktop via CSS ── */}
+      {pastHero && (
+        <>
+          <button
+            className={`sims-fab${menuOpen ? ' sims-fab--open' : ''}`}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
+          {menuOpen && (
+            <div className="sims-drawer-overlay" onClick={() => setMenuOpen(false)} />
+          )}
+        </>
+      )}
 
       {/* ── Two-column layout ── */}
       <div id="portfolio-start" className="sims-layout">
@@ -288,7 +319,7 @@ export default function PortfolioPage() {
         </div>
 
         {/* ═══════ RIGHT: Static sidebar ═══════ */}
-        <aside className="sims-sidebar">
+        <aside className={`sims-sidebar${menuOpen ? ' sims-sidebar--open' : ''}`}>
           {/* Logo */}
           <div className="sims-sidebar__logo">
             <span className="sims-sidebar__logo-the">The</span>
