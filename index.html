@@ -1,81 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance | Syaqi</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        body {
-            background-color: #202020;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    <!-- ── Primary SEO ── -->
+    <title>Siti Nursyaqirah Binti Osman | Software Developer | syaqi.dev</title>
+    <meta name="description" content="Portfolio of Siti Nursyaqirah Binti Osman (Syaqirah) — Software Developer from Malaysia. Frontend, Full Stack, React, Python, Java. Find her work at syaqi.dev." />
+    <meta name="keywords" content="Siti Nursyaqirah Binti Osman, Siti Nursyaqirah Osman, Siti Nursyaqirah, Syaqirah, syaqi.dev, Syaqirah Dev, software developer Malaysia, frontend developer, portfolio, React developer, snsyaqirah" />
+    <meta name="author" content="Siti Nursyaqirah Binti Osman" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://syaqi.dev/" />
 
-        .video-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #202020;
-        }
+    <!-- ── Open Graph (Facebook / LinkedIn previews) ── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://syaqi.dev/" />
+    <meta property="og:title" content="Siti Nursyaqirah Binti Osman | Software Developer | syaqi.dev" />
+    <meta property="og:description" content="Portfolio of Siti Nursyaqirah (Syaqirah) — Software Developer from Malaysia. Explore projects, skills, and more at syaqi.dev." />
+    <meta property="og:image" content="https://syaqi.dev/og-image.png" />
+    <meta property="og:locale" content="en_MY" />
+    <meta property="og:site_name" content="syaqi.dev" />
 
-        #maintenance-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Fill the screen on all devices */
-        }
+    <!-- ── Twitter / X Card ── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://syaqi.dev/" />
+    <meta name="twitter:title" content="Siti Nursyaqirah Binti Osman | Software Developer | syaqi.dev" />
+    <meta name="twitter:description" content="Portfolio of Siti Nursyaqirah (Syaqirah) — Software Developer from Malaysia." />
+    <meta name="twitter:image" content="https://syaqi.dev/og-image.png" />
 
-        /* Optional: If video doesn't load, show fallback */
-        .fallback {
-            position: fixed;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            color: #e0e0e0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            text-align: center;
-            display: none;
-            font-size: 10px;
-            opacity: 0.8;
-        }
+    <!-- ── JSON-LD Structured Data (Person schema) ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Siti Nursyaqirah Binti Osman",
+      "alternateName": ["Syaqirah", "snsyaqirah", "Syaqi"],
+      "url": "https://syaqi.dev",
+      "sameAs": [
+        "https://github.com/snsyaqirah",
+        "https://www.linkedin.com/in/snsyaqirah/",
+        "https://snsyaqirah.github.io"
+      ],
+      "jobTitle": "Software Developer",
+      "nationality": "Malaysian",
+      "description": "Software Developer from Malaysia specialising in frontend and full-stack development. Known online as syaqi.dev and snsyaqirah."
+    }
+    </script>
 
-        .fallback h3 {
-            font-size: 15px;
-            margin-bottom: 0.5rem;
-        }
-
-        .fallback p {
-            margin: 0.25rem 0;
-        }
-
-        video:not([src]) ~ .fallback {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="video-container">
-        <video id="maintenance-video" autoplay muted loop playsinline>
-            <source src="01 - Under Maintenance.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <div class="fallback">
-            <h3>Under Maintenance</h3>
-            <p>The site will be back... only God knows when</p>
-            <p>— Syaqi</p>
-        </div>
-    </div>
-</body>
+    <!-- ── Favicon ── -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <script type="module" crossorigin src="/assets/index-DrLqjrl8.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C1tFqfCj.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
