@@ -147,24 +147,24 @@ export default function PortfolioPage() {
 
       </section>
 
-      {/* ── Mobile FAB — hidden on hero, hidden on desktop via CSS ── */}
-      {pastHero && (
-        <>
-          <button
-            className={`sims-fab${menuOpen ? ' sims-fab--open' : ''}`}
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? '✕' : '☰'}
-          </button>
-          {menuOpen && (
-            <div className="sims-drawer-overlay" onClick={() => setMenuOpen(false)} />
-          )}
-        </>
-      )}
-
       {/* ── Two-column layout ── */}
       <div id="portfolio-start" className="sims-layout">
+
+        {/* ── Mobile FAB + overlay — inside sims-layout so z-index stacking works ── */}
+        {pastHero && (
+          <>
+            <button
+              className={`sims-fab${menuOpen ? ' sims-fab--open' : ''}`}
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? '✕' : '☰'}
+            </button>
+            {menuOpen && (
+              <div className="sims-drawer-overlay" onClick={() => setMenuOpen(false)} />
+            )}
+          </>
+        )}
 
         {/* ═══════ LEFT: Content area ═══════ */}
         <div className="sims-content">

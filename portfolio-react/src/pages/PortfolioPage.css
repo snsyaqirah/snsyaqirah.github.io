@@ -1159,6 +1159,14 @@
   .sims-contact-grid {
     grid-template-columns: 1fr;
   }
+
+  /* ── Filter pills: add horizontal padding so not flush with screen ── */
+  .sims-projects-header {
+    padding: 0 1rem;
+  }
+  .sims-filter-pills {
+    padding: 0.5rem 0;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
