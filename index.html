@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- ── Primary SEO ── -->
-    <title>Siti Nursyaqirah | Software Developer | syaqi.dev</title>
+    <title>Siti Nursyaqirah Binti Osman | Software Developer | syaqi.dev</title>
     <meta name="description" content="Portfolio of Siti Nursyaqirah Binti Osman (Syaqirah) — Software Developer from Malaysia. Frontend, Full Stack, React, Python, Java. Find her work at syaqi.dev." />
     <meta name="keywords" content="Siti Nursyaqirah Binti Osman, Siti Nursyaqirah Osman, Siti Nursyaqirah, Syaqirah, syaqi.dev, Syaqirah Dev, software developer Malaysia, frontend developer, portfolio, React developer, snsyaqirah" />
     <meta name="author" content="Siti Nursyaqirah Binti Osman" />
@@ -47,12 +47,27 @@
     }
     </script>
 
+    <!-- ── No-cache for index.html so phones always get the latest ── -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <!-- ── Favicon ── -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <script type="module" crossorigin src="/assets/index-DrLqjrl8.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-C1tFqfCj.css">
+    <script type="module" crossorigin src="/assets/index-he5_3nH5.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BrLD-ROO.css">
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- ── Unregister stale service workers (old Workbox from prev deploy) ── -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var r of registrations) { r.unregister(); }
+        });
+      }
+    </script>
+
   </body>
 </html>
