@@ -4,6 +4,7 @@ import GalaxyBackground from '../components/Landing/GalaxyBackground';
 import { personalInfo, socialLinks } from '../data/social';
 import { projects } from '../data/projects';
 import { skills } from '../data/skills';
+import landingTheme from '../assets/sign-of-times.mp3';
 import './PortfolioPage.css';
 
 /* ── Random memoji pool ── */
@@ -61,10 +62,70 @@ const HOME_CARDS = [
 
 export default function PortfolioPage() {
   const contentRef = useRef(null);
+  const audioRef   = useRef(null);
+  const fadeTimer  = useRef(null);
   const [activeTab, setActiveTab] = useState('home');
   const [filterCat, setFilterCat] = useState('All');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [pastHero, setPastHero] = useState(false);
+  const [menuOpen, setMenuOpen]   = useState(false);
+  const [pastHero, setPastHero]   = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  /* ── Landing music: init once ── */
+  useEffect(() => {
+    const audio = new Audio(landingTheme);
+    audio.volume = 0;
+    audio.loop   = false;
+    audioRef.current = audio;
+    return () => { audio.pause(); audio.src = ''; };
+  }, []);
+
+  /* ── Fade helper ── */
+  const fadeTo = (target, ms) => {
+    clearInterval(fadeTimer.current);
+    const audio = audioRef.current;
+    if (!audio) return;
+    const from  = audio.volume;
+    const delta = target - from;
+    const steps = 60;
+    let   i     = 0;
+    fadeTimer.current = setInterval(() => {
+      i++;
+      audio.volume = Math.max(0, Math.min(1, from + delta * (i / steps)));
+      if (i >= steps) clearInterval(fadeTimer.current);
+    }, ms / steps);
+  };
+
+  /* ── Play / Pause toggle ── */
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) {
+      fadeTo(0, 1500);
+      setTimeout(() => audio.pause(), 1500);
+      setIsPlaying(false);
+    } else {
+      audio.currentTime = 0;
+      audio.volume = 0;
+      audio.play().then(() => {
+        fadeTo(0.3, 2500);
+        setIsPlaying(true);
+        // auto fade out near end (34s total)
+        setTimeout(() => fadeTo(0, 2500), 31500);
+        setTimeout(() => { audio.pause(); setIsPlaying(false); }, 34000);
+      }).catch(() => {});
+    }
+  };
+
+  /* ── Fade out when scrolled past hero, fade in when back ── */
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (pastHero && isPlaying) {
+      fadeTo(0, 1500);
+      setTimeout(() => audio.pause(), 1500);
+      setIsPlaying(false);
+    }
+  }, [pastHero]);
 
 
   /* Auto-generate unique categories from project data */
@@ -134,6 +195,12 @@ export default function PortfolioPage() {
             Let's Go to Portfolio
           </button>
         </div>
+
+        {/* ── Music toggle ── */}
+        <button className="landing-hero__music" onClick={toggleMusic} aria-label={isPlaying ? 'Pause music' : 'Play music'}>
+          {isPlaying ? '⏸' : '▶'}
+          <span className="landing-hero__music-label">{isPlaying ? 'Pause' : 'Play'}</span>
+        </button>
 
         <div className="landing-hero__marquee-wrap">
           <div className="landing-hero__marquee">
