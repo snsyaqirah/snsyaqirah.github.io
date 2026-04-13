@@ -280,9 +280,10 @@ export default function PortfolioPage() {
                 <p className="sims-info-card__line">Software developer by day, The Sims architect by night. My design inspiration? Literally the Sims 4 menu you’re looking at right now. I’ve been a hardcore fan since I was a kid, so I figured why not turn my portfolio into a UI mod? (No regrets!).</p>
                 <p className="sims-info-card__line">I'm the type of dev who loves to explore new tech, whether it's at hackathons or building random side projects. When I’m not debugging or joining hackathons, you’ll probably find me looking up. I have a massive obsession with stargazing—basically anything up in the sky amaze, amaze, amaze! (except ghosts, we don't talk about those).</p>
                 <ul className="sims-info-card__list" style={{ marginTop: '0.7rem' }}>
-                  <li>🎯 <strong>Current Quest:</strong> Striving to be a reliable Full Stack developer.</li>
+                  <li>🎯 <strong>Current Quest:</strong> Striving to be a reliable Full Stack developer while leveling up my Data Science skills. I want to go from building apps to predicting the future (or at least predicting patterns in data). Think of it as being a Fortune Teller, but with Python and Math.</li>
                   <li>⚡ <strong>Vibe:</strong> 100% redah-first, figure-it-out-later.</li>
                   <li>😩 <strong>Regrets:</strong> Not joining physical hackathons sooner! ughhh.</li>
+                  <li>🏔️ <strong>Ultimate Dream:</strong> A long vacayyy in Chunda Valley or.. Swisss rivers, green fields, and a cow chilling way across the valley surrounded by gunung-ganang.</li>
                 </ul>
               </div>
 
