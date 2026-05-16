@@ -456,6 +456,20 @@
 
 .sims-pack:hover .sims-pack__overlay { opacity: 1; }
 
+/* Project card image (fills art block, behind overlay) */
+.sims-pack__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  transition: opacity 0.25s;
+  z-index: 1;
+}
+
+.sims-pack:hover .sims-pack__img { opacity: 0.25; }
+
 .sims-pack__overlay-title {
   font-size: 0.95rem;
   font-weight: 900;
@@ -463,6 +477,14 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   line-height: 1.2;
+}
+
+.sims-pack__overlay-series {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.6);
 }
 
 .sims-pack__overlay-cat {

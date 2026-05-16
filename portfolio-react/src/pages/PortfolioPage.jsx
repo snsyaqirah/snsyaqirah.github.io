@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import GalaxyBackground from '../components/Landing/GalaxyBackground';
 import { personalInfo, socialLinks } from '../data/social';
@@ -61,6 +62,7 @@ const HOME_CARDS = [
 
 export default function PortfolioPage() {
   const contentRef = useRef(null);
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('home');
   const [filterCat, setFilterCat] = useState('All');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -227,42 +229,46 @@ export default function PortfolioPage() {
               </div>
             </div>
 
-            <div className="sims-wip-wrapper">
-              <div className="sims-packs-grid sims-wip-blur">
-                {filteredProjects.map(p => (
-                  <div className="sims-pack" key={p.id}>
-                    <div
-                      className="sims-pack__art"
-                      style={{ background: CAT_COLOR[p.category] || CAT_COLOR.Frontend }}
-                    >
-                      <div className="sims-pack__overlay">
-                        <span className="sims-pack__overlay-title">{p.title}</span>
-                        <span className="sims-pack__overlay-cat">{p.category}</span>
-                        <span className="sims-pack__overlay-tech">
-                          {p.tech.slice(0, 3).join(' · ')}
+            <div className="sims-packs-grid">
+              {filteredProjects.map(p => (
+                <div
+                  className="sims-pack"
+                  key={p.id}
+                  onClick={() => navigate(`/projects/${p.slug}`)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => e.key === 'Enter' && navigate(`/projects/${p.slug}`)}
+                >
+                  <div
+                    className="sims-pack__art"
+                    style={{ background: CAT_COLOR[p.category] || CAT_COLOR.Frontend }}
+                  >
+                    {p.image && (
+                      <img
+                        src={p.image}
+                        alt={p.title}
+                        className="sims-pack__img"
+                        onError={e => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    )}
+                    <div className="sims-pack__overlay">
+                      <span className="sims-pack__overlay-title">{p.title}</span>
+                      {p.series && (
+                        <span className="sims-pack__overlay-series">{p.series}</span>
+                      )}
+                      <span className="sims-pack__overlay-cat">{p.category}</span>
+                      <span className="sims-pack__overlay-tech">
+                        {p.tech.slice(0, 3).join(' · ')}
+                      </span>
+                      <div className="sims-pack__overlay-links">
+                        <span className="sims-pack__overlay-btn sims-pack__overlay-btn--primary">
+                          View Details →
                         </span>
-                        <div className="sims-pack__overlay-links">
-                          {p.liveUrl && (
-                            <a href={p.liveUrl} className="sims-pack__overlay-btn sims-pack__overlay-btn--primary"
-                               target="_blank" rel="noopener noreferrer">
-                              Live Demo
-                            </a>
-                          )}
-                          {p.githubUrl && (
-                            <a href={p.githubUrl} className="sims-pack__overlay-btn"
-                               target="_blank" rel="noopener noreferrer">
-                              Source
-                            </a>
-                          )}
-                        </div>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-              <div className="sims-wip-notice">
-                🚧 In Progress &nbsp;·&nbsp; Tengah Update &nbsp;·&nbsp; Sabo jap 🚧
-              </div>
+                </div>
+              ))}
             </div>
           </section>
 

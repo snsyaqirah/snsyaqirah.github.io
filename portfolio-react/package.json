@@ -17,10 +17,13 @@
     "@react-three/fiber": "^9.5.0",
     "aos": "^2.3.4",
     "gh-pages": "^6.3.0",
+    "mermaid": "^11.15.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.6",
+    "remark-gfm": "^4.0.1",
     "three": "^0.183.2"
   },
   "devDependencies": {

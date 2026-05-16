@@ -59,6 +59,17 @@
   <body>
     <div id="root"></div>
 
+    <!-- ── Restore deep-link path saved by 404.html redirect ── -->
+    <script>
+      (function() {
+        var redirect = sessionStorage.getItem('spa_redirect');
+        if (redirect) {
+          sessionStorage.removeItem('spa_redirect');
+          window.history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+
     <!-- ── Unregister stale service workers (old Workbox from prev deploy) ── -->
     <script>
       if ('serviceWorker' in navigator) {

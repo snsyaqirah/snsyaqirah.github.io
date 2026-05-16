@@ -1,0 +1,460 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── Not found ── */
+.pdp-not-found {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: #f2f2f2;
+  font-family: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+  color: #1a1a3e;
+}
+
+.pdp-not-found button {
+  padding: 0.6rem 1.4rem;
+  background: #3D3BC1;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ── Layout override for detail page ── */
+.pdp-layout {
+  /* inherits sims-layout — no override needed */
+}
+
+/* ── Topbar ── */
+.pdp-topbar {
+  gap: 0.6rem;
+}
+
+.pdp-back-btn {
+  padding: 0.5rem 1rem;
+  background: #3D3BC1;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.pdp-back-btn:hover {
+  background: #4e4cd0;
+  transform: translateY(-1px);
+}
+
+.pdp-topbar-divider {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.pdp-topbar-title {
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #1a1a3e;
+}
+
+.pdp-topbar-series {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+  background: #3D3BC1;
+  padding: 0.2rem 0.7rem;
+  border-radius: 10px;
+}
+
+/* ── Project header card ── */
+.pdp-header-card {
+  margin: 1.5rem 2rem 0;
+  background: #fff;
+  border: 1px solid #DFE0E0;
+  border-radius: 14px;
+  padding: 1.8rem 2rem;
+}
+
+.pdp-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pdp-cat-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #14FFFF;
+  background: rgba(20, 255, 255, 0.12);
+  border: 1px solid rgba(20, 255, 255, 0.25);
+  padding: 0.2rem 0.8rem;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.pdp-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1a1a3e;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
+}
+
+.pdp-series {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #3D3BC1;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.pdp-header-links {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  align-items: flex-start;
+  margin-top: 0.2rem;
+}
+
+.pdp-link-btn {
+  padding: 0.5rem 1.2rem;
+  border: 1.5px solid #3D3BC1;
+  border-radius: 20px;
+  background: transparent;
+  color: #3D3BC1;
+  font-family: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.pdp-link-btn:hover {
+  background: rgba(61, 59, 193, 0.08);
+  transform: translateY(-1px);
+}
+
+.pdp-link-btn--primary {
+  background: #3D3BC1;
+  color: #fff;
+}
+
+.pdp-link-btn--primary:hover {
+  background: #4e4cd0;
+}
+
+.pdp-description {
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.pdp-tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.pdp-tech-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  background: rgba(61, 59, 193, 0.08);
+  border-radius: 8px;
+  color: #3D3BC1;
+}
+
+.pdp-highlights {
+  border-top: 1px solid #DFE0E0;
+  padding-top: 1rem;
+}
+
+.pdp-highlights-title {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #1a1a3e;
+  margin-bottom: 0.6rem;
+}
+
+.pdp-highlights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pdp-highlights-list li {
+  font-size: 0.82rem;
+  color: #555;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.pdp-highlights-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #3D3BC1;
+  font-size: 0.7rem;
+}
+
+/* ── README section ── */
+.pdp-readme-section {
+  margin-top: 1.5rem;
+}
+
+.pdp-readme-body {
+  padding: 1.2rem 2rem 2rem;
+}
+
+.pdp-loading {
+  text-align: center;
+  padding: 3rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #3D3BC1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pdp-no-readme {
+  background: rgba(61, 59, 193, 0.04);
+  border: 1px dashed rgba(61, 59, 193, 0.3);
+  border-radius: 12px;
+  padding: 2.5rem;
+  text-align: center;
+  color: #777;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.pdp-no-readme p { margin: 0.3rem 0; }
+
+/* ── Markdown content styles ── */
+.pdp-markdown {
+  font-family: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, sans-serif;
+  color: #1a1a3e;
+  font-size: 0.88rem;
+  line-height: 1.75;
+}
+
+.pdp-markdown h1 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #1a1a3e;
+  margin: 2rem 0 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #DFE0E0;
+}
+
+.pdp-markdown h2 {
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1a1a3e;
+  margin: 1.8rem 0 0.6rem;
+  padding: 0.5rem 1rem;
+  background: rgba(61, 59, 193, 0.06);
+  border-left: 3px solid #3D3BC1;
+  border-radius: 0 8px 8px 0;
+}
+
+.pdp-markdown h3 {
+  font-size: 0.92rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3D3BC1;
+  margin: 1.4rem 0 0.5rem;
+}
+
+.pdp-markdown h4 {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #555;
+  margin: 1rem 0 0.4rem;
+}
+
+.pdp-markdown p {
+  margin: 0.6rem 0;
+  color: #444;
+}
+
+.pdp-markdown a {
+  color: #3D3BC1;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.pdp-markdown a:hover { color: #4e4cd0; }
+
+.pdp-markdown ul,
+.pdp-markdown ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+  color: #444;
+}
+
+.pdp-markdown li { margin: 0.25rem 0; }
+
+.pdp-markdown strong { color: #1a1a3e; }
+
+.pdp-markdown em { color: #555; }
+
+.pdp-markdown blockquote {
+  margin: 1rem 0;
+  padding: 0.8rem 1.2rem;
+  background: rgba(61, 59, 193, 0.05);
+  border-left: 3px solid #3D3BC1;
+  border-radius: 0 8px 8px 0;
+  color: #555;
+  font-style: italic;
+}
+
+.pdp-markdown hr {
+  border: none;
+  border-top: 1px solid #DFE0E0;
+  margin: 2rem 0;
+}
+
+/* Code blocks */
+.pdp-markdown pre {
+  background: #1a1a3e;
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.pdp-markdown pre code {
+  background: none;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  border: none;
+  padding: 0;
+}
+
+.pdp-markdown code {
+  background: rgba(61, 59, 193, 0.08);
+  color: #3D3BC1;
+  border-radius: 5px;
+  padding: 0.15rem 0.45rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.pdp-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.82rem;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #DFE0E0;
+}
+
+.pdp-markdown thead tr {
+  background: #3D3BC1;
+  color: #fff;
+}
+
+.pdp-markdown th {
+  padding: 0.7rem 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.72rem;
+  text-align: left;
+}
+
+.pdp-markdown td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #DFE0E0;
+  color: #444;
+}
+
+.pdp-markdown tbody tr:nth-child(even) {
+  background: rgba(61, 59, 193, 0.03);
+}
+
+.pdp-markdown tbody tr:last-child td { border-bottom: none; }
+
+/* Badges (img links in markdown) */
+.pdp-markdown img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 0.2rem 0.2rem 0 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .pdp-header-card {
+    margin: 1rem 1rem 0;
+    padding: 1.2rem 1.2rem;
+  }
+
+  .pdp-header-top {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .pdp-title { font-size: 1.5rem; }
+
+  .pdp-header-links {
+    flex-wrap: wrap;
+  }
+
+  .pdp-readme-body {
+    padding: 1rem 1rem 1.5rem;
+  }
+
+  .pdp-topbar-title {
+    display: none;
+  }
+
+  .pdp-markdown h1 { font-size: 1.2rem; }
+  .pdp-markdown h2 { font-size: 0.95rem; }
+
+  .pdp-markdown table {
+    display: block;
+    overflow-x: auto;
+  }
+}

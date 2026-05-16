@@ -20,7 +20,7 @@ export const socialLinks = [
     },
     {
         name: "Email",
-        url: "mailto:your.email@example.com",
+        url: "mailto:snsyaqirah@gmail.com",
         icon: "email",
         color: "#EA4335"
     }
@@ -37,7 +37,7 @@ export const personalInfo = {
         "Sims 4 Addict"
     ],
     bio: "I'm Syaqirah \u2014 a developer who lives by the \"redah dulu, stuck baru pikiaqq\" philosophy. Most of my growth happened when I jumped into the deep end without a life jacket.",
-    email: "your.email@example.com",
+    email: "snsyaqirah@gmail.com",
     location: "Malaysia",
     availability: "Striving to be a reliable full stack dev!",
     resumeUrl: "/resume.pdf"
