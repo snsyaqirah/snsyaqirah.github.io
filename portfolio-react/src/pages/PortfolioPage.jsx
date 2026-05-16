@@ -4,7 +4,6 @@ import GalaxyBackground from '../components/Landing/GalaxyBackground';
 import { personalInfo, socialLinks } from '../data/social';
 import { projects } from '../data/projects';
 import { skills } from '../data/skills';
-import landingTheme from '../assets/sign-of-times.mp3';
 import './PortfolioPage.css';
 
 /* ── Random memoji pool ── */
@@ -62,70 +61,10 @@ const HOME_CARDS = [
 
 export default function PortfolioPage() {
   const contentRef = useRef(null);
-  const audioRef   = useRef(null);
-  const fadeTimer  = useRef(null);
   const [activeTab, setActiveTab] = useState('home');
   const [filterCat, setFilterCat] = useState('All');
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const [pastHero, setPastHero]   = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  /* ── Landing music: init once ── */
-  useEffect(() => {
-    const audio = new Audio(landingTheme);
-    audio.volume = 0;
-    audio.loop   = false;
-    audioRef.current = audio;
-    return () => { audio.pause(); audio.src = ''; };
-  }, []);
-
-  /* ── Fade helper ── */
-  const fadeTo = (target, ms) => {
-    clearInterval(fadeTimer.current);
-    const audio = audioRef.current;
-    if (!audio) return;
-    const from  = audio.volume;
-    const delta = target - from;
-    const steps = 60;
-    let   i     = 0;
-    fadeTimer.current = setInterval(() => {
-      i++;
-      audio.volume = Math.max(0, Math.min(1, from + delta * (i / steps)));
-      if (i >= steps) clearInterval(fadeTimer.current);
-    }, ms / steps);
-  };
-
-  /* ── Play / Pause toggle ── */
-  const toggleMusic = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (isPlaying) {
-      fadeTo(0, 1500);
-      setTimeout(() => audio.pause(), 1500);
-      setIsPlaying(false);
-    } else {
-      audio.currentTime = 0;
-      audio.volume = 0;
-      audio.play().then(() => {
-        fadeTo(0.3, 2500);
-        setIsPlaying(true);
-        // auto fade out near end (34s total)
-        setTimeout(() => fadeTo(0, 2500), 31500);
-        setTimeout(() => { audio.pause(); setIsPlaying(false); }, 34000);
-      }).catch(() => {});
-    }
-  };
-
-  /* ── Fade out when scrolled past hero, fade in when back ── */
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (pastHero && isPlaying) {
-      fadeTo(0, 1500);
-      setTimeout(() => audio.pause(), 1500);
-      setIsPlaying(false);
-    }
-  }, [pastHero]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
 
   /* Auto-generate unique categories from project data */
@@ -195,12 +134,6 @@ export default function PortfolioPage() {
             Let's Go to Portfolio
           </button>
         </div>
-
-        {/* ── Music toggle ── */}
-        <button className="landing-hero__music" onClick={toggleMusic} aria-label={isPlaying ? 'Pause music' : 'Play music'}>
-          {isPlaying ? '⏸' : '▶'}
-          <span className="landing-hero__music-label">{isPlaying ? 'Pause' : 'Play'}</span>
-        </button>
 
         <div className="landing-hero__marquee-wrap">
           <div className="landing-hero__marquee">
@@ -347,10 +280,9 @@ export default function PortfolioPage() {
                 <p className="sims-info-card__line">Software developer by day, The Sims architect by night. My design inspiration? Literally the Sims 4 menu you’re looking at right now. I’ve been a hardcore fan since I was a kid, so I figured why not turn my portfolio into a UI mod? (No regrets!).</p>
                 <p className="sims-info-card__line">I'm the type of dev who loves to explore new tech, whether it's at hackathons or building random side projects. When I’m not debugging or joining hackathons, you’ll probably find me looking up. I have a massive obsession with stargazing—basically anything up in the sky amaze, amaze, amaze! (except ghosts, we don't talk about those).</p>
                 <ul className="sims-info-card__list" style={{ marginTop: '0.7rem' }}>
-                  <li>🎯 <strong>Current Quest:</strong> Striving to be a reliable Full Stack developer while leveling up my Data Science skills. I want to go from building apps to predicting the future (or at least predicting patterns in data). Think of it as being a Fortune Teller, but with Python and Math.</li>
+                  <li>🎯 <strong>Current Quest:</strong> Striving to be a reliable Full Stack developer.</li>
                   <li>⚡ <strong>Vibe:</strong> 100% redah-first, figure-it-out-later.</li>
                   <li>😩 <strong>Regrets:</strong> Not joining physical hackathons sooner! ughhh.</li>
-                  <li>🏔️ <strong>Ultimate Dream:</strong> A long vacayyy in Chunda Valley or.. Swisss rivers, green fields, and a cow chilling way across the valley surrounded by gunung-ganang.</li>
                 </ul>
               </div>
 

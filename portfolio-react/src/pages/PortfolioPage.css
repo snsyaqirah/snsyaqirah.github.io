@@ -55,39 +55,6 @@
   overflow: hidden;
 }
 
-/* ── Music toggle button ── */
-.landing-hero__music {
-  position: absolute;
-  bottom: 2rem;
-  right: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 1.1rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 30px;
-  color: rgba(255, 255, 255, 0.75);
-  font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 3;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-.landing-hero__music:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-.landing-hero__music-label {
-  font-size: 0.7rem;
-}
-
 /* ── Skewed tech marquee strip (bottom) ── */
 .landing-hero__marquee-wrap {
   position: absolute;
