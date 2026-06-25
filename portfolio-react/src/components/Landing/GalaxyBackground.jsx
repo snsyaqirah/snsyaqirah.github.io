@@ -160,12 +160,12 @@ export default function GalaxyBackground() {
       <ambientLight intensity={0.3} />
 
       {/* Stars layers */}
-      <Stars radius={80} depth={60} count={6000} factor={4} saturation={0.2} fade speed={0.6} />
-      <Stars radius={40} depth={30} count={1500} factor={6} saturation={0.6} fade speed={0.3} />
+      <Stars radius={80} depth={60} count={2500} factor={4} saturation={0.2} fade speed={0.6} />
+      <Stars radius={40} depth={30} count={700} factor={6} saturation={0.6} fade speed={0.3} />
 
       {/* Sparkles for close-up fairy-dust feel */}
-      <Sparkles count={120} scale={30} size={1.5} speed={0.3} color="#7eb8ff" />
-      <Sparkles count={60} scale={20} size={2} speed={0.2} color="#c49dff" />
+      <Sparkles count={50} scale={30} size={1.5} speed={0.3} color="#7eb8ff" />
+      <Sparkles count={25} scale={20} size={2} speed={0.2} color="#c49dff" />
 
       {/* Nebula backdrop */}
       <Nebula />

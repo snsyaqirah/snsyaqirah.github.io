@@ -1,8 +1,7 @@
 /* Import Variables */
 @import './variables.css';
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+/* Fonts (Nunito, Montserrat, Plus Jakarta Sans) are loaded once via a combined <link> in index.html */
 
 /* ========================================
    CSS RESET & BASE STYLES
@@ -476,4 +475,16 @@ section {
     html {
         font-size: 12px;
     }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

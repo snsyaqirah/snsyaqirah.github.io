@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+import { useState, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Canvas } from '@react-three/fiber';
-import GalaxyBackground from '../components/Landing/GalaxyBackground';
 import { personalInfo, socialLinks } from '../data/social';
 import { projects } from '../data/projects';
 import { skills } from '../data/skills';
 import './PortfolioPage.css';
+
+const GalaxyCanvas = lazy(() => import('../components/Landing/GalaxyCanvas'));
 
 /* ── Random memoji pool ── */
 const MEMOJIS = ['👩‍💻','🧑‍💻','👨‍💻'];
@@ -67,6 +67,7 @@ export default function PortfolioPage() {
   const [filterCat, setFilterCat] = useState('All');
   const [menuOpen, setMenuOpen] = useState(false);
   const [pastHero, setPastHero] = useState(false);
+  const [galaxyReady, setGalaxyReady] = useState(false);
 
 
   /* Auto-generate unique categories from project data */
@@ -82,6 +83,12 @@ export default function PortfolioPage() {
 
   /* Pick one random memoji per mount */
   const memoji = useMemo(() => MEMOJIS[Math.floor(Math.random() * MEMOJIS.length)], []);
+
+  /* Mount the WebGL galaxy after first paint so it never blocks LCP/FCP */
+  useEffect(() => {
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setGalaxyReady(true)));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   /* Hide FAB on landing hero, show once scrolled past */
   useEffect(() => {
@@ -117,11 +124,13 @@ export default function PortfolioPage() {
 
   return (
     <div className="sims-portfolio">
-      {/* ── 3D galaxy background ── */}
+      {/* ── 3D galaxy background — mounted after first paint, render loop paused once scrolled past the hero ── */}
       <div className="sims-portfolio__canvas">
-        <Canvas camera={{ position: [0, 0, 20], fov: 60 }} gl={{ antialias: true, alpha: false }} dpr={[1, 1.5]}>
-          <Suspense fallback={null}><GalaxyBackground /></Suspense>
-        </Canvas>
+        {galaxyReady && (
+          <Suspense fallback={null}>
+            <GalaxyCanvas frameloop={pastHero ? 'never' : 'always'} />
+          </Suspense>
+        )}
       </div>
 
       {/* ── Landing hero (full viewport, dark + stars) ── */}
@@ -169,7 +178,7 @@ export default function PortfolioPage() {
         )}
 
         {/* ═══════ LEFT: Content area ═══════ */}
-        <div className="sims-content">
+        <main className="sims-content">
 
           {/* Top navigation — fixed, not scrollable */}
           <nav className="sims-topbar">
@@ -193,6 +202,7 @@ export default function PortfolioPage() {
 
           {/* ══════ HOME ══════ */}
           <section id="home">
+            <h2 className="sr-only">Home</h2>
             {/* 3 highlight boxes */}
             <div className="sims-wip-wrapper">
               <div className="sims-home-cards sims-wip-blur">
@@ -322,7 +332,7 @@ export default function PortfolioPage() {
             </div>
           </footer>
           </div>{/* end sims-scroll-area */}
-        </div>
+        </main>
 
         {/* ═══════ RIGHT: Static sidebar ═══════ */}
         <aside className={`sims-sidebar${menuOpen ? ' sims-sidebar--open' : ''}`}>

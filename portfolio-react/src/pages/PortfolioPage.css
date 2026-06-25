@@ -5,7 +5,7 @@
    - Project cards: plain gradient, hover reveals info
    ===================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* Plus Jakarta Sans is loaded once via a combined <link> in index.html */
 
 /* ── Root ── */
 .sims-portfolio {
@@ -903,10 +903,10 @@
   transform: translateY(-1px);
 }
 .sims-sidebar__resume--disabled {
-  opacity: 0.45;
+  background: rgba(255,255,255,0.6);
+  color: #1a1a3e;
   cursor: not-allowed;
   pointer-events: none;
-  filter: grayscale(0.4);
 }
 
 /* Tooltip */
@@ -945,10 +945,10 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.65rem 1rem;
-  background: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.85);
   border: 1px solid rgba(255,255,255,0.25);
   border-radius: 8px;
-  color: #fff;
+  color: #1a1a3e;
   font-family: inherit;
   font-size: 0.8rem;
   font-weight: 800;
@@ -960,7 +960,7 @@
 }
 
 .sims-sidebar__btn:hover {
-  background: rgba(255,255,255,0.55);
+  background: rgba(255,255,255,1);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -969,7 +969,7 @@
   font-size: 0.9rem;
   width: 20px;
   text-align: center;
-  color: #fff;
+  color: #1a1a3e;
 }
 
 .sims-sidebar__btn-text { flex: 1; }
@@ -1004,19 +1004,19 @@
 
 .sims-sidebar__version {
   font-size: 0.6rem;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.85);
   margin-top: 0.1rem;
 }
 
 .sims-sidebar__links {
   font-size: 0.58rem;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.8);
 }
 
 .sims-sidebar__link {
   background: none;
   border: none;
-  color: rgba(255,255,255,0.6);
+  color: #fff;
   text-decoration: underline;
   cursor: pointer;
   font-size: inherit;
