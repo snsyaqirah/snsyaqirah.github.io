@@ -5,6 +5,13 @@ on:
     branches: [master]
     paths:
       - 'portfolio-react/**'
+      - 'maintenance/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+# Set to 'true' to serve maintenance/ instead of the portfolio build
+env:
+  MAINTENANCE_MODE: 'true'
 
 permissions:
   contents: read
@@ -26,22 +33,25 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
+        if: env.MAINTENANCE_MODE != 'true'
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: portfolio-react/package-lock.json
 
       - name: Install dependencies
+        if: env.MAINTENANCE_MODE != 'true'
         working-directory: portfolio-react
         run: npm ci
 
       - name: Build
+        if: env.MAINTENANCE_MODE != 'true'
         working-directory: portfolio-react
         run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: portfolio-react/dist
+          path: ${{ env.MAINTENANCE_MODE == 'true' && 'maintenance' || 'portfolio-react/dist' }}
 
       - uses: actions/deploy-pages@v4
         id: deployment
