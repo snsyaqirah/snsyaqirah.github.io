@@ -1,10 +1,11 @@
 # 🏍️ RedahLuhh
 
-> Smart route weather tracker for Malaysian motorcyclists — redah tanpa ragu (ride without doubt)
+> Route weather checker for Malaysian riders — see the weather at every stretch of your route, not just the destination. *Redah tanpa ragu* (ride without doubt).
 
 ![Status](https://img.shields.io/badge/status-live-brightgreen)
 ![Version](https://img.shields.io/badge/version-0.3.0-blue)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![Stack](https://img.shields.io/badge/stack-Next.js%20%2B%20FastAPI-e94560)
+![Maps](https://img.shields.io/badge/maps-Google%20Maps%20Platform-4285F4)
 
 ---
 
@@ -20,8 +21,6 @@
 - [API Structure](#-api-structure)
 - [Frontend Components](#-frontend-components)
 - [Feature Flows](#-feature-specific-flows)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
 - [Deployment](#-deployment)
 - [Project Structure](#-project-structure)
 - [Roadmap](#-roadmap)
@@ -31,7 +30,11 @@
 
 ## 🧭 Overview
 
-RedahLuhh checks the weather at every kilometre of your route — not just the destination. Enter your origin and destination, pick a departure time, and get a colour-coded (green / yellow / red) breakdown across all available routes so you can choose the driest path before you ride. It also integrates live MET Malaysia official weather warnings and a real-time GPS navigation mode that keeps your screen on while riding.
+RedahLuhh answers the question every Malaysian biker asks before a ride: *"Hujan tak kat tengah jalan nanti?"* You type an origin and destination (or let it detect your location), choose to leave now or at a set time, and the app gets up to three driving routes. It samples 3–7 waypoints along each route, works out when you will reach each one, and fetches the weather forecast for that place at that time.
+
+Each route gets a weather score (green = 0, yellow = 1, red = 3 per waypoint). Routes are ranked driest first and labelled *Recommended*, *Driest Route*, *Fastest Route* or *Alternative N*. On the map, the polyline is coloured green, yellow or red section by section, with an emoji weather marker at each waypoint. A Summary tab shows the full breakdown and any active official warnings from MET Malaysia.
+
+There are no user accounts. The main app is fully public, and nothing about your trip is stored. Supabase is used only for a community feedback wall, simple anonymous analytics, and a small admin dashboard for the developer.
 
 **Type:** `Solo`
 **Brand:** `Luhh Series`
@@ -41,20 +44,31 @@ RedahLuhh checks the weather at every kilometre of your route — not just the d
 
 ## ✨ Features
 
-- ✅ Real-time weather at every waypoint along the route (not just the destination)
-- ✅ Multi-route comparison — up to 3 routes ranked by weather score (driest first)
-- ✅ Google Maps with colour-coded polyline (green / yellow / red per segment)
-- ✅ Departure time scheduler for future trip planning + hourly forecast
-- ✅ 5-provider weather cascade with automatic fallback (XWeather → Meteoblue → Tomorrow.io → Open-Meteo → WeatherAPI)
-- ✅ MET Malaysia official weather warnings integrated
-- ✅ Go Now full-screen navigation mode with live GPS tracking + screen wake lock
-- ✅ Day/night map theme auto-switched based on Malaysia local time
-- ✅ Auto-detect current location on page load
-- ✅ Feedback system with public wall and admin dashboard (Supabase)
-- ✅ Per-provider quota alerts with transparent active provider display
-- 🚧 Saved/favourite routes *(in progress)*
-- 💡 Push notifications for weather changes mid-journey *(planned)*
-- 💡 Offline mode / PWA *(planned)*
+- ✅ Weather at every sampled waypoint along the route (3–7 points, depending on route length), each with its own ETA
+- ✅ Multi-route comparison: up to 3 routes from Google Routes API, ranked by weather score, ties broken by duration
+- ✅ Route chips labelled *Recommended / Driest Route / Fastest Route / Alternative N*, with distance, duration and a safety badge
+- ✅ Google Map with a green/yellow/red polyline per section and emoji markers (Start / Destination labelled)
+- ✅ Summary tab: worst-condition banner, distance / duration / departure tiles, a status timeline dot strip, and per-waypoint weather cards (temp, rain %, wind, humidity, feels-like, ETA)
+- ✅ Departure scheduler: *Leave now* or *Depart at* a set date and time, using hourly forecasts for future trips
+- ✅ 5-provider weather cascade with automatic fallback: XWeather (road weather) → Meteoblue → Tomorrow.io (realtime for start and destination) → Open-Meteo → WeatherAPI
+- ✅ Reality-check filter on rain readings, so model "phantom rain" doesn't turn a dry route red
+- ✅ MET Malaysia official warnings (via api.data.gov.my) shown at the top of the summary
+- ✅ **Go Now** mode: full-screen map, live GPS bike marker, Screen Wake Lock, auto weather refresh every 15 minutes
+- ✅ Day/night map theme based on Malaysia time (light from 06:00 to 19:00)
+- ✅ Auto-detects your location on load (browser geolocation + Google Geocoder), with a tip if location is blocked
+- ✅ Places Autocomplete biased to Malaysia, clear buttons, and an origin/destination swap button
+- ✅ Shows which weather provider is active, with toast alerts when a provider's quota runs out
+- ✅ Backend status dot and a "warming up" notice for Render free-tier cold starts
+- ✅ Floating feedback widget (bug / enhancement / general / testimonial; bugs need a suggested fix)
+- ✅ Public community feedback wall with developer replies (`/feedback`)
+- ✅ Admin dashboard (`/admin`): 7-day searches and page views chart, hide/restore feedback, reply to feedback
+- ✅ Changelog page, PWA manifest with generated icons, sitemap, robots and bilingual (BM/EN) SEO metadata
+- ✅ API rate limit (30 requests per minute per IP) and input validation on locations
+- 🚧 MET Malaysia district-level forecasts *(service and reverse-geocode helper written, not yet wired into the cascade)*
+- 💡 Saved / favourite routes
+- 💡 Avoid-tolls and route preference options
+- 💡 Push notifications when the weather changes mid-ride
+- 💡 Offline support / service worker (only the manifest exists today)
 
 ---
 
@@ -63,35 +77,42 @@ RedahLuhh checks the weather at every kilometre of your route — not just the d
 ```mermaid
 graph TD
     subgraph Frontend
-        FE["Next.js 14 + TypeScript"]
-        UI["Tailwind CSS + clsx"]
-        MAP["@vis.gl/react-google-maps"]
+        FE["Next.js 14 App Router<br/>React 18 + TypeScript"]
+        UI["Tailwind CSS · clsx · date-fns"]
+        MAP["@vis.gl/react-google-maps<br/>Maps JS · Places · Geocoder · AdvancedMarker"]
     end
     subgraph Backend
-        BE["FastAPI + Uvicorn\nPython"]
-        RL["slowapi\nRate Limiting"]
+        BE["FastAPI + Uvicorn<br/>Python 3.12"]
+        RL["slowapi rate limiting<br/>Pydantic v2 validation"]
+        HX["httpx async client<br/>polyline decoder"]
     end
-    subgraph Infrastructure
-        DB[("Supabase\nFeedback + Auth")]
-        HO["Vercel + Render"]
-        EX["Google Routes API\nGoogle Maps JS\nXWeather · Meteoblue\nTomorrow.io · Open-Meteo\nWeatherAPI · MET Malaysia"]
+    subgraph External
+        GR["Google Routes API v2"]
+        WX["XWeather · Meteoblue · Tomorrow.io<br/>Open-Meteo · WeatherAPI"]
+        MET["MET Malaysia<br/>api.data.gov.my"]
+        SB[("Supabase<br/>feedback · analytics · auth")]
     end
     FE --> BE
-    FE --> DB
-    BE --> EX
+    FE --> SB
+    BE --> GR
+    BE --> WX
+    BE --> MET
 ```
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js 14, TypeScript, Tailwind CSS |
-| Backend | FastAPI, Uvicorn, Python |
-| Database | Supabase (PostgreSQL) |
-| Auth | Supabase Auth (admin dashboard only) |
-| Hosting | Vercel (frontend), Render (backend) |
-| Routing | Google Routes API, Google Maps JS + Places |
+| Frontend | Next.js 14.2 (App Router), React 18, TypeScript |
+| Styling | Tailwind CSS, clsx, custom keyframe animations |
+| Maps | Google Maps JavaScript API via `@vis.gl/react-google-maps` (vector map, AdvancedMarker, Places Autocomplete, Geocoder) |
+| Backend | FastAPI 0.115, Uvicorn, Pydantic v2, pydantic-settings |
+| HTTP | httpx (async) |
+| Routing | Google Routes API v2 (`computeRoutes`, traffic-aware, alternative routes) |
 | Weather | XWeather, Meteoblue, Tomorrow.io, Open-Meteo, WeatherAPI |
-| Alerts | MET Malaysia official warnings |
-| Other | slowapi (rate limiting), date-fns, clsx |
+| Warnings | MET Malaysia open data (`api.data.gov.my/weather/warning`) |
+| Data / Auth | Supabase (Postgres + Auth), used from the browser with `@supabase/supabase-js` |
+| Rate limiting | slowapi |
+| Hosting | Vercel (frontend), Render (backend) |
+| Containers | Dockerfiles for both apps + Docker Compose |
 
 ---
 
@@ -101,12 +122,13 @@ graph TD
 
 ```mermaid
 graph TD
-    U[User / Browser] --> FE[Next.js Frontend]
-    FE --> API[FastAPI Backend]
-    FE --> SB[(Supabase)]
-    API --> GR[Google Routes API]
-    API --> WC[Weather Cascade\nXWeather → Meteoblue → Tomorrow.io\n→ Open-Meteo → WeatherAPI]
-    API --> MET[MET Malaysia\nWarnings]
+    U["Rider / Browser"] --> FE["Next.js Frontend<br/>Vercel"]
+    FE -->|"Maps JS, Places, Geocoder"| GM["Google Maps Platform"]
+    FE -->|"POST /api/route-weather"| API["FastAPI Backend<br/>Render"]
+    FE -->|"feedback, analytics, admin auth"| SB[("Supabase")]
+    API --> GR["Google Routes API"]
+    API --> WC["Weather cascade<br/>5 providers"]
+    API --> MET["MET Malaysia warnings"]
 ```
 
 ### System Architecture
@@ -114,20 +136,23 @@ graph TD
 ```mermaid
 graph TD
     subgraph Frontend
-        P[Pages] --> C[Components]
-        C --> H[Hooks / API Client]
+        P["Pages<br/>/ · /feedback · /admin · /changelog"] --> C["Components<br/>RouteForm · WeatherMap · WeatherSummary"]
+        C --> H["Hooks<br/>useRouteWeather · useBackendHealth"]
+        H --> L["lib/api.ts<br/>fetch + polyline decoder"]
     end
     subgraph Backend
-        R[Routes\n/api] --> MW[CORS + Rate Limiter]
-        MW --> E[Route Handler]
-        E --> MS[maps_service\ndecode + sample waypoints]
-        E --> WS[weather_service\n5-provider cascade]
-        E --> MM[met_malaysia_service\nofficial warnings]
+        R["weather_route router<br/>/api"] --> MW["CORS + slowapi"]
+        MW --> MS["maps_service<br/>Routes API · haversine · waypoint sampler"]
+        MW --> WS["weather_service<br/>5-provider cascade"]
+        MW --> MM["met_malaysia_service<br/>active warnings"]
     end
-    H --> R
-    WS --> EXT[External Weather APIs]
-    MS --> GR[Google Routes API]
+    L --> R
+    MS --> GR["Google Routes API"]
+    WS --> EXT["Weather APIs"]
+    MM --> DGM["api.data.gov.my"]
 ```
+
+> API keys for Google Routes and the weather providers stay on the backend. The browser only holds the Google Maps JS key and the Supabase anon key.
 
 ---
 
@@ -135,93 +160,105 @@ graph TD
 
 ```mermaid
 flowchart TD
-    A([Start]) --> B[Landing Page]
-    B --> C[Enter Origin + Destination\noptional: Departure Time]
-    C --> D[POST /api/route-weather]
-    D --> E{Routes returned?}
-    E -->|Yes| F[View Map Tab\nColour-coded polyline + waypoints]
-    E -->|No| G[Error message]
-    F --> H[Switch to Summary Tab]
-    F --> I[Select different route\ne.g. Driest vs Fastest]
-    F --> J[Tap Go Now]
-    J --> K[Full-screen GPS navigation\nScreen wake lock on]
-    K --> L[15-min weather refresh]
-    H --> M([Done])
-    L --> M
+    A([Open RedahLuhh]) --> B{Location allowed?}
+    B -->|Yes| C["Origin auto-filled<br/>via Geocoder"]
+    B -->|No| D["Show tip to allow location"]
+    C --> E["Enter destination<br/>Places Autocomplete"]
+    D --> E
+    E --> F{"Leave now or Depart at?"}
+    F --> G["Check Route Weather"]
+    G --> H["Riding bike loading animation"]
+    H --> I{Routes found?}
+    I -->|No| J["Error card"]
+    I -->|Yes| K["Route chips<br/>Best route selected"]
+    K --> L["Map View<br/>coloured polyline + emoji markers"]
+    K --> M["Summary<br/>warnings, banner, waypoint cards"]
+    L --> N["Tap Go Now"]
+    N --> O["Full-screen live GPS<br/>wake lock + 15-min refresh"]
+    M --> P([Decide: redah or tunggu])
+    O --> P
 ```
 
 ### Page Map
 
 ```mermaid
 graph TD
-    subgraph Public ["🌐 Public Routes"]
-        ROOT["/\nMain App"]
-        CL["/changelog"]
-        FB["/feedback\nPublic wall"]
+    subgraph Public ["🌐 Public"]
+        ROOT["/<br/>Route weather app"]
+        FB["/feedback<br/>Community wall"]
+        CL["/changelog<br/>Release notes"]
     end
-    subgraph Protected ["🔐 Admin Only"]
-        ADMIN["/admin\nDashboard"]
+    subgraph Admin ["🔐 Supabase Auth"]
+        AD["/admin<br/>Analytics + moderation"]
     end
-    ROOT --> CL
     ROOT --> FB
-    ROOT --> ADMIN
+    ROOT --> CL
+    FB -.-> AD
 
     style Public fill:#e8f5e9,stroke:#4caf50
-    style Protected fill:#e3f2fd,stroke:#2196f3
+    style Admin fill:#e3f2fd,stroke:#2196f3
 ```
 
 ### Wireframe Overview
 
 ```mermaid
-graph TD
-    subgraph Home ["📄 / (Home)"]
-        H1["Header: Logo + Backend status"]
-        H2["Hero text (pre-search only)"]
-        H3["RouteForm: origin · destination · departure"]
-        H4["Route selector chips (multi-route)"]
-        H5["Map | Summary tabs"]
-        H6["WeatherMap / WeatherSummary"]
-        H7["Mini waypoint cards (scroll)"]
-        H8["Footer: version · provider"]
-        H1 --> H2 --> H3 --> H4 --> H5 --> H6 --> H7 --> H8
+graph LR
+    subgraph Home ["📄 / Home"]
+        direction TB
+        H1["Header: logo · backend status dot"]
+        H2["Hero text, before first search"]
+        H3["RouteForm: from · to · swap · departure"]
+        H4["Available routes chips"]
+        H5["Map View | Summary tabs"]
+        H6["WeatherMap or WeatherSummary"]
+        H7["Mini waypoint cards row"]
+        H8["Footer: version · active provider"]
+        H1 --- H2 --- H3 --- H4 --- H5 --- H6 --- H7 --- H8
     end
-
-    subgraph Nav ["📄 Go Now (full-screen overlay)"]
+    subgraph Nav ["📄 Go Now overlay"]
+        direction TB
         N1["Full-screen Google Map"]
-        N2["Live GPS dot"]
-        N3["Weather refresh banner"]
-        N1 --> N2 --> N3
+        N2["Live GPS badge · Screen On"]
+        N3["Updated N min ago"]
+        N1 --- N2 --- N3
     end
+    Home -.->|"tap Go Now"| Nav
 ```
 
 ---
 
 ## 🔐 Auth & Session Flow
 
-> The main app requires no login — it is fully public. Auth applies only to the `/admin` dashboard, which uses Supabase email/password auth.
+> Riders never log in. Only `/admin` needs a login, using Supabase email + password auth. The `isAdmin` flag in localStorage just stops the developer's own visits from being counted in analytics.
 
 ```mermaid
 sequenceDiagram
-    participant U as Developer
-    participant FE as Admin Page
-    participant SB as Supabase Auth
+    participant D as Developer
+    participant FE as /admin page
+    participant SA as Supabase Auth
+    participant DB as Supabase Postgres
 
-    U->>FE: Open /admin
-    FE->>FE: Check localStorage isAdmin
-    FE-->>U: Show login screen (if not set)
-
-    U->>FE: Enter email + password
-    FE->>SB: supabase.auth.signInWithPassword()
-    SB-->>FE: Session token
-    FE->>FE: localStorage.setItem("isAdmin", "true")
-    FE-->>U: Show admin dashboard
+    D->>FE: Open /admin
+    FE->>SA: auth.getSession()
+    SA-->>FE: No session
+    FE-->>D: Login screen
+    D->>FE: Email + password
+    FE->>SA: signInWithPassword()
+    SA-->>FE: Session (JWT)
+    FE->>FE: localStorage isAdmin = true
+    FE->>DB: select feedback + admin_replies, analytics_events
+    DB-->>FE: Rows (access controlled by Supabase policies)
+    FE-->>D: Dashboard
+    D->>FE: Logout
+    FE->>SA: auth.signOut()
+    FE->>FE: remove isAdmin
 ```
 
 ---
 
 ## 🗄️ Database (ERD)
 
-> Supabase is used exclusively for the feedback and analytics system. Weather data is fetched live from external APIs and never stored.
+> Supabase holds only the feedback and analytics data. Routes and weather are fetched live and never stored. The table shapes below come from the queries in the frontend code. The SQL schema itself is not in the repo.
 
 ### Core ERD
 
@@ -229,81 +266,92 @@ sequenceDiagram
 erDiagram
     FEEDBACK {
         uuid id PK
-        string category
-        text message
-        string status
-        timestamp created_at
+        text category "bug, enhancement, general, testimonial"
+        text description
+        text suggested_fix "required for bugs"
+        int status "1 visible, 0 hidden"
+        timestamptz created_at
     }
-    ADMIN_REPLY {
+    ADMIN_REPLIES {
         uuid id PK
         uuid feedback_id FK
-        text message
-        timestamp created_at
+        text reply
+        int status "1 active, 0 deleted"
+        timestamptz created_at
     }
-    ANALYTICS_EVENT {
-        uuid id PK
-        string event_type
-        jsonb payload
-        timestamp created_at
+    ANALYTICS_EVENTS {
+        bigint id PK
+        text event "page_view or search"
+        jsonb meta "route_count"
+        timestamptz created_at
     }
-    FEEDBACK ||--o{ ADMIN_REPLY : "has"
+    FEEDBACK ||--o{ ADMIN_REPLIES : "has"
 ```
 
 ### Database Schema Overview
 
-| Table | Purpose | Key Relations |
+| Table | Purpose | Written by |
 |---|---|---|
-| `feedback` | User-submitted bug reports, enhancements, testimonials | — |
-| `admin_reply` | Developer replies to feedback entries | belongs to `feedback` |
-| `analytics_event` | Page views and interaction events | — |
+| `feedback` | Bug reports, enhancement ideas, general comments and testimonials | Anyone, via the feedback widget |
+| `admin_replies` | Developer replies shown on the public wall (soft delete with `status`) | Admin dashboard |
+| `analytics_events` | Anonymous `page_view` and `search` events for the 7-day chart | Home page (skipped for admin) |
 
 ---
 
 ## 🔌 API Structure
 
-### API Structure
+### API Overview
 
 ```mermaid
-graph TD
-    API[FastAPI]
-    API --> Meta[meta]
-    API --> WR[/api]
-
-    Meta --> M1[GET /health]
-    Meta --> M2[GET /api/provider-status]
-    Meta --> M3[GET /api/debug-weather]
-
-    WR --> W1[POST /api/route-weather]
+mindmap
+  root((RedahLuhh API))
+    meta
+      GET /health
+      GET /api/provider-status
+    weather-route
+      POST /api/route-weather
+    debug
+      GET /api/debug-weather
+    docs
+      /docs Swagger UI
+      /redoc
 ```
 
 ### Endpoint Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/health` | Service health check |
-| `GET` | `/api/provider-status` | Active weather provider + exhaustion flags |
-| `GET` | `/api/debug-weather?lat=&lon=` | Test WeatherAPI at a coordinate |
-| `POST` | `/api/route-weather` | Main endpoint — returns weather for all routes |
+| `GET` | `/health` | Health check, used for the status dot and cold-start notice |
+| `GET` | `/api/provider-status` | Active weather provider + per-provider quota-exhausted flags |
+| `POST` | `/api/route-weather` | Main endpoint: `{ origin, destination, departure_time? }` → weather for all routes, ranked. Limited to 30 requests/min per IP |
+| `GET` | `/api/debug-weather?lat=&lon=` | Developer helper that calls WeatherAPI for one coordinate |
 
 ### Request/Response Flow
 
 ```mermaid
 sequenceDiagram
     participant FE as Frontend
-    participant MW as CORS + Rate Limiter
-    participant API as Route Handler
+    participant MW as CORS + slowapi
+    participant API as route-weather handler
     participant GR as Google Routes
-    participant WC as Weather Cascade
     participant MET as MET Malaysia
+    participant WC as Weather cascade
 
-    FE->>MW: POST /api/route-weather {origin, destination, departure_time}
-    MW->>API: Pass request (max 30/min/IP)
-    API->>GR: Fetch up to 3 routes
-    API->>MET: Fetch active warnings
-    Note over API: concurrent via asyncio.gather
-    API->>WC: Get weather per sampled waypoint
-    WC-->>API: WeatherCondition per waypoint
-    API->>API: Rank routes by weather score (driest first)
+    FE->>MW: POST /api/route-weather
+    MW->>API: Validated request
+    par Fetch together
+        API->>GR: computeRoutes, alternatives on
+        API->>MET: GET /weather/warning
+    end
+    GR-->>API: 1 to 3 encoded polylines
+    MET-->>API: Warnings, keep only still-valid ones
+    loop Each route, concurrently
+        API->>API: Decode polyline, sample 3 to 7 waypoints with ETAs
+        API->>WC: Weather per waypoint at its ETA
+        WC-->>API: WeatherCondition
+        API->>API: Overall status, alerts, weather score
+    end
+    API->>API: Sort by score then duration, assign labels
     API-->>FE: MultiRouteWeatherResponse
 ```
 
@@ -315,27 +363,36 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    App["App\n(Next.js + APIProvider)"]
-    App --> Layout["layout.tsx\nfont + metadata"]
-    Layout --> Home["page.tsx\n(Home)"]
-    Home --> RF["RouteForm\norigin · destination · departure"]
-    Home --> WMap["WeatherMap\nGoogle Maps + polyline + Go Now"]
-    Home --> WSumm["WeatherSummary\nfull route breakdown"]
-    Home --> AT["AnalyticsTracker\nevent tracking"]
-    Home --> FW["FeedbackWidget\nsubmission modal"]
-    WMap --> WCard["WeatherCard\nper-waypoint popup"]
+    Root["layout.tsx<br/>metadata · FeedbackWidget · AnalyticsTracker"]
+    Root --> Home["page.tsx<br/>APIProvider + Home"]
+    Root --> FBP["feedback/page.tsx"]
+    Root --> ADP["admin/page.tsx"]
+    Root --> CLP["changelog/page.tsx"]
+    Home --> RF["RouteForm<br/>PlaceInput · departure picker"]
+    Home --> RC["RouteChip"]
+    Home --> WM["WeatherMap<br/>dynamic import, no SSR"]
+    Home --> WSU["WeatherSummary"]
+    Home --> MC["MiniCard"]
+    WM --> CR["ColoredRoute"]
+    WM --> EM["EmojiMarker"]
+    WM --> GD["GpsDot + MapController"]
+    WSU --> WCD["WeatherCard"]
+    ADP --> AN["AnalyticsSection"]
+    ADP --> DB["Dashboard"]
 ```
 
 ### Key Components
 
 | Component | Purpose |
 |---|---|
-| `RouteForm` | Origin + destination autocomplete and optional departure time picker |
-| `WeatherMap` | Google Maps with colour-coded polyline, emoji waypoint markers, and Go Now full-screen navigation |
-| `WeatherCard` | Individual waypoint weather detail popup on the map |
-| `WeatherSummary` | Full-route breakdown: overall status, waypoint list, MET warnings, alerts |
-| `FeedbackWidget` | Floating feedback button + submission modal (writes to Supabase) |
-| `AnalyticsTracker` | Passive event tracker (writes to Supabase) |
+| `RouteForm` | Origin/destination inputs with Places Autocomplete, use-my-location, swap, and the Leave now / Depart at picker |
+| `WeatherMap` | Google vector map with section-coloured polylines, emoji waypoint markers, legend, and Go Now mode (GPS follow, wake lock, 15-min refresh) |
+| `WeatherSummary` | MET warnings, worst-condition banner, stat tiles, status timeline, waypoint cards, refresh button |
+| `WeatherCard` | Weather details for one waypoint: temperature, condition, rain %, wind, humidity, feels-like, ETA |
+| `FeedbackWidget` | Floating button + modal that writes to the Supabase `feedback` table |
+| `AnalyticsTracker` | Logs one anonymous `page_view` per visit (skipped for admin) |
+| `useRouteWeather` | Search state, selected route, refresh, `search` analytics event |
+| `useBackendHealth` | Pings `/health` with a 35 s timeout to cover Render cold starts |
 
 ---
 
@@ -345,161 +402,99 @@ graph TD
 
 ```mermaid
 flowchart TD
-    A([Waypoint needs weather]) --> B{XWeather quota OK?}
-    B -->|Yes| C[Fetch XWeather\nroad weather · SE Asia]
-    B -->|No / error| D{Meteoblue quota OK?}
-    C -->|Success| Z([Return WeatherCondition])
-    C -->|Quota hit| D
-    D -->|Yes| E[Fetch Meteoblue\nhigh-res tropical model]
-    D -->|No / error| F{Tomorrow.io quota OK?}
-    E -->|Success| Z
-    E -->|Quota hit| F
-    F -->|Yes| G[Fetch Tomorrow.io\nrealtime or forecast]
-    F -->|No / error| H[Fetch Open-Meteo\nECMWF · fully free]
-    G -->|Success| Z
-    G -->|Quota hit| H
-    H -->|Success| Z
-    H -->|Error| I[Fetch WeatherAPI\nGFS · last resort]
-    I -->|Success| Z
-    I -->|Error| J([Return fallback\n'Weather data unavailable'])
+    A([Waypoint + ETA]) --> X{"XWeather key set<br/>and quota OK?"}
+    X -->|Yes| X1["XWeather road weather"]
+    X -->|No| M{"Meteoblue key set<br/>and quota OK?"}
+    X1 -->|OK| Z([WeatherCondition])
+    X1 -->|"429/403 or error"| M
+    M -->|Yes| M1["Meteoblue basic-1h"]
+    M -->|No| T{"Tomorrow.io key set<br/>and quota OK?"}
+    M1 -->|OK| Z
+    M1 -->|429 or error| T
+    T -->|Yes| T1["Tomorrow.io<br/>realtime for start and end,<br/>hourly forecast in between"]
+    T -->|No| O["Open-Meteo<br/>free, no key"]
+    T1 -->|OK| Z
+    T1 -->|429 or error| O
+    O -->|OK| Z
+    O -->|error| W["WeatherAPI.com"]
+    W -->|OK| Z
+    W -->|error| F(["Fallback: Weather data unavailable"])
 ```
 
-### Go Now Navigation Flow
+> Quota hits set module-level "exhausted" flags. `/api/provider-status` exposes these flags so the UI can show toasts and the active provider in the footer.
+
+### Status Classification
 
 ```mermaid
-sequenceDiagram
-    participant U as Rider
-    participant FE as Frontend
-    participant GPS as Browser Geolocation
-    participant WL as WakeLock API
-    participant API as Backend
-
-    U->>FE: Tap "Go Now"
-    FE->>GPS: watchPosition()
-    FE->>WL: navigator.wakeLock.request("screen")
-    WL-->>FE: WakeLock acquired (screen stays on)
-    FE-->>U: Full-screen map with live GPS dot
-
-    loop Every 15 minutes
-        FE->>API: POST /api/route-weather (refresh)
-        API-->>FE: Updated weather conditions
-        FE-->>U: Weather refresh banner
-    end
-
-    U->>FE: Exit Go Now
-    FE->>WL: wakeLock.release()
-    FE->>GPS: clearWatch()
+flowchart LR
+    A["Any provider reading<br/>shared reality check"] --> B{"Rain at least 2 mm?"}
+    B -->|Yes| R["🔴 red<br/>Rain / Heavy Rain"]
+    B -->|No| C{"Rain at least 1 mm,<br/>or 0.5 mm with 40% chance?"}
+    C -->|Yes| Y1["🟡 yellow<br/>Light Rain"]
+    C -->|No| D{"Cloud cover at least 50%?"}
+    D -->|Yes| Y2["🟡 yellow<br/>Cloudy / Overcast"]
+    D -->|No| G["🟢 green<br/>Clear / Partly Cloudy"]
 ```
 
 ### Route Ranking Flow
 
 ```mermaid
 flowchart TD
-    A([Routes from Google]) --> B[Process each route concurrently]
-    B --> C[Sample 3–7 waypoints per route]
-    C --> D[Fetch weather per waypoint\nvia cascade]
-    D --> E[Calculate weather score\ngreen=0 · yellow=1 · red=3]
-    E --> F[Sort routes by score ascending]
-    F --> G{Score tied?}
-    G -->|Yes| H[Sort by duration ascending]
-    G -->|No| I[Label routes]
-    H --> I
-    I --> J["Rank 0 → Recommended / Driest Route"]
-    I --> K["Fastest Route (if not rank 0)"]
-    I --> L["Alternative N"]
-    J --> M([Return MultiRouteWeatherResponse])
-    K --> M
-    L --> M
+    A([1 to 3 routes]) --> B["Sample waypoints<br/>3 to 7, scaled by polyline length"]
+    B --> C["Weather per waypoint"]
+    C --> D["Score: green 0, yellow 1, red 3"]
+    D --> E["Sort by score, then duration"]
+    E --> F{"Rank 0 is also fastest,<br/>or only one route?"}
+    F -->|Yes| G["Recommended"]
+    F -->|No| H["Rank 0: Driest Route"]
+    E --> I["Fastest Route label"]
+    E --> J["Others: Alternative N"]
 ```
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js `>=18`
-- Python `>=3.11`
-- Docker + Docker Compose *(optional)*
-
-### Installation
-
-```bash
-git clone https://github.com/syaqirah/RedahLuhh.git
-cd RedahLuhh
-```
-
-### Running locally
-
-```bash
-# Backend
-cd backend
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-
-# Frontend (separate terminal)
-cd frontend
-npm install
-npm run dev
-```
-
-### Running with Docker
-
-```bash
-# Development
-docker compose up --build
-```
+### Go Now Navigation Flow
 
 ```mermaid
-graph LR
-    subgraph Dev ["docker-compose.yml"]
-        D1["frontend\nNext.js :3000"]
-        D2["backend\nFastAPI :8000\n--reload"]
-        D1 -. "NEXT_PUBLIC_API_URL" .-> D2
+sequenceDiagram
+    participant R as Rider
+    participant FE as WeatherMap
+    participant GPS as Geolocation API
+    participant WL as Wake Lock API
+    participant API as Backend
+
+    R->>FE: Tap Go Now
+    FE->>FE: Container goes fixed full-screen, map stays mounted
+    FE->>WL: request screen lock
+    FE->>GPS: watchPosition, high accuracy
+    GPS-->>FE: Position updates
+    FE-->>R: Bike marker, map follows at zoom 16
+    loop Every 15 minutes
+        FE->>API: POST /api/route-weather again
+        API-->>FE: Fresh conditions
+        FE-->>R: Updated just now
     end
-    B1["🌐 Browser"] --> D1
+    R->>FE: Tap Stop
+    FE->>WL: release
+    FE->>GPS: clearWatch, stop timers
+    Note over FE,WL: Hiding the tab also releases the wake lock
 ```
 
-| Service | Dev URL |
-|---|---|
-| Frontend | http://localhost:3000 |
-| Backend | http://localhost:8000 |
-| API Docs | http://localhost:8000/docs |
+### Feedback Loop
 
----
+```mermaid
+sequenceDiagram
+    participant U as Rider
+    participant W as FeedbackWidget
+    participant SB as Supabase
+    participant A as Admin
+    participant P as /feedback wall
 
-## 🔑 Environment Variables
-
-### Backend (`backend/.env`)
-
-```env
-# Google
-GOOGLE_MAPS_API_KEY=
-
-# Weather providers (cascade order)
-XWEATHER_CLIENT_ID=
-XWEATHER_CLIENT_SECRET=
-METEOBLUE_API_KEY=
-TOMORROW_API_KEY=
-WEATHERAPI_KEY=
-
-# CORS
-CORS_ORIGINS=["http://localhost:3000"]
+    U->>W: Pick category, write message
+    W->>SB: insert feedback, status 1
+    A->>SB: Read feedback + replies
+    A->>SB: insert admin_replies or toggle status
+    P->>SB: select feedback where status = 1, with replies
+    SB-->>P: Visible feedback + dev replies
 ```
-
-### Frontend (`frontend/.env.local`)
-
-```env
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=
-NEXT_PUBLIC_API_URL=http://localhost:8000
-
-# Supabase (feedback + admin auth)
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-```
-
-> Copy `backend/.env.example` and `frontend/.env.local.example` and fill in your values.
 
 ---
 
@@ -507,18 +502,18 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ```mermaid
 graph LR
-    GH["GitHub\nmain branch"] -->|push| CI["Vercel / Render\nauto-deploy"]
-    CI --> FE["Vercel\nNext.js Frontend"]
-    CI --> BE["Render\nFastAPI Backend"]
-    BE --> EXT["Google Routes API\nWeather APIs\nMET Malaysia"]
-    FE --> SB[("Supabase\nFeedback + Auth")]
+    GH["GitHub repo"] --> V["Vercel<br/>Next.js frontend"]
+    GH --> RD["Render<br/>FastAPI backend"]
+    V --> SB[("Supabase")]
+    V --> RD
+    RD --> EXT["Google Routes · weather APIs · MET Malaysia"]
 ```
 
 | Service | Platform | Notes |
 |---|---|---|
-| Frontend | Vercel | Auto-deploy on push to `main` |
-| Backend | Render | Free tier — ~30 s cold start on first request |
-| Database | Supabase | Managed PostgreSQL + Auth |
+| Frontend | Vercel | [redahluhh.vercel.app](https://redahluhh.vercel.app/) |
+| Backend | Render | Free tier, so expect a ~30 s cold start (the UI shows a warm-up notice) |
+| Data / Auth | Supabase | Feedback, analytics and admin login |
 
 ---
 
@@ -526,63 +521,62 @@ graph LR
 
 ```
 RedahLuhh/
-├── docker-compose.yml
+├── docker-compose.yml          backend :8000 + frontend :3000
 │
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── page.tsx          # Main app (home)
-│   │   │   ├── layout.tsx
-│   │   │   ├── changelog/
-│   │   │   ├── feedback/
-│   │   │   └── admin/
-│   │   ├── components/
-│   │   │   ├── RouteForm.tsx
-│   │   │   ├── WeatherMap.tsx
-│   │   │   ├── WeatherCard.tsx
-│   │   │   ├── WeatherSummary.tsx
-│   │   │   ├── FeedbackWidget.tsx
-│   │   │   └── AnalyticsTracker.tsx
-│   │   ├── hooks/
-│   │   │   ├── useRouteWeather.ts
-│   │   │   └── useBackendHealth.ts
-│   │   └── lib/
-│   │       ├── api.ts
-│   │       ├── supabase.ts
-│   │       └── types.ts
-│   └── [config files]
+├── backend/
+│   ├── Dockerfile              python:3.12-slim + uvicorn
+│   ├── requirements.txt
+│   └── app/
+│       ├── main.py             FastAPI app, CORS, slowapi, /health
+│       ├── config.py           pydantic-settings (API keys, CORS origins)
+│       ├── models/schemas.py   Request / response models + validation
+│       ├── routers/
+│       │   └── weather_route.py   route-weather, provider-status, debug
+│       └── services/
+│           ├── maps_service.py        Routes API, haversine, waypoint sampler
+│           ├── weather_service.py     5-provider cascade + classifiers
+│           └── met_malaysia_service.py  Warnings + district forecast
 │
-└── backend/
-    └── app/
-        ├── main.py
-        ├── config.py
-        ├── models/
-        │   └── schemas.py
-        ├── routers/
-        │   └── weather_route.py
-        └── services/
-            ├── maps_service.py
-            ├── weather_service.py
-            └── met_malaysia_service.py
+└── frontend/
+    ├── Dockerfile
+    └── src/
+        ├── app/
+        │   ├── page.tsx        Main app
+        │   ├── layout.tsx      SEO metadata, widgets
+        │   ├── feedback/       Community wall
+        │   ├── admin/          Analytics + moderation
+        │   ├── changelog/      Release notes
+        │   ├── icons/[size]/   Edge-generated PWA icons
+        │   ├── manifest.ts · robots.ts · sitemap.ts
+        ├── components/         RouteForm, WeatherMap, WeatherSummary,
+        │                       WeatherCard, FeedbackWidget, AnalyticsTracker
+        ├── hooks/              useRouteWeather, useBackendHealth
+        └── lib/                api.ts, supabase.ts, types.ts
 ```
 
 ---
 
 ## 🗺 Roadmap
 
-- [x] Real-time weather along entire route (v0.1.0)
+- [x] Weather along the entire route, not just the destination (v0.1.0)
+- [x] Google Routes API for Malaysian routing (v0.1.0)
 - [x] Multi-route comparison with weather scoring (v0.2.0)
-- [x] Departure time scheduler + hourly forecast (v0.2.0)
+- [x] Colour-coded polyline + emoji waypoint markers (v0.2.0)
+- [x] Departure time scheduler + hourly forecasts (v0.2.0)
 - [x] 5-provider weather cascade with automatic fallback (v0.3.0)
-- [x] Go Now full-screen navigation + screen wake lock (v0.3.0)
-- [x] MET Malaysia official weather warnings (v0.3.0)
-- [x] Feedback system with admin dashboard (v0.3.0)
-- [ ] Saved/favourite routes
-- [ ] Push notifications for weather changes mid-journey
-- [ ] Offline mode / PWA support
+- [x] MET Malaysia official warnings (v0.3.0)
+- [x] Go Now full-screen GPS mode + screen wake lock (v0.3.0)
+- [x] Day/night map theme + auto-detect location (v0.3.0)
+- [x] Feedback wall + admin dashboard on Supabase (v0.3.0)
+- [ ] Wire MET Malaysia district forecasts into the cascade
+- [ ] Only show warnings relevant to the route (skip marine/shipping ones)
+- [ ] Saved / favourite routes
+- [ ] Avoid tolls / route preferences
+- [ ] Push notifications for mid-ride weather changes
+- [ ] Offline mode with a service worker
 
 ---
 
 ## 📄 License
 
-[MIT](LICENSE) © 2025 Syaqirah
+No license file has been published yet, so all rights are reserved. © 2025 Siti Nursyaqirah · Source on [GitHub](https://github.com/snsyaqirah/RedahLuhh)

@@ -14,7 +14,7 @@ export const socialLinks = [
     },
     {
         name: "Twitter",
-        url: "https://twitter.com/snsyaqirah",
+        url: "https://twitter.com/snsyaqirahh",
         icon: "twitter",
         color: "#1DA1F2"
     },

@@ -1,10 +1,11 @@
-# 🚀 SinggahLuhh
+# 🕌 SinggahLuhh
 
-> Cari, jejak, dan kongsi tempat solat berhampiran anda. Community-driven mosque, surau, and musolla discovery and visit-tracking app for Malaysia.
+> Cari, jejak dan kongsi tempat solat. A community-driven app for finding masjid, surau and musolla in Malaysia, checking in by GPS, and sharing the little details that matter: is it sejuk, is there a Coway, is the parking a nightmare, any kucing oren?
 
-![Status](https://img.shields.io/badge/status-live-brightgreen)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Version](https://img.shields.io/badge/version-1.2.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![Stack](https://img.shields.io/badge/stack-React%20%2B%20FastAPI%20%2B%20Supabase-1b3a2a)
 
 ---
 
@@ -20,20 +21,20 @@
 - [API Structure](#-api-structure)
 - [Frontend Components](#-frontend-components)
 - [Feature Flows](#-feature-specific-flows)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
 - [Deployment](#-deployment)
 - [Project Structure](#-project-structure)
-- [Screenshots](#-screenshots)
 - [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
 - [License](#-license)
 
 ---
 
 ## 🧭 Overview
 
-SinggahLuhh is a community-driven mosque, surau, and musolla discovery and visit-tracking app for Malaysia. Users discover prayer places, check in to earn streaks and reputation, contribute facility info, share real-time crowd updates, form prayer groups with friends, and track personal ibadah — all wrapped in gamification that rewards the Malaysian jemaah spirit.
+SinggahLuhh is a Malay-language PWA for Muslims on the move. Travellers, commuters and anyone stuck in traffic at Maghrib can look up nearby places to pray, see what the facilities are like, and check in when they get there. Everything is crowdsourced. Users add places, fill in the facilities, vote to verify listings, and post live updates like "saf penuh" or today's iftar menu.
+
+Check-ins are geofenced with PostGIS: you have to be within 200 m of the masjid, or 500 m in Musafir mode. Each check-in earns reputation points, keeps a daily streak going and can unlock badges, so the app doubles as a personal "masjid passport". On top of that there are community boards for each masjid (announcements, events, lost and found, iftar reviews), prayer groups with invite codes, and a private log for Quran reading and sunat prayers.
+
+The FastAPI backend is a thin service layer over Supabase. Supabase Auth handles accounts and email OTP. PostgREST, through the Supabase client, does the data access. PostGIS handles the distance and duplicate checks. The React frontend talks only to the FastAPI REST API.
 
 **Type:** `Solo`
 **Brand:** `Luhh Series`
@@ -43,67 +44,48 @@ SinggahLuhh is a community-driven mosque, surau, and musolla discovery and visit
 
 ## ✨ Features
 
-### Discovery & Exploration
-- ✅ Browse masjid, surau, and musolla with search and filters (type, state, facilities)
-- ✅ Trending Masjid section — weekly computed score based on engagement
-- ✅ Map view with all prayer places plotted (PostGIS geospatial queries)
-- ✅ Slug-based URLs for easy sharing
+**Discovery**
+- ✅ Browse masjid / surau / musolla with type chips, text search (name + address) and 12 facility quick-filters (Iftar, Terawih, Aircon, Coway, Mesra OKU, Telekung Bersih, Parking Senang…)
+- ✅ Leaflet + OpenStreetMap map with an emoji marker per place type, plus a "Lokasi Saya" locate button
+- ✅ Detail page per place, reachable by slug or UUID, with photo gallery, facilities grid, live status and Google Maps directions link
+- ✅ Homepage with public stats, featured verified places and a weekly **Trending** list
 
-### Visit Tracking (Langkah)
-- ✅ GPS check-in with geofencing (must be within 200 m)
-- ✅ Track prayer type: Subuh, Zohor, Asar, Maghrib, Isyak, Jumaat, Terawih, Iftar, Kuliah
-- ✅ Daily streak tracking + longest streak badge
-- ✅ Visit history with calendar heatmap
+**Malaysian-flavoured facilities**
+- ✅ Sejuk meter (Full AC / Sejuk Gila → Panas), Coway, kucing count, karpet vibe, talam gang
+- ✅ Terawih rakaat (8 / 11 / 20 / 23), iftar type + menu, parking level, OKU / moto parking
+- ✅ Telekung rating, toilet cleanliness + floor condition, wudhu seating, kids area, tahfiz, library
+- ✅ Transit proximity (bas / LRT / MRT) and a tourist-friendly flag
 
-### Gamification & Reputation
-- ✅ Reputation Points earned via contributions (check-ins, facility edits, photos, votes)
-- ✅ Achievement Badges (Subuh Warrior, Musafir Tegar, Masjid Hunter, etc.)
-- ✅ Leaderboard filterable by Malaysian state (name-censored for privacy)
-- ✅ Badge progress tracking and achievement notifications
+**Check-ins & gamification**
+- ✅ GPS check-in validated server-side with `ST_Distance`: 200 m normally, 500 m in Musafir mode
+- ✅ 10 visit types (5 fardhu, Jumaat, Terawih, Iftar, Kuliah, general). One check-in per masjid + type + day, enforced by a unique index
+- ✅ Points per visit type (Subuh / Jumaat / Terawih 15, Isyak 12, others 8–10), daily streak + longest streak
+- ✅ Badges, reputation tiers (Jemaah Baru → Ahli Tetap → Penjaga Masjid → Tok Imam) and a leaderboard with a state filter
+- ✅ "Jejak Saya" dashboard: stat tiles, badge passport, activity calendar, visit-type breakdown, favourite masjid, visit history
 
-### Malaysian-Specific Facilities
-- ✅ Cooling system, Kucing count, Talam gang flag, Parking availability
-- ✅ Wanita facilities (telekung, cleanliness), Food & Iftar details
-- ✅ Terawih rakaat count, Amenities (toilet, Coway dispenser), Family-friendly indicators
+**Community & data quality**
+- ✅ Add a place with Nominatim address search or the device GPS. Anything within 100 m of an existing listing is rejected as a duplicate
+- ✅ Peer verification: 3 upvotes auto-verify a listing (+25 bonus to the creator). You can't vote on your own listing, and a downvote needs a reason
+- ✅ Live updates (saf, parking, crowd level: 45 min TTL · iftar menu: 24 h TTL)
+- ✅ Per-masjid announcements (pinnable), events, Lost & Found board (7-day expiry) and Iftar thread with star ratings
+- ✅ Report wrong info. Admin panel for reports, feedback and QR moderation
+- ✅ Photo upload to Supabase Storage (5 MB cap, 3 per user per masjid). TNG / DuitNow QR codes need 30+ reputation and admin approval before they show
 
-### Community Content
-- ✅ Events — post community events (khutbah, kuliah, program Ramadan) with type + datetime
-- ✅ Announcements — post notices with categories (umum, solat, kemudahan, kebersihan, keselamatan)
-- ✅ Lost & Found — report lost/found items; poster can mark as resolved
-- ✅ Iftar Thread — rate and describe iftar experience (seasonal, by star rating)
-- ✅ Live Crowdsourced Updates — real-time conditions (saf status, parking, crowd level); auto-expire after 45 min
+**Personal**
+- ✅ Bookmarks: "Disimpan" (saved) vs "Nak Pergi" (wishlist)
+- ✅ Private notes per masjid (Nota Peribadi / diary)
+- ✅ Ibadah Saya: Khatam Al-Quran log (surah/ayah ranges, juz) and a sunat prayer log (tahajjud, dhuha, witir, hajat…)
+- ✅ Prayer groups / buddy pairs with 8-char invite codes, member list and a shared check-in feed
+- ✅ PWA: installable, Workbox caching, install prompt, browser notification on check-in
+- ✅ Floating feedback widget, FAQ, changelog, privacy policy and terms pages
 
-### Bookmarks & Wishlist
-- ✅ Save prayer places to personal bookmark list
-- ✅ Mark places as "Nak Pergi" (wishlist) — toggle between saved and wishlist
-
-### Prayer Groups & Buddy System
-- ✅ Create groups (up to 10 members) or buddy pairs (2 people)
-- ✅ Unique 8-character alphanumeric invite code per group
-- ✅ Share via WhatsApp or copy invite code
-- ✅ Group members + recent activity feed visible
-
-### Personal Ibadah Tracker
-- ✅ **Khatam Al-Quran** — log progress by juz, surah, and ayah with optional notes
-- ✅ **Solat Sunat** — log tahajjud, dhuha, hajat, witir, istikharah, taubat, syukur, etc. with rakaat count
-
-### Personal Diary
-- ✅ Write private visit notes for any prayer place
-- ✅ Chronological diary entries per masjid, visible only to you
-
-### PWA & Offline Support
-- ✅ Installable on mobile as native-like app
-- ✅ Service worker for offline capability
-
-### Auth & Moderation
-- ✅ Email + password signup with 6-digit OTP email verification
-- ✅ Forgot password via email reset link
-- ✅ Community verification (upvote/downvote submissions; auto-verify at 3+ upvotes)
-- ✅ Report system for inappropriate content / wrong info (admin panel to resolve)
-
-### Other
-- 🚧 Feedback form (floating button, always accessible)
-- 💡 FAQ, Changelog, Privacy Policy, Terms pages
+**In progress / ideas**
+- 🚧 New badge set (v3 seed: `first_checkin`, `visit_5`, `streak_7`…). They're in the DB, but the check-in service still awards only the original codes, and their requirement types don't match the API's badge schema yet
+- 🚧 Admin edit/ban tooling (an `is_banned` check exists on create, but there's no UI yet)
+- 💡 Nearby search sorted by the user's live location
+- 💡 Ramadan mode (terawih tracker, iftar map)
+- 💡 Admin analytics for masjid committees
+- 💡 English / multi-language UI
 
 ---
 
@@ -112,43 +94,43 @@ SinggahLuhh is a community-driven mosque, surau, and musolla discovery and visit
 ```mermaid
 graph TD
     subgraph Frontend
-        FE["React 18 + TypeScript + Vite"]
-        UI["shadcn/ui + Radix UI + Tailwind CSS 3"]
-        RQ["TanStack Query v5 + React Router v6"]
-        RHF["React Hook Form + Zod validation"]
-        PWA["vite-plugin-pwa"]
-        CH["Recharts (data viz)"]
+        FE["React 18 + TypeScript<br/>Vite 7 · PWA"]
+        UI["shadcn/ui + Tailwind CSS<br/>Lucide · Recharts"]
+        ST["TanStack React Query<br/>React Router v6"]
+        MAP["Leaflet + OpenStreetMap<br/>Nominatim geocoding"]
     end
     subgraph Backend
-        BE["FastAPI 0.115 + Uvicorn"]
-        AUTH["python-jose (JWT) + Supabase Auth"]
-        GEO["geopy + PostGIS (geospatial)"]
-        VAL["Pydantic validation"]
+        BE["FastAPI · Python 3.11<br/>Uvicorn"]
+        PY["Pydantic v2<br/>camelCase aliases"]
+        SC["supabase-py client"]
     end
-    subgraph Infrastructure
-        DB[("PostgreSQL + PostGIS")]
-        SB["Supabase (Auth + Storage)"]
-        HOST["Vercel (Frontend) + Cloud Run (Backend)"]
-        EXT["SMTP (Resend), Maps API"]
+    subgraph Supabase
+        AUTH["Supabase Auth<br/>email + OTP, JWT"]
+        DB[("PostgreSQL + PostGIS<br/>RLS · triggers · RPC")]
+        STO["Supabase Storage<br/>masjid-media bucket"]
     end
-    FE --> UI & RQ & RHF & PWA & CH
-    BE --> AUTH & GEO & VAL
-    BE --> SB --> DB
     FE --> BE
-    BE --> EXT
+    FE --> MAP
+    BE --> SC
+    SC --> AUTH
+    SC --> DB
+    SC --> STO
 ```
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18 + TypeScript, Vite 7, React Router v6, TanStack Query v5 |
-| UI/Styling | shadcn/ui, Radix UI, Tailwind CSS 3, next-themes |
-| Form Handling | React Hook Form, Zod |
-| Backend | FastAPI 0.115, Uvicorn |
-| Auth | python-jose (JWT), Supabase Auth |
-| Database | PostgreSQL + PostGIS (geospatial) |
-| Storage | Supabase Storage (photo uploads) |
-| Hosting | Vercel (frontend), Cloud Run (backend) |
-| External | Resend (SMTP), Google Maps API |
+| Frontend | React 18 + TypeScript + Vite 7 |
+| Routing / State | React Router v6 · TanStack React Query |
+| UI | Tailwind CSS + shadcn/ui (Radix UI) · Lucide icons · Recharts |
+| Maps | Leaflet 1.9 (CDN) + OpenStreetMap tiles · Nominatim search |
+| PWA | vite-plugin-pwa (Workbox, auto-update) |
+| Backend | FastAPI 0.115 · Uvicorn · Pydantic v2 / pydantic-settings |
+| Data access | supabase-py 2.10 (PostgREST + Auth + Storage) |
+| Database | Supabase PostgreSQL + PostGIS (`GEOGRAPHY(POINT, 4326)`) |
+| Auth | Supabase Auth (email/password + email OTP verification) |
+| Storage | Supabase Storage bucket `masjid-media` |
+| Containers | Docker (backend + multi-stage frontend / nginx) |
+| Testing | Vitest + Testing Library (frontend scaffold) |
 
 ---
 
@@ -158,11 +140,15 @@ graph TD
 
 ```mermaid
 graph TD
-    A[User / Browser] --> B[React Frontend<br/>Vite + PWA]
-    B --> C["FastAPI Backend<br/>JWT Auth + Validation"]
-    C --> D[("PostgreSQL<br/>+ PostGIS")]
-    C --> E["Supabase<br/>Auth + Storage"]
-    C --> F["External Services<br/>Maps, SMTP, etc"]
+    U[User / Browser PWA] --> FE[React SPA on Vercel]
+    FE -->|REST + Bearer JWT| BE[FastAPI on Cloud Run]
+    BE -->|service role| PG[Supabase PostgREST]
+    BE -->|verify token, sign-up, OTP| SA[Supabase Auth]
+    BE -->|photo upload| SS[Supabase Storage]
+    PG --> DB[(Postgres + PostGIS)]
+    SA --> DB
+    FE -->|map tiles| OSM[OpenStreetMap]
+    FE -->|address search| NOM[Nominatim]
 ```
 
 ### System Architecture
@@ -170,33 +156,25 @@ graph TD
 ```mermaid
 graph TD
     subgraph Frontend
-        Pages["Pages\n(Browse, Detail, Dashboard, Groups, etc)"]
-        Components["Components\n(MasjidCard, CheckinWidget, etc)"]
-        Hooks["Hooks\n(TanStack Query, Auth, etc)"]
-        Client["API Client\n(lib/api.ts)"]
-        Pages --> Components
-        Components --> Hooks
-        Hooks --> Client
+        P[Pages] --> C[Components: Header · MasjidCard · FeedbackButton]
+        P --> RQ[React Query hooks]
+        RQ --> API[lib/api.ts fetch wrapper]
+        AC[AuthContext] --> SJS[supabase-js session]
     end
     subgraph Backend
-        Router["Routes\n(/api/v1/*)"]
-        Auth["Auth Middleware\n(JWT validation)"]
-        Endpoints["Endpoints\n(masjids, checkins, etc)"]
-        Services["Services\n(Business logic)"]
-        RLS["Supabase Admin SDK\n(bypasses RLS)"]
-        Router --> Auth
-        Auth --> Endpoints
-        Endpoints --> Services
-        Services --> RLS
+        R[APIRouter /api/v1] --> D[deps: get_current_user]
+        D --> E[Endpoint modules x19]
+        E --> SC[supabase_admin client]
     end
     subgraph Database
-        DB[("PostgreSQL\n+ PostGIS")]
-        Store["Supabase Storage\n(photos)"]
-        RLS --> DB
-        RLS --> Store
+        SC --> T[Tables + RLS]
+        SC --> F[RPC: find_nearby_masjids · get_masjid_distance · compute_trending_masjids]
+        T --> TR[Triggers: profile on signup · auto-verify · updated_at]
     end
-    Client --> Router
+    API --> R
 ```
+
+> Almost every endpoint uses the **service-role** Supabase client and checks ownership in Python (for example `created_by == current_user`). The RLS policies in the schema are a second line of defence for anything that reaches Postgres with the anon key.
 
 ---
 
@@ -204,41 +182,19 @@ graph TD
 
 ```mermaid
 flowchart TD
-    A([🏠 Home]) --> B{Logged in?}
-    B -->|No| C[Login / Register]
-    B -->|Yes| D[Dashboard / Browse]
-    
-    C --> OTP["📧 Enter OTP<br/>(6-digit email)"]
-    OTP --> E["✅ Account Created<br/>(profile auto-created)"]
-    E --> D
-    
-    D --> F{Core Action}
-    F -->|Browse| G["🔍 Search + Filter<br/>by Type / State / Facilities"]
-    F -->|View Map| H["🗺️ Map View<br/>All prayer places plotted"]
-    F -->|Check-in| I["📍 Masjid Detail Page<br/>Review all info"]
-    
-    I --> J["✅ GPS Check-in<br/>(must be within 200m)"]
-    J --> K["Verify location"]
-    K -->|Success| L["➕ Reputation Points<br/>✅ Streak updated"]
-    K -->|Too far| M["❌ Too far<br/>(show distance)"]
-    M --> I
-    
-    I --> N["🔖 Bookmark / Wishlist"]
-    I --> O["📔 Add Diary Entry"]
-    I --> P["📅 Add Event / 📢 Announcement"]
-    I --> Q["🍽️ Iftar Rating / Lost&Found"]
-    
-    D --> R["📊 Dashboard"]
-    R --> S["📈 Stats + Heatmap"]
-    R --> T["🏆 Leaderboard<br/>(filter by state)"]
-    R --> U["🎖️ Badges"]
-    
-    D --> V["👥 Prayer Groups"]
-    V --> W["Create / Join<br/>(8-char code)"]
-    W --> X["Group Detail<br/>(members + activity)"]
-    
-    D --> Y["⭐ Ibadah Saya"]
-    Y --> Z["Khatam Al-Quran /  Solat Sunat"]
+    A([Open app]) --> B[Landing: stats, popular, trending]
+    B --> C[Cari: browse + filter]
+    B --> M[Peta: map view]
+    C --> D[Masjid detail]
+    M --> D
+    D --> L{Logged in?}
+    L -->|No| AU[Log masuk / Daftar + OTP]
+    AU --> D
+    L -->|Yes| ACT[Check-in · Vote · Bookmark · Live update<br/>Facilities · Photos · Notes · Community boards]
+    ACT --> J[Jejak Saya dashboard]
+    J --> PR[Profil]
+    J --> AD[Tambah Tempat Solat]
+    D --> G[Kumpulan Solat]
 ```
 
 ### Page Map
@@ -246,96 +202,36 @@ flowchart TD
 ```mermaid
 graph TD
     subgraph Public ["🌐 Public Routes"]
-        ROOT["/"]
+        ROOT["/ Landing"]
         BROWSE["/browse"]
-        MAP["/map"]
-        DETAIL["/masjid/:id"]
-        AUTH["/auth"]
-        RESET["/reset-password"]
-        PRIV["/privacy"]
-        TERMS["/terms"]
-        FAQ["/faq"]
-        CL["/changelog"]
+        MAPV["/map"]
+        DET["/masjid/:slug"]
+        AUTH["/auth · /reset-password"]
+        INFO["/faq · /changelog<br/>/privacy · /terms"]
     end
-
-    subgraph Protected ["🔐 Protected Routes (auth required)"]
-        TRACKING["/tracking"]
-        PROFILE["/profile"]
+    subgraph Protected ["🔐 Logged-in Routes"]
+        TRACK["/tracking"]
         ADD["/add"]
-        BOOKMARKS["/bookmarks"]
+        PROF["/profile"]
+        BOOK["/bookmarks"]
         IBADAH["/ibadah"]
-        GROUPS["/groups"]
-        GROUP_D["/groups/:id"]
-        ADMIN["/admin"]
+        GRP["/groups · /groups/:id"]
+        ADM["/admin (is_admin)"]
     end
-
     ROOT --> BROWSE
-    ROOT --> MAP
-    ROOT --> DETAIL
-    ROOT --> AUTH
-    BROWSE --> DETAIL
-    MAP --> DETAIL
-    DETAIL --> TRACKING
-    AUTH --> TRACKING
-    GROUPS --> GROUP_D
+    ROOT --> MAPV
+    BROWSE --> DET
+    MAPV --> DET
+    AUTH --> TRACK
+    TRACK --> ADD
+    TRACK --> PROF
+    PROF --> BOOK
+    PROF --> IBADAH
+    PROF --> GRP
+    PROF --> ADM
 
     style Public fill:#e8f5e9,stroke:#4caf50
     style Protected fill:#e3f2fd,stroke:#2196f3
-```
-
-### Wireframe Overview
-
-```mermaid
-graph TD
-    subgraph Home ["🏠 Home / Landing"]
-        H1["Header (nav + auth)"]
-        H2["Hero + CTA"]
-        H3["📊 Stats bar (total masjids / visits)"]
-        H4["🔥 Trending Minggu Ini (horizontal scroll)"]
-        H5["🌟 Popular Masjids (grid)"]
-        H1 --> H2 --> H3 --> H4 --> H5
-    end
-
-    subgraph Browse ["🔍 Browse Masjid"]
-        B1["Search input"]
-        B2["Type chips (Masjid · Surau · Musolla)"]
-        B3["Facility filter tags (scrollable)"]
-        B4["State filter"]
-        B5["Sort toggle (distance / rating / trending)"]
-        B6["MasjidCard grid (cover photo + badges)"]
-        B1 --> B2 --> B3 --> B4 --> B5 --> B6
-    end
-
-    subgraph Detail ["📍 Masjid Detail"]
-        D1["Photo gallery"]
-        D2["Name · Type · Address · Status"]
-        D3["✅ GPS Check-in button"]
-        D4["🔖 Bookmark / 💭 Wishlist toggles"]
-        D5["⭐ Verification status + upvote/downvote"]
-        D6["🏠 Facilities panel (expandable)"]
-        D7["📢 Live Updates (auto-expire)"]
-        D8["📅 Events + 📢 Announcements + 🍽️ Iftar Thread"]
-        D9["📔 Diary + 🔍 Lost&Found"]
-        D1 --> D2 --> D3 --> D4 --> D5 --> D6 --> D7 --> D8 --> D9
-    end
-
-    subgraph Dashboard ["📊 Dashboard"]
-        K1["👤 User welcome + stats (total visits · streak · unique)"]
-        K2["📊 Visit calendar heatmap"]
-        K3["🎖️ Badges earned (grid)"]
-        K4["🏆 Leaderboard (state filter + censored names)"]
-        K5["📋 Visit history (latest first)"]
-        K1 --> K2 --> K3 --> K4 --> K5
-    end
-
-    subgraph Groups ["👥 Prayer Groups"]
-        G1["Buat Kumpulan / Join dengan Kod buttons"]
-        G2["My Groups list"]
-        G3["Group Detail (members list)"]
-        G4["🔗 Invite code (large mono) + Copy + WhatsApp"]
-        G5["📊 Recent group activity feed"]
-        G1 --> G2 --> G3 --> G4 --> G5
-    end
 ```
 
 ---
@@ -345,59 +241,51 @@ graph TD
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant FE as Frontend
+    participant FE as React SPA
     participant API as FastAPI
-    participant SB as Supabase Auth
-    participant DB as PostgreSQL
+    participant SA as Supabase Auth
+    participant DB as Postgres
 
-    Note over U,DB: Signup (3-step)
-    U->>FE: Fill signup form (name, email, password)
+    Note over U,DB: Sign up with email OTP
+    U->>FE: Name, email, password, gender
     FE->>API: POST /api/v1/auth/signup
-    API->>SB: supabase.auth.sign_up()
-    SB-->>DB: INSERT auth.users
-    SB-->>U: Send 6-digit OTP email
-    API-->>FE: 201 Created
-
-    Note over U,DB: OTP Verification
-    U->>FE: Enter 6-digit OTP
+    API->>SA: sign_up with full_name metadata
+    SA->>DB: Insert auth.users
+    DB->>DB: Trigger creates profiles row
+    API->>DB: Upsert profile (gender)
+    SA-->>U: 6-digit code by email
+    API-->>FE: 201 (session returned if confirm-email is off)
+    U->>FE: Enter OTP
     FE->>API: POST /api/v1/auth/verify-otp
-    API->>SB: supabase.auth.verify_otp()
-    SB-->>DB: Trigger auto-creates profiles row
-    SB-->>API: Return session (access_token, refresh_token)
-    API-->>FE: Tokens + user info (reputation, name, etc)
-    FE->>FE: Store tokens in AuthContext + localStorage
+    API->>SA: verify_otp type signup
+    API-->>FE: accessToken + refreshToken + user
 
-    Note over U,DB: Subsequent API Calls
-    U->>FE: Any action (check-in, bookmark, etc)
-    FE->>API: Request + Authorization: Bearer {access_token}
-    API->>API: Validate JWT (get_current_user dependency)
-    API->>DB: Query data (Supabase Admin SDK)
-    DB-->>API: Data
-    API-->>FE: JSON response
-    FE-->>U: UI update
+    Note over U,DB: Login and authenticated calls
+    U->>FE: Email + password
+    FE->>API: POST /api/v1/auth/login
+    API->>SA: sign_in_with_password
+    API-->>FE: Tokens, stored in localStorage
+    FE->>API: Any request with Bearer token
+    API->>SA: auth.get_user(token)
+    SA-->>API: User id + metadata
+    API-->>FE: JSON
 ```
 
-### Token Lifecycle
+### Password Reset & Account
 
 ```mermaid
 sequenceDiagram
-    participant FE as Frontend
+    participant FE as React SPA
     participant API as FastAPI
-    participant SB as Supabase Auth
+    participant SA as Supabase Auth
 
-    FE->>API: Request + Bearer accessToken
-    Note over API: Check token claims
-    API-->>FE: 401 Unauthorized (expired)
-    
-    FE->>API: POST /api/v1/auth/refresh
-    Note over FE: Send refreshToken from localStorage
-    API->>SB: supabase.auth.refresh_session(refreshToken)
-    SB-->>API: New session (new accessToken, refreshToken)
-    API-->>FE: New tokens + user info
-    FE->>FE: Update localStorage + AuthContext
-    
-    FE->>API: Retry original request + new accessToken
-    API-->>FE: 200 OK + data
+    FE->>API: POST /auth/forgot-password with redirectTo
+    API->>SA: reset_password_for_email
+    API-->>FE: Always 200, no user enumeration
+    SA-->>FE: Email link to /reset-password with recovery token
+    FE->>API: POST /auth/update-password, Bearer recovery token
+    API->>SA: admin.update_user_by_id
+    Note over FE,SA: DELETE /auth/account removes the auth user, data cascades
 ```
 
 ---
@@ -408,394 +296,259 @@ sequenceDiagram
 
 ```mermaid
 erDiagram
-    PROFILES {
+    profiles {
         uuid id PK
         text full_name
-        text phone_number
         text gender
-        text state
         int reputation_points
         int streak_count
         int longest_streak
-        timestamp last_checkin_at
-        bool is_admin
-        bool is_banned
-        timestamp created_at
+        timestamptz last_checkin_at
+        boolean is_admin
+        boolean is_banned
     }
-
-    MASJIDS {
+    masjids {
         uuid id PK
         text name
-        text address
+        text slug UK
         text type
-        geometry location
+        text address
+        text state
+        geography location
         text status
         int verification_count
-        text description
-        text slug
-        text state
         uuid created_by FK
-        timestamp created_at
+        timestamptz deleted_at
     }
-
-    MASJID_FACILITIES {
+    masjid_facilities {
         uuid id PK
         uuid masjid_id FK
+        int terawih_rakaat
         text cooling_system
+        boolean has_coway
         text kucing_count
-        bool talam_gang
-        text iftar_type
-        text terawih_rakaat
         text parking_level
-        bool has_kids_area
-        uuid created_by FK
+        boolean near_lrt
     }
-
-    MASJID_MEDIA {
+    masjid_media {
         uuid id PK
         uuid masjid_id FK
         text media_type
         text url
-        bool is_verified
+        boolean is_verified
         uuid created_by FK
-        timestamp created_at
     }
-
-    USER_VISITS {
+    user_visits {
         uuid id PK
         uuid user_id FK
         uuid masjid_id FK
         text visit_type
         date visit_date
-        geometry user_location
+        geography user_location
         numeric distance_meters
-        timestamp created_at
+        boolean is_musafir
     }
-
-    PROFILES ||--o{ USER_VISITS : "makes"
-    MASJIDS ||--|| MASJID_FACILITIES : "has"
-    MASJIDS ||--o{ MASJID_MEDIA : "has"
-    MASJIDS ||--o{ USER_VISITS : "receives"
-    PROFILES ||--o{ MASJIDS : "creates"
-    PROFILES ||--o{ MASJID_FACILITIES : "edits"
-```
-
-### Feature / Social ERD
-
-```mermaid
-erDiagram
-    BOOKMARKS {
-        uuid id PK
-        uuid user_id FK
-        uuid masjid_id FK
-        bool is_wishlist
-        timestamp created_at
-    }
-
-    DIARY_ENTRIES {
-        uuid id PK
-        uuid user_id FK
-        uuid masjid_id FK
-        text content
-        date visit_date
-        timestamp created_at
-    }
-
-    KHATAM_LOGS {
-        uuid id PK
-        uuid user_id FK
-        int juz
-        int surah_from
-        int ayah_from
-        int surah_to
-        int ayah_to
-        text notes
-        timestamp created_at
-    }
-
-    SPECIAL_PRAYER_LOGS {
-        uuid id PK
-        uuid user_id FK
-        text prayer_type
-        int rakaat
-        text notes
-        timestamp created_at
-    }
-
-    EVENTS {
-        uuid id PK
-        uuid masjid_id FK
-        uuid user_id FK
-        text title
-        text event_type
-        timestamp starts_at
-        text description
-        timestamp created_at
-    }
-
-    ANNOUNCEMENTS {
-        uuid id PK
-        uuid masjid_id FK
-        uuid user_id FK
-        text title
-        text body
-        text category
-        timestamp expires_at
-        timestamp created_at
-    }
-
-    LOST_FOUND_POSTS {
-        uuid id PK
-        uuid masjid_id FK
-        uuid user_id FK
-        text description
-        bool is_resolved
-        timestamp created_at
-    }
-
-    IFTAR_THREADS {
-        uuid id PK
-        uuid masjid_id FK
-        uuid user_id FK
-        text iftar_type
-        text description
-        int rating
-        timestamp created_at
-    }
-
-    LIVE_UPDATES {
-        uuid id PK
-        uuid masjid_id FK
-        uuid user_id FK
-        text update_type
-        text value
-        timestamp expires_at
-        timestamp created_at
-    }
-
-    PRAYER_GROUPS {
-        uuid id PK
-        text name
-        text type
-        text invite_code
-        uuid created_by FK
-        int max_members
-        timestamp created_at
-    }
-
-    PRAYER_GROUP_MEMBERS {
-        uuid id PK
-        uuid group_id FK
-        uuid user_id FK
-        text role
-        timestamp joined_at
-    }
-
-    VERIFICATIONS {
+    verifications {
         uuid id PK
         uuid masjid_id FK
         uuid user_id FK
         text vote_type
         text reason
-        timestamp created_at
     }
-
-    BADGES {
+    live_updates {
         uuid id PK
-        text code
+        uuid masjid_id FK
+        uuid user_id FK
+        text update_type
+        text value
+        timestamptz expires_at
+    }
+    badges {
+        uuid id PK
+        text code UK
         text name
-        text description
-        text icon
         text requirement_type
         int requirement_value
     }
-
-    USER_BADGES {
+    user_badges {
         uuid id PK
         uuid user_id FK
         uuid badge_id FK
-        timestamp earned_at
+        timestamptz earned_at
     }
+    profiles ||--o{ masjids : "adds"
+    masjids ||--o| masjid_facilities : "has"
+    masjids ||--o{ masjid_media : "has"
+    profiles ||--o{ user_visits : "checks in"
+    masjids ||--o{ user_visits : "visited at"
+    masjids ||--o{ verifications : "voted on"
+    masjids ||--o{ live_updates : "status"
+    badges ||--o{ user_badges : "earned as"
+    profiles ||--o{ user_badges : "earns"
+```
 
-    PROFILES ||--o{ BOOKMARKS : "saves"
-    PROFILES ||--o{ DIARY_ENTRIES : "writes"
-    PROFILES ||--o{ KHATAM_LOGS : "logs"
-    PROFILES ||--o{ SPECIAL_PRAYER_LOGS : "logs"
-    PROFILES ||--o{ EVENTS : "posts"
-    PROFILES ||--o{ ANNOUNCEMENTS : "posts"
-    PROFILES ||--o{ LOST_FOUND_POSTS : "posts"
-    PROFILES ||--o{ IFTAR_THREADS : "posts"
-    PROFILES ||--o{ LIVE_UPDATES : "posts"
-    PROFILES ||--o{ VERIFICATIONS : "votes"
-    PROFILES ||--o{ PRAYER_GROUPS : "creates"
-    PROFILES ||--o{ PRAYER_GROUP_MEMBERS : "joins"
-    PROFILES ||--o{ USER_BADGES : "earns"
-    MASJIDS ||--o{ BOOKMARKS : "bookmarked"
-    MASJIDS ||--o{ DIARY_ENTRIES : "has"
-    MASJIDS ||--o{ EVENTS : "has"
-    MASJIDS ||--o{ ANNOUNCEMENTS : "has"
-    MASJIDS ||--o{ LOST_FOUND_POSTS : "has"
-    MASJIDS ||--o{ IFTAR_THREADS : "has"
-    MASJIDS ||--o{ LIVE_UPDATES : "receives"
-    MASJIDS ||--o{ VERIFICATIONS : "receives"
-    PRAYER_GROUPS ||--o{ PRAYER_GROUP_MEMBERS : "has"
-    BADGES ||--o{ USER_BADGES : "awarded via"
+### Community & Personal ERD
+
+```mermaid
+erDiagram
+    masjids ||--o{ masjid_announcements : "posts"
+    masjids ||--o{ masjid_events : "hosts"
+    masjids ||--o{ lost_found_posts : "board"
+    masjids ||--o{ iftar_threads : "reviews"
+    masjids ||--o{ trending_masjids : "scored"
+    masjids ||--o{ masjid_bookmarks : "saved"
+    masjids ||--o{ masjid_diary : "noted"
+    prayer_groups ||--o{ prayer_group_members : "has"
+    profiles ||--o{ prayer_group_members : "joins"
+    profiles ||--o{ khatam_progress : "logs"
+    profiles ||--o{ special_prayers : "logs"
+
+    masjid_announcements {
+        uuid id PK
+        text title
+        text category
+        boolean is_pinned
+    }
+    masjid_events {
+        uuid id PK
+        text title
+        text event_type
+        timestamptz starts_at
+        boolean is_recurring
+    }
+    lost_found_posts {
+        uuid id PK
+        text description
+        boolean is_resolved
+        timestamptz expires_at
+    }
+    iftar_threads {
+        uuid id PK
+        text iftar_type
+        int rating
+        text ramadan_season
+    }
+    trending_masjids {
+        uuid id PK
+        int score
+        date week_of
+    }
+    prayer_groups {
+        uuid id PK
+        text name
+        text type
+        text invite_code UK
+        int max_members
+    }
+    prayer_group_members {
+        uuid id PK
+        text role
+        timestamptz joined_at
+    }
+    khatam_progress {
+        uuid id PK
+        int surah_from
+        int ayah_from
+        int surah_to
+        int ayah_to
+        int juz
+    }
+    special_prayers {
+        uuid id PK
+        text prayer_type
+        int rakaat
+        boolean is_ramadan
+    }
 ```
 
 ### Database Schema Overview
 
-| Table | Purpose | Key Relations |
-|---|---|---|
-| `profiles` | User auth + reputation + streaks | — |
-| `masjids` | Prayer place records | created_by: profiles |
-| `masjid_facilities` | Detailed facility info per masjid | masjid_id, created_by |
-| `masjid_media` | Photos (main, interior, etc) | masjid_id |
-| `user_visits` | Check-in records (Langkah) | user_id, masjid_id |
-| `bookmarks` | Saved / wishlist places | user_id, masjid_id |
-| `diary_entries` | Personal notes per visit | user_id, masjid_id |
-| `events` | Community events (khutbah, kuliah) | masjid_id, user_id |
-| `announcements` | Masjid notices | masjid_id, user_id |
-| `live_updates` | Real-time conditions (45 min expiry) | masjid_id, user_id |
-| `iftar_threads` | Seasonal iftar ratings | masjid_id, user_id |
-| `lost_found_posts` | Lost & found items | masjid_id, user_id |
-| `khatam_logs` | Quran reading progress | user_id |
-| `special_prayer_logs` | Solat sunat tracking | user_id |
-| `prayer_groups` | User-created groups (max 10 members) | created_by |
-| `prayer_group_members` | Group membership | group_id, user_id |
-| `badges` | Badge definitions | — |
-| `user_badges` | Badge achievements | user_id, badge_id |
-| `verifications` | Community upvote/downvote | masjid_id, user_id |
+| Table | Purpose |
+|---|---|
+| `profiles` | Extends `auth.users`: name, gender, reputation, streaks, admin/ban flags. Created by a trigger on signup |
+| `masjids` | Places (masjid / surau / musolla) with PostGIS location, slug, status `pending → verified` |
+| `masjid_facilities` | One row per place with all the facility enums and flags |
+| `masjid_media` | Photos and QR codes. QR rows stay hidden until an admin approves them |
+| `user_visits` | Check-ins. Unique on `(user, masjid, visit_type, visit_date)` |
+| `verifications` | Up/down votes. Unique per user per masjid |
+| `live_updates` | Short-lived crowd/saf/parking/iftar status with `expires_at` |
+| `badges` / `user_badges` | Badge catalogue and earned badges |
+| `reports` · `feedback` | Moderation queue and app feedback |
+| `masjid_announcements` · `masjid_events` · `lost_found_posts` · `iftar_threads` | Per-masjid community boards |
+| `masjid_bookmarks` · `masjid_diary` · `khatam_progress` · `special_prayers` | Private, per-user data |
+| `prayer_groups` · `prayer_group_members` | Groups / buddy pairs with invite codes |
+| `trending_masjids` | Weekly scores filled by `compute_trending_masjids()` |
+
+> **Postgres logic:** `find_nearby_masjids(lat, lng, radius)` and `get_masjid_distance(...)` wrap `ST_DWithin` / `ST_Distance` on a GiST-indexed geography column. `on_auth_user_created` creates the profile, and `trigger_auto_verify` recounts upvotes. Most tables are soft-deleted via `deleted_at`.
 
 ---
 
 ## 🔌 API Structure
 
+### API Overview
+
 ```mermaid
 mindmap
-  root((API /api/v1))
+  root((/api/v1))
     auth
-      POST /signup
-      POST /verify-otp
-      POST /resend-otp
-      POST /login
-      POST /refresh
-      POST /logout
-      GET /me
-      POST /forgot-password
-      POST /reset-password
-      DELETE /account
+      signup and verify-otp
+      login and refresh
+      forgot and update password
+      me and delete account
     masjids
-      GET / - browse with cover photos
-      GET /stats
-      POST /check-nearby
-      POST / - add new masjid
-      GET /:id - detail + all info
-      PATCH /:id - update
-      DELETE /:id
-      GET /:id/media
-      POST /:id/media - upload
-    facilities
-      GET /:masjid_id
-      POST /:masjid_id
-      PATCH /:masjid_id
+      list and stats
+      detail by slug
+      check-nearby
+      create update delete
+      media and QR review
     checkins
-      POST / - GPS check-in
-      GET /history
-    verifications
-      POST /vote
-      POST /report
-      GET /status/:id
-      GET /reports/mine
-      PATCH /reports/:id - admin
-    live-updates
-      POST / - create update
-      GET /:masjid_id
-    dashboard
-      GET /stats
-      GET /badges
-      GET /leaderboard
-    bookmarks
-      GET /
-      POST /
-      DELETE /:masjid_id
-    diary
-      GET /
-      POST /
-      DELETE /:id
-    khatam
-      GET /
-      POST /
-      DELETE /:id
-    special-prayers
-      GET /
-      POST /
-      DELETE /:id
-    events
-      GET /
-      POST /
-      DELETE /:id
-    announcements
-      GET /
-      POST /
-      DELETE /:id
-    lost-found
-      GET /
-      POST /
-      PATCH /:id/resolve
-      DELETE /:id
-    iftar
-      GET /
-      POST /
-      DELETE /:id
-    prayer-groups
-      GET / - my groups
-      POST / - create group
-      POST /join - join via code
-      GET /:id - group detail
-      DELETE /:id/leave
-      DELETE /:id - admin delete
-    trending
-      GET / - weekly trending list
+      check in
+      history
+    community
+      live-updates
+      verifications
+      facilities
+      boards and trending
+    personal
+      profile and dashboard
+      bookmarks and diary
+      khatam and prayers
+      groups
     feedback
-      POST / - submit feedback
 ```
 
-### Request/Response Flow (Check-in Example)
+| Group | Endpoints |
+|---|---|
+| Auth | `POST /auth/{signup, verify-otp, resend-otp, login, refresh, logout, forgot-password, update-password}` · `GET /auth/me` · `DELETE /auth/account` |
+| Masjids | `GET /masjids` (page, type, state, search) · `GET /masjids/stats` · `GET /masjids/{slug or id}` · `POST /masjids` · `PATCH/DELETE /masjids/{id}` · `POST /masjids/check-nearby` |
+| Media | `GET/POST /masjids/{id}/media` · `POST .../media/upload` · `DELETE .../media/{mediaId}` · `GET /masjids/admin/pending-media` · `PATCH .../approve` · `DELETE .../reject` |
+| Check-ins | `POST /checkins/` · `GET /checkins/history` |
+| Verification | `POST /verifications/vote` · `GET /verifications/status/{id}` · `POST /verifications/report` · `GET /verifications/reports/{mine, all}` · `PATCH /verifications/reports/{id}` |
+| Live / Facilities | `POST /live-updates/` · `GET /live-updates/{id}` · `GET /live-updates/options` · `GET/POST/PATCH /facilities/{id}` |
+| Community | `/announcements` · `/events` · `/lost-found` (+ `/resolve`) · `/iftar` · `GET /trending` |
+| Personal | `GET/PATCH /profile/me` · `GET /dashboard/{stats, badges, leaderboard}` · `/bookmarks` · `/diary` · `/khatam` · `/special-prayers` |
+| Groups | `GET/POST /groups` · `POST /groups/join?invite_code=` · `GET /groups/{id}` · `DELETE /groups/{id}/leave` · `DELETE /groups/{id}` |
+| Feedback | `POST /feedback` · `GET /feedback/admin` |
+
+### Request/Response Flow
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant FE as Frontend
-    participant MW as Auth Middleware
-    participant API as FastAPI Controller
-    participant VAL as Validation Service
-    participant DB as PostgreSQL
+    participant FE as React Query
+    participant R as FastAPI router
+    participant DEP as get_current_user
+    participant SB as supabase_admin
+    participant DB as Postgres
 
-    U->>FE: Tap check-in button (send device location)
-    FE->>MW: POST /api/v1/checkins + Bearer token + {lat, lon, masjid_id}
-    MW->>MW: Validate JWT
-    MW->>API: Pass user_id from token claims
-    
-    API->>VAL: Validate geofence (distance_meters < 200m)
-    VAL->>DB: SELECT ST_Distance(user_location, masjid_location)
-    DB-->>VAL: distance_meters
-    
-    alt distance > 200m
-        VAL-->>API: 400 Too far
-        API-->>FE: {error: "Too far", distance_meters}
-    else already checked in today
-        VAL->>DB: Check UNIQUE(user_id, masjid_id, visit_type, visit_date)
-        DB-->>VAL: Duplicate found
-        VAL-->>API: 409 Duplicate check-in
-        API-->>FE: {error: "Already checked in"}
-    else OK
-        API->>DB: INSERT user_visits
-        API->>DB: UPDATE profiles SET reputation_points += 10
-        API->>DB: UPDATE profiles SET streak_count += 1
-        DB-->>API: Success
-        API-->>FE: {reputation, streak, badges_earned}
-        FE-->>U: Toast + confetti animation
-    end
+    FE->>R: POST /api/v1/checkins/ with Bearer token
+    R->>DEP: Resolve dependency
+    DEP->>SB: auth.get_user(token)
+    SB-->>DEP: user id
+    R->>SB: rpc get_masjid_distance
+    SB->>DB: ST_Distance on geography
+    DB-->>R: distance in metres
+    R->>SB: insert user_visits, update profile
+    R-->>FE: camelCase JSON via Pydantic aliases
 ```
 
 ---
@@ -806,373 +559,124 @@ sequenceDiagram
 
 ```mermaid
 graph TD
-    App["App.tsx\n(Routes + Providers)"]
-    
-    App --> AuthContext["AuthContext\n(user, tokens, login/logout)"]
-    App --> Header["Header\n(nav + auth dropdown)"]
-    App --> Footer["Footer"]
-    App --> Pages["Pages"]
-    
-    Pages --> Index["Index\n(Home + Trending)"]
-    Pages --> Browse["BrowseMasjid\n(Search + Filters)"]
-    Pages --> Detail["MasjidDetail\n(Full info + Check-in)"]
-    Pages --> Dashboard["TrackingDashboard\n(Stats + Leaderboard)"]
-    Pages --> Groups["PrayerGroups\n(List + Create + Join)"]
-    Pages --> Bookmarks["Bookmarks\n(Saved + Wishlist)"]
-    Pages --> Ibadah["IbadahSaya\n(Khatam + Solat Sunat)"]
-    Pages --> MapView["MapView"]
-    Pages --> Profile["Profile"]
-    Pages --> Admin["AdminPanel"]
-    
-    Detail --> DetailSections["Check-in Widget<br/>Facilities<br/>Events<br/>Announcements<br/>Diary<br/>Lost&Found<br/>Iftar Thread"]
-    
-    Browse --> MasjidCard["MasjidCard\n(cover photo + badges)"]
-    Index --> MasjidCard
-    
-    Dashboard --> LeaderboardComp["Leaderboard\n(with state filter)"]
-    Dashboard --> BadgesComp["BadgesGrid"]
-    Dashboard --> HeatmapComp["VisitCalendar"]
-    
-    Groups --> GroupDetail["PrayerGroupDetail\n(members + activity)"]
-    
-    App --> SharedComps["Shared Components<br/>InstallPrompt<br/>FeedbackButton<br/>Modals"]
+    App["App.tsx<br/>QueryClient · AuthProvider · Tooltip"]
+    App --> GL["Global: Toaster · Sonner<br/>InstallPrompt · FeedbackButton"]
+    App --> RT["BrowserRouter"]
+    RT --> IDX["Index"]
+    RT --> BR["BrowseMasjid"]
+    RT --> MV["MapView"]
+    RT --> MD["MasjidDetail"]
+    RT --> TD["TrackingDashboard"]
+    RT --> AM["AddMasjid"]
+    RT --> PF["Profile · Bookmarks · IbadahSaya"]
+    RT --> PG["PrayerGroups · PrayerGroupDetail"]
+    RT --> AP["AdminPanel"]
+    IDX --> MC["MasjidCard"]
+    BR --> MC
+    MD --> FAC["Facilities sheet"]
+    MD --> MED["Media dialog"]
+    MD --> BOARDS["Announcements · Events<br/>Lost and Found · Iftar thread"]
+    MD --> CI["Check-in panel + Musafir toggle"]
 ```
 
 ### Key Components
 
-| Component | Purpose |
+| Component / Module | Purpose |
 |---|---|
-| `AuthContext` | Global auth state (user, tokens, login/logout/refresh) |
-| `ProtectedRoute` | Redirects to login if not authenticated |
-| `Header` | Navigation bar + auth dropdown + mobile menu |
-| `MasjidCard` | Prayer place preview (cover photo, type, verification status, badges) |
-| `MasjidDetail` | Full masjid view: all facilities, events, announcements, check-in, community content |
-| `CheckinWidget` | GPS check-in button + geofence validation feedback |
-| `FacilitiesPanel` | Expandable Malaysian-specific facility details |
-| `LiveUpdates` | Real-time conditions (auto-expiring, 45 min) |
-| `VerificationPanel` | Upvote/downvote submission + report form |
-| `EventsList` & `AnnouncementsList` | Community event/notice display + creation forms |
-| `DiaryEntry` | Personal visit notes (private) |
-| `LostFoundThread` & `IftarThread` | Community posts |
-| `TrackingDashboard` | User stats, visit heatmap, badges, leaderboard |
-| `Leaderboard` | Top users by reputation, state-filtered, name-censored |
-| `BadgesGrid` | Achievement badges with progress |
-| `PrayerGroups` | Create/join groups with invite codes |
-| `PrayerGroupDetail` | Group members + recent activity + WhatsApp share |
-| `Bookmarks` | Saved places + wishlist tabs |
-| `IbadahSaya` | Khatam Al-Quran + Solat Sunat tabs |
-| `MapView` | Masjid locations plotted on map (PostGIS) |
-| `InstallPrompt` | PWA installation banner (iOS + Android) |
-| `FeedbackButton` | Always-visible feedback form |
+| `lib/api.ts` | Typed fetch wrapper for all 19 API groups, bearer token from localStorage |
+| `AuthContext` | User state from the supabase-js session + `authenticate()` after API login |
+| `MasjidCard` | Cover photo, type + verified badges, feature chips (Iftar, Terawih, AC, Kucing) |
+| `MasjidDetail` | The big one: gallery, facilities, live status, voting, boards, notes, check-in |
+| `MapView` | Loads Leaflet from CDN, draws emoji markers, bottom card on select |
+| `AddMasjid` | Nominatim search or GPS → lat/lng, 100 m duplicate pre-check, optional facilities |
+| `TrackingDashboard` | Stat tiles, badge passport, calendar, breakdown bars, leaderboard |
+| `lib/constants.ts` | Quick-filter tags and their predicate functions, visit types, Malaysian states |
+| `lib/utils.ts` | Reputation tiers and progress, Title Case helper |
+| `InstallPrompt` / `FeedbackButton` | PWA install banner and floating feedback form |
 
 ---
 
 ## ⚙️ Feature-specific Flows
 
-### Check-in Flow (Langkah)
+### Check-in Flow
 
 ```mermaid
-sequenceDiagram
-    participant U as User
-    participant FE as Frontend
-    participant GEO as Geolocation API
-    participant API as FastAPI
-    participant DB as PostgreSQL
+flowchart TD
+    A([Tap Solat / Jumaat / Terawih...]) --> B[Browser geolocation]
+    B --> C[POST /checkins/ with lat, lng, isMusafir]
+    C --> D[rpc get_masjid_distance]
+    D --> E{Within 200 m, or 500 m musafir?}
+    E -->|No| F([400: Anda terlalu jauh])
+    E -->|Yes| G[Insert user_visits]
+    G --> H{Unique index hit?}
+    H -->|Yes| I([409: dah check-in hari ini])
+    H -->|No| J[Update streak: same day, +1, or reset]
+    J --> K[Add points by visit type]
+    K --> L[Check badge rules]
+    L --> M([Toast: +points, streak N hari])
+```
 
-    U->>FE: Navigate to Masjid Detail page
-    FE->>FE: Display check-in button + location icon
-    U->>FE: Tap "Check-in" button
-    FE->>GEO: Request device GPS coordinates
-    GEO-->>FE: {latitude, longitude, accuracy}
-    
-    FE->>API: POST /api/v1/checkins<br/>{masjid_id, visit_type, lat, lon}
-    
-    API->>DB: Geofence check: distance = ST_Distance(user_location, masjid_location)
-    DB-->>API: distance_meters
-    
-    alt distance > 200m
-        API-->>FE: 400 {error: "Too far", distance_meters}
-        FE-->>U: Toast "You're X m away (need <200m)"
-    else already checked in same masjid + prayer + day
-        API-->>FE: 409 {error: "Already checked in"}
-        FE-->>U: Toast "Already checked in today"
-    else success
-        API->>DB: INSERT user_visits {user_id, masjid_id, visit_date, visit_type}
-        API->>DB: UPDATE profiles SET reputation_points += 10
-        API->>DB: UPDATE profiles SET streak_count += 1
-        API->>DB: Check badge thresholds (Subuh Warrior @ 7-day streak, etc)
-        DB-->>API: Updated reputation, streak, badges_earned
-        API-->>FE: 201 {reputation, streak, badges_earned}
-        FE-->>U: Toast "✅ +10 points! Streak: 5" + confetti animation
-        FE->>FE: Refresh dashboard stats
+### Add Masjid & Verification
+
+```mermaid
+flowchart TD
+    A([Tambah Tempat Solat]) --> B[Search Nominatim or use GPS]
+    B --> C[POST /masjids/check-nearby radius 100 m]
+    C --> D{Existing place nearby?}
+    D -->|Yes| E([Show duplicate warning])
+    D -->|No| F[POST /masjids: status pending, slug, +50 pts]
+    F --> G[Optional facilities, +10 pts]
+    G --> H[Other users vote]
+    H --> I{Upvotes reach 3?}
+    I -->|No| H
+    I -->|Yes| J[Status verified, creator +25 pts]
+```
+
+### Points & Tiers
+
+```mermaid
+flowchart LR
+    subgraph Earn ["Ways to earn"]
+        CI["Check-in<br/>8 to 15 pts"]
+        ADD["Add place<br/>50 pts"]
+        VER["Place verified<br/>25 pts bonus"]
+        FAC["Facilities<br/>10 add / 5 edit"]
+        SMALL["Vote · live update · photo<br/>5 pts each"]
     end
-```
-
-### Gamification & Points Flow
-
-```mermaid
-flowchart TD
-    A([User Action]) --> B{Action Type?}
-    
-    B -->|Subuh Check-in| C["➕ 15 Points"]
-    B -->|Other Prayer Check-in| D["➕ 10 Points"]
-    B -->|Add Facility Info| E["➕ 10 Points"]
-    B -->|Post Live Update| F["➕ 5 Points"]
-    B -->|Vote upvote/downvote| G["➕ 5 Points"]
-    B -->|Upload Photo| H["➕ 5 Points"]
-    
-    C --> I["Update reputation_points"]
-    D --> I
-    E --> I
-    F --> I
-    G --> I
-    H --> I
-    
-    I --> J{Check Badge Thresholds}
-    
-    J -->|7-day streak| K["🎖️ Subuh Warrior"]
-    J -->|3 different states| L["🎖️ Musafir Tegar"]
-    J -->|5 mosque facilities| M["🎖️ Kucing Lover"]
-    J -->|20 terawih check-ins| N["🎖️ Ramadan Champion"]
-    J -->|50 unique mosques| O["🎖️ Masjid Hunter"]
-    J -->|First iftar update| P["🎖️ AJK Iftar"]
-    
-    K --> Q["Award badge + notify user"]
-    L --> Q
-    M --> Q
-    N --> Q
-    O --> Q
-    P --> Q
-    
-    J -->|No threshold met| R([Done])
-    Q --> R
-```
-
-### Community Verification Flow
-
-```mermaid
-flowchart TD
-    A["📍 New Masjid Submission"] --> B["Initial Status: UNVERIFIED"]
-    B --> C["Users upvote / downvote"]
-    C --> D{Upvotes >= 3?}
-    D -->|Yes| E["✅ Auto-verify (trigger)<br/>Status: VERIFIED"]
-    D -->|No| F["Still pending upvotes"]
-    F --> C
-    E --> G["Display green badge ✓"]
-    
-    H["❌ Report Issue"] --> I["Reasons:<br/>Doesn't exist · Wrong location<br/>Duplicate · Inappropriate<br/>Wrong info"]
-    I --> J["Admin reviews report"]
-    J --> K{Action?}
-    K -->|Reject| L["Close report"]
-    K -->|Merge duplicate| M["Merge into existing"]
-    K -->|Delete submission| N["Remove masjid + all related"]
-    L --> O["Update resolution_notes"]
-    M --> O
-    N --> O
+    subgraph Tiers ["Reputation tiers"]
+        T1["🌱 Jemaah Baru 0+"]
+        T2["⭐ Ahli Tetap 100+"]
+        T3["🏅 Penjaga Masjid 500+"]
+        T4["👑 Tok Imam 1000+"]
+        T1 --> T2 --> T3 --> T4
+    end
+    Earn --> Tiers
 ```
 
 ### Role & Permission Matrix
 
-| Action | Owner | Admin | Member | Guest |
+| Action | Guest | User | Owner of listing | Admin |
 |---|---|---|---|---|
-| Create masjid | ✅ | ✅ | ❌ | ❌ |
-| Edit masjid | ✅ | ✅ | ❌ | ❌ |
-| Delete masjid | ✅ | ✅ | ❌ | ❌ |
-| Add facilities | ✅ | ✅ | ✅ | ❌ |
-| Add event | ✅ | ✅ | ✅ | ❌ |
-| Add announcement | ✅ | ✅ | ✅ | ❌ |
-| Check-in | ✅ | ✅ | ✅ | ❌ |
-| Vote verification | ✅ | ✅ | ✅ | ❌ |
-| Report masjid | ✅ | ✅ | ✅ | ❌ |
-| Resolve reports | ❌ | ✅ | ❌ | ❌ |
-| Ban user | ❌ | ✅ | ❌ | ❌ |
-| View dashboard | ✅ | ✅ | ✅ | ❌ |
-| Create prayer group | ✅ | ✅ | ✅ | ❌ |
-| View leaderboard | ✅ | ✅ | ✅ | ✅ |
-| Browse masjid | ✅ | ✅ | ✅ | ✅ |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js `>=18`
-- Python `>=3.11`
-- Docker + Docker Compose (for local development)
-- Git
-
-### Installation
-
-```bash
-git clone https://github.com/syaqirah/SinggahLuhh.git
-cd SinggahLuhh
-
-# Install frontend dependencies
-cd frontend
-npm install
-
-# Install backend dependencies
-cd ../backend
-pip install -r requirements.txt
-```
-
-### Running locally
-
-#### With Docker (Recommended)
-
-```bash
-# Development (hot reload for both frontend + backend)
-docker compose up --build
-
-# Frontend: http://localhost:5173
-# Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/docs
-```
-
-#### Without Docker
-
-```bash
-# Terminal 1: Frontend (from frontend/)
-npm run dev
-# http://localhost:5173
-
-# Terminal 2: Backend (from backend/)
-python -m uvicorn app.main:app --reload --port 8000
-# http://localhost:8000
-```
-
-### Running with Docker
-
-```mermaid
-graph LR
-    subgraph Dev ["docker-compose.yml (dev)"]
-        D1["Frontend Container<br/>Vite dev server :5173<br/>+ hot reload"]
-        D2["Backend Container<br/>FastAPI :8000<br/>--reload"]
-        D1 -. "VITE_API_URL=http://localhost:8000" .-> D2
-    end
-
-    subgraph Prod ["docker-compose.prod.yml (prod)"]
-        P1["Frontend Container<br/>nginx :80<br/>serves built static files"]
-        P2["Backend Container<br/>FastAPI :8080<br/>internal only"]
-        P1 -- "/api/* proxied" --> P2
-    end
-
-    Browser1["🌐 Browser"] --> D1
-    Browser2["🌐 Browser"] --> P1
-```
-
-**Development (hot reload)**
-
-```bash
-docker compose up --build
-```
-
-| Service | URL |
-|---|---|
-| Frontend (Vite) | http://localhost:5173 |
-| Backend (FastAPI) | http://localhost:8000 |
-| API Docs (Swagger) | http://localhost:8000/docs |
-| ReDoc | http://localhost:8000/redoc |
-
-**Production**
-
-```bash
-docker compose -f docker-compose.prod.yml up --build
-```
-
-| Service | URL |
-|---|---|
-| App (nginx) | http://localhost:80 |
-| Backend (internal) | — |
-
----
-
-## 🔑 Environment Variables
-
-### Backend (`backend/.env`)
-
-```env
-# App
-APP_NAME=SinggahLuhh API
-APP_VERSION=1.0.0
-DEBUG=true
-ENVIRONMENT=development
-
-# Supabase
-SUPABASE_URL=https://<project>.supabase.co
-SUPABASE_ANON_KEY=<anon key>
-SUPABASE_SERVICE_KEY=<service role key>
-
-# Security
-SECRET_KEY=<generate: openssl rand -hex 32>
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
-
-# CORS
-ALLOWED_ORIGINS=["http://localhost:5173"]
-
-# Email (SMTP)
-SMTP_HOST=smtp.resend.com
-SMTP_PORT=587
-SMTP_USER=resend
-SMTP_PASSWORD=<resend API key>
-EMAIL_FROM=noreply@singgahluhh.my
-
-# Business Rules
-MASJID_VERIFY_THRESHOLD=3
-MASJID_DUPLICATE_RADIUS_METERS=100
-GEOFENCE_RADIUS_METERS=200
-LIVE_UPDATE_EXPIRY_MINUTES=45
-```
-
-### Frontend (`frontend/.env`)
-
-```env
-VITE_API_URL=http://localhost:8000
-VITE_SUPABASE_URL=https://<project>.supabase.co
-VITE_SUPABASE_ANON_KEY=<anon key>
-VITE_GOOGLE_MAPS_API_KEY=<Google Maps API key>
-```
-
-> Copy `.env.example` files in both directories and fill in your values.
+| Browse, map, detail, boards | ✅ | ✅ | ✅ | ✅ |
+| Check-in, vote, live update, bookmark | ❌ | ✅ | ✅ *(no self-vote)* | ✅ |
+| Add / edit facilities | ❌ | ✅ | ✅ | ✅ |
+| Upload photos | ❌ | ✅ *(max 3 per masjid)* | ✅ | ✅ |
+| Submit QR code | ❌ | 30+ reputation | 30+ reputation | ✅ |
+| Edit / delete masjid | ❌ | ❌ | ✅ | ✅ |
+| Review reports, QR, feedback | ❌ | ❌ | ❌ | ✅ |
 
 ---
 
 ## ☁️ Deployment
 
-```mermaid
-graph LR
-    GitHub["GitHub<br/>(main branch)"] -->|push| CI["CI/CD Pipeline<br/>(GitHub Actions)"]
-    
-    CI --> FE["Vercel<br/>(Frontend)"]
-    CI --> BE["Cloud Run<br/>(Backend)"]
-    
-    BE --> SB[("Supabase<br/>(DB + Auth + Storage)")]
-    BE --> EXT["External APIs<br/>(Maps, SMTP)"]
-```
+> **Status:** the public deployment (`singgahluhh.vercel.app`) is currently offline, and Vercel returns `DEPLOYMENT_NOT_FOUND`. The table below describes how the app is set up to deploy.
 
-| Service | Platform | Purpose |
+| Piece | Platform | Notes |
 |---|---|---|
-| Frontend | Vercel | React SPA + PWA hosting |
-| Backend | Cloud Run | FastAPI containerized app |
-| Database | Supabase (PostgreSQL) | Auth + Data + Storage |
-| Email | Resend | OTP + password reset emails |
-| Maps | Google Maps API | Map view + geospatial queries |
-
-**Deploy Frontend:**
-
-```bash
-vercel --prod
-```
-
-**Deploy Backend:**
-
-```bash
-gcloud builds submit --tag gcr.io/[PROJECT_ID]/singgahluhh-api
-gcloud run deploy singgahluhh-api --image gcr.io/[PROJECT_ID]/singgahluhh-api --platform managed
-```
+| Frontend | Vercel | SPA rewrite to `index.html`, PWA assets |
+| Backend | Google Cloud Run | Built and deployed through `cloudbuild.yaml` (Artifact Registry → `gcloud run deploy`) |
+| Database / Auth / Storage | Supabase | Postgres + PostGIS, Auth with email OTP, `masjid-media` bucket |
+| Self-host option | Docker Compose | `docker-compose.prod.yml`: nginx-served frontend proxying `/api` to the backend |
 
 ---
 
@@ -1180,137 +684,61 @@ gcloud run deploy singgahluhh-api --image gcr.io/[PROJECT_ID]/singgahluhh-api --
 
 ```
 SinggahLuhh/
-├── docker-compose.yml              # Dev: Vite + FastAPI with hot reload
-├── docker-compose.prod.yml         # Prod: nginx + FastAPI
-├── README.md
+├── docker-compose.yml            Dev: backend + Vite frontend
+├── docker-compose.prod.yml       Prod: nginx frontend + backend
+├── cloudbuild.yaml               Cloud Build → Cloud Run
 │
-├── frontend/
-│   ├── Dockerfile                  # Multi-stage: dev (Vite) + prod (nginx)
-│   ├── nginx.conf                  # SPA routing + /api proxy
-│   ├── vite.config.ts
-│   ├── tailwind.config.ts
-│   ├── tsconfig.json
-│   ├── .env.example
-│   ├── package.json
-│   └── src/
-│       ├── main.tsx
-│       ├── App.tsx                 # All routes + providers
-│       ├── types/
-│       │   └── index.ts            # Masjid, Visit, Badge, etc
-│       ├── contexts/
-│       │   └── AuthContext.tsx     # Global auth state
-│       ├── lib/
-│       │   ├── api.ts              # All API calls
-│       │   ├── constants.ts        # MALAYSIA_STATES, FACILITY_OPTIONS, etc
-│       │   └── utils.ts            # Helper functions
-│       ├── hooks/
-│       │   └── use-toast.ts
-│       ├── components/
-│       │   ├── Header.tsx
-│       │   ├── Footer.tsx
-│       │   ├── MasjidCard.tsx
-│       │   ├── InstallPrompt.tsx
-│       │   └── FeedbackButton.tsx
-│       └── pages/
-│           ├── Index.tsx           # Home + Trending
-│           ├── BrowseMasjid.tsx
-│           ├── MasjidDetail.tsx
-│           ├── TrackingDashboard.tsx
-│           ├── MapView.tsx
-│           ├── Bookmarks.tsx
-│           ├── IbadahSaya.tsx
-│           ├── PrayerGroups.tsx
-│           ├── PrayerGroupDetail.tsx
-│           ├── Profile.tsx
-│           ├── AdminPanel.tsx
-│           ├── Auth.tsx
-│           ├── PrivacyPolicy.tsx
-│           ├── Terms.tsx
-│           ├── FAQ.tsx
-│           ├── Changelog.tsx
-│           └── NotFound.tsx
+├── backend/
+│   ├── Dockerfile
+│   ├── supabase_schema.sql       Core tables, RLS, triggers, PostGIS helpers
+│   ├── supabase_migrations_*.sql v2 RPCs, v3 gender + badges, slug
+│   ├── feedback_table.sql
+│   └── app/
+│       ├── main.py               FastAPI app, CORS, /health
+│       ├── core/                 config, supabase clients, auth deps
+│       ├── schemas/              Pydantic models (CamelModel base)
+│       └── api/v1/endpoints/     auth, masjids, checkin, verification,
+│                                 live_updates, facilities, dashboard,
+│                                 bookmarks, diary, khatam, special_prayers,
+│                                 events, announcements, lost_found, iftar,
+│                                 trending, prayer_groups, profile, feedback
 │
-└── backend/
-    ├── Dockerfile
-    ├── requirements.txt
-    ├── .env.example
-    ├── .gitignore
-    └── app/
-        ├── main.py                 # FastAPI app, CORS, lifespan
-        ├── core/
-        │   ├── config.py           # Settings (pydantic-settings)
-        │   ├── deps.py             # get_current_user() dependency
-        │   └── supabase.py         # Admin + anon client factory
-        ├── schemas/
-        │   └── base.py             # CamelModel, response schemas
-        └── api/v1/
-            ├── router.py           # Master router
-            └── endpoints/
-                ├── auth.py
-                ├── masjids.py      # Browse, detail, add, edit, delete
-                ├── facilities.py
-                ├── checkin.py      # GPS check-in with geofence
-                ├── live_updates.py
-                ├── verification.py # Upvote/downvote + reports
-                ├── dashboard.py    # Stats, badges, leaderboard
-                ├── profile.py
-                ├── bookmarks.py
-                ├── diary.py
-                ├── khatam.py
-                ├── special_prayers.py
-                ├── events.py
-                ├── announcements.py
-                ├── lost_found.py
-                ├── iftar.py
-                ├── trending.py     # Weekly trending compute
-                ├── prayer_groups.py
-                └── feedback.py
+└── frontend/
+    ├── vite.config.ts            React SWC + VitePWA
+    ├── nginx.conf · Dockerfile   Multi-stage dev / prod
+    └── src/
+        ├── pages/                19 route pages
+        ├── components/           Header, Footer, MasjidCard, InstallPrompt,
+        │                         FeedbackButton, ui/ (shadcn)
+        ├── contexts/             AuthContext
+        ├── lib/                  api.ts, supabase.ts, constants.ts, utils.ts
+        └── types/                Shared TypeScript types
 ```
-
----
-
-## 📸 Screenshots
-
-| Page | Preview |
-|---|---|
-| Home | ![home](./screenshots/home.png) |
-| Browse | ![browse](./screenshots/browse.png) |
-| Masjid Detail | ![detail](./screenshots/masjid-detail.png) |
-| Dashboard | ![dashboard](./screenshots/dashboard.png) |
-| Prayer Groups | ![groups](./screenshots/prayer-groups.png) |
 
 ---
 
 ## 🗺 Roadmap
 
-- [x] Core MVP (masjid browse, check-in, reputation)
-- [x] Community features (events, announcements, lost & found)
-- [x] Gamification (badges, leaderboard, streaks)
-- [x] Prayer groups + buddy system
-- [x] Personal ibadah tracker (Khatam + Solat Sunat)
-- [x] PWA / offline support
-- [ ] Mobile app (React Native / Expo)
-- [ ] Analytics dashboard for mosque admins
-- [ ] AI-powered facility recommendations
-- [ ] Multi-language support (English, Chinese, Tamil)
-- [ ] Integration with mosque management systems
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to change.
-
-```bash
-git checkout -b feature/your-feature
-git commit -m "feat: add your feature"
-git push origin feature/your-feature
-```
+- [x] Browse, search, facility filters and map view
+- [x] Add place with 100 m duplicate guard
+- [x] GPS check-in with PostGIS geofence + Musafir mode
+- [x] Reputation, streaks, badges, tiers, leaderboard
+- [x] Community verification (3 upvotes)
+- [x] Live updates with auto-expiry
+- [x] Photo upload + admin-moderated QR codes
+- [x] Announcements, events, lost & found, iftar thread
+- [x] Bookmarks, private notes, Khatam + sunat prayer log
+- [x] Prayer groups with invite codes
+- [x] Weekly trending
+- [x] PWA install + notifications
+- [ ] Wire the v3 badge set into the check-in rules
+- [ ] Sort by distance from the user's location
+- [ ] Ramadan mode (terawih tracker, iftar map)
+- [ ] Admin analytics for masjid committees
+- [ ] Multi-language UI
 
 ---
 
 ## 📄 License
 
-MIT © 2026 Syaqirah · Luhh Series
-
----
+MIT © 2026 Siti Nursyaqirah · Luhh Series · Source on [GitHub](https://github.com/snsyaqirah/SinggahLuhh)

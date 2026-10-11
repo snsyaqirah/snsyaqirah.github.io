@@ -37,7 +37,7 @@ const ProjectCard = ({ project, index }) => {
             </div>
 
             <div className="project-content">
-                <div className="project-category">{project.category}</div>
+                <div className="project-category">{project.categories.join(' · ')}</div>
                 <h3 className="project-title">{project.title}</h3>
                 <p className="project-description">{project.description}</p>
 
@@ -58,7 +58,7 @@ ProjectCard.propTypes = {
         description: PropTypes.string.isRequired,
         image: PropTypes.string.isRequired,
         tech: PropTypes.arrayOf(PropTypes.string).isRequired,
-        category: PropTypes.string.isRequired,
+        categories: PropTypes.arrayOf(PropTypes.string).isRequired,
         featured: PropTypes.bool,
         liveUrl: PropTypes.string,
         githubUrl: PropTypes.string,

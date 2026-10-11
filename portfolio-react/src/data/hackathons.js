@@ -1,0 +1,40 @@
+// Hackathon / competition journey — shown on the Home section, oldest first
+export const hackathons = [
+    {
+        level: 1,
+        levelName: "Newbie Hacker",
+        emoji: "🎟️",
+        year: "2025",
+        event: "IOTA Hackathon Malaysia 2025",
+        result: "First physical hackathon",
+        built: "IOTA Proof of Attendance",
+        story: "My very first physical hackathon. Did it go well? Honestly... it kinda sucked, hahah. UGHHH. But I walked out knowing way more about blockchain, pitching, and surviving on zero sleep than when I walked in.",
+        projectSlug: null,
+        // Repo is private (github.com/micheal-el07/TestBeforeHackathon) — add the link once it's public
+        githubUrl: null,
+    },
+    {
+        level: 2,
+        levelName: "Runner-up",
+        emoji: "🥈",
+        year: "2026",
+        event: "Code; Without Barriers Hackathon 2026",
+        result: "2nd Place",
+        built: "KenduriLuhh — AI-Powered Multi-Agent System for Smart Catering Operations",
+        story: "Came back for round two and it paid off. KenduriLuhh puts a team of AI agents in charge of kenduri catering ops, and it took home 2nd place. Wehuuuu!",
+        projectSlug: "kenduriluhh",
+        githubUrl: "https://github.com/snsyaqirah/KenduriLuhh",
+    },
+    {
+        level: 3,
+        levelName: "Comeback Kid",
+        emoji: "🚩",
+        year: null,
+        event: "Capture The Flag (CTF)",
+        result: "7th Place",
+        built: null,
+        story: "After 5 yearsss away from CTF, I'm backkk. Dusted off the old skills and finished 7th in the challenge.",
+        projectSlug: null,
+        githubUrl: null,
+    },
+];

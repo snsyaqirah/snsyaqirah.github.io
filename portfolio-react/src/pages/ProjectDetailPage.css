@@ -95,18 +95,42 @@
   margin-bottom: 1rem;
 }
 
+.pdp-cat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
 .pdp-cat-badge {
   display: inline-block;
   font-size: 0.65rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: #14FFFF;
-  background: rgba(20, 255, 255, 0.12);
-  border: 1px solid rgba(20, 255, 255, 0.25);
+  color: #3D3BC1;
+  background: rgba(61, 59, 193, 0.08);
+  border: 1px solid rgba(61, 59, 193, 0.25);
   padding: 0.2rem 0.8rem;
   border-radius: 10px;
-  margin-bottom: 0.5rem;
+}
+
+/* Hackathon award banner */
+.pdp-award {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  background: #1a1a3e;
+  color: #14FFFF;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.pdp-gallery-section {
+  margin-top: 1.5rem;
 }
 
 .pdp-title {

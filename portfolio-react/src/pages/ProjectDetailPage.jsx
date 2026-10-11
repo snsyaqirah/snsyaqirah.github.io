@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import GalaxyBackground from '../components/Landing/GalaxyBackground';
 import MermaidBlock from '../components/MermaidBlock/MermaidBlock';
+import ScreenshotGallery from '../components/ScreenshotGallery/ScreenshotGallery';
 import { projects } from '../data/projects';
 import { socialLinks } from '../data/social';
 import './ProjectDetailPage.css';
@@ -80,7 +81,11 @@ export default function ProjectDetailPage() {
             <div className="pdp-header-card">
               <div className="pdp-header-top">
                 <div>
-                  <div className="pdp-cat-badge">{project.category}</div>
+                  <div className="pdp-cat-row">
+                    {project.categories.map(c => (
+                      <span className="pdp-cat-badge" key={c}>{c}</span>
+                    ))}
+                  </div>
                   <h1 className="pdp-title">{project.title}</h1>
                   {project.series && <p className="pdp-series">{project.series}</p>}
                 </div>
@@ -97,6 +102,8 @@ export default function ProjectDetailPage() {
                   )}
                 </div>
               </div>
+
+              {project.award && <div className="pdp-award">{project.award}</div>}
 
               <p className="pdp-description">{project.description}</p>
 
@@ -118,55 +125,60 @@ export default function ProjectDetailPage() {
               )}
             </div>
 
-            {/* README section */}
-            <div className="pdp-readme-section">
-              <div className="sims-section-header" style={{ marginLeft: '2rem' }}>
-                <h2 className="sims-section-header__title">README</h2>
+            {/* Screenshots */}
+            {project.screenshots?.length > 0 && (
+              <div className="pdp-gallery-section">
+                <div className="sims-section-header" style={{ marginLeft: '2rem' }}>
+                  <h2 className="sims-section-header__title">Screenshots</h2>
+                </div>
+                <ScreenshotGallery shots={project.screenshots} title={project.title} />
               </div>
+            )}
 
-              <div className="pdp-readme-body">
-                {loading && (
-                  <div className="pdp-loading">Loading README...</div>
-                )}
+            {/* README section — skipped for projects without docs (e.g. client work) */}
+            {project.readmeFile && (
+              <div className="pdp-readme-section">
+                <div className="sims-section-header" style={{ marginLeft: '2rem' }}>
+                  <h2 className="sims-section-header__title">README</h2>
+                </div>
 
-                {!loading && mdError && (
-                  <div className="pdp-no-readme">
-                    <p>README coming soon.</p>
-                    <p>Full documentation will be available here once published.</p>
-                  </div>
-                )}
+                <div className="pdp-readme-body">
+                  {loading && (
+                    <div className="pdp-loading">Loading README...</div>
+                  )}
 
-                {!loading && !project.readmeFile && (
-                  <div className="pdp-no-readme">
-                    <p>README coming soon.</p>
-                    <p>Full documentation will be available here once published.</p>
-                  </div>
-                )}
+                  {!loading && mdError && (
+                    <div className="pdp-no-readme">
+                      <p>README coming soon.</p>
+                      <p>Full documentation will be available here once published.</p>
+                    </div>
+                  )}
 
-                {!loading && markdown && (
-                  <div className="pdp-markdown">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        code({ className, children }) {
-                          const lang = /language-(\w+)/.exec(className || '')?.[1];
-                          if (lang === 'mermaid') {
-                            return <MermaidBlock code={String(children)} />;
-                          }
-                          return <code className={className}>{children}</code>;
-                        },
-                        // Open all links in new tab
-                        a({ href, children }) {
-                          return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
-                        },
-                      }}
-                    >
-                      {markdown}
-                    </ReactMarkdown>
-                  </div>
-                )}
+                  {!loading && markdown && (
+                    <div className="pdp-markdown">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          code({ className, children }) {
+                            const lang = /language-(\w+)/.exec(className || '')?.[1];
+                            if (lang === 'mermaid') {
+                              return <MermaidBlock code={String(children)} />;
+                            }
+                            return <code className={className}>{children}</code>;
+                          },
+                          // Open all links in new tab
+                          a({ href, children }) {
+                            return <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>;
+                          },
+                        }}
+                      >
+                        {markdown}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             <footer className="sims-footer">
               <div className="sims-footer__marquee">

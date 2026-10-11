@@ -3,21 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { personalInfo, socialLinks } from '../data/social';
 import { projects } from '../data/projects';
 import { skills } from '../data/skills';
+import { hackathons } from '../data/hackathons';
 import './PortfolioPage.css';
 
 const GalaxyCanvas = lazy(() => import('../components/Landing/GalaxyCanvas'));
 
 /* ── Random memoji pool ── */
 const MEMOJIS = ['👩‍💻','🧑‍💻','👨‍💻'];
-
-/* ── Category color map (flat, 4-color palette) ── */
-const CAT_COLOR = {
-  Frontend:     '#3D3BC1',
-  Backend:      '#3D3BC1',
-  'Full Stack': '#3D3BC1',
-  Design:       '#3D3BC1',
-  Mobile:       '#3D3BC1',
-};
 
 /* ── Top-bar tabs ── */
 const TABS = [
@@ -38,14 +30,8 @@ const TECH_MARQUEE = [
   'PHP', 'PYTHON', 'JAVA', 'JS', 'REACT', 'HTML', 'CSS', 'MYSQL', 'AI TOOLS', 'POWER BI',
 ];
 
-/* ── Highlight cards for the Home section (3 boxes) ── */
+/* ── Fun cards under the hackathon journey ── */
 const HOME_CARDS = [
-  {
-    bg: '#3D3BC1',
-    emoji: '🏆',
-    title: 'Hackathon SZN',
-    sub: 'Currently competing & building cool stuff',
-  },
   {
     bg: '#3D3BC1',
     emoji: '🎮',
@@ -72,14 +58,14 @@ export default function PortfolioPage() {
 
   /* Auto-generate unique categories from project data */
   const categories = useMemo(() => {
-    const cats = [...new Set(projects.map(p => p.category))];
+    const cats = [...new Set(projects.flatMap(p => p.categories))];
     return ['All', ...cats];
   }, []);
 
   /* Filtered projects */
   const filteredProjects = filterCat === 'All'
     ? projects
-    : projects.filter(p => p.category === filterCat);
+    : projects.filter(p => p.categories.includes(filterCat));
 
   /* Pick one random memoji per mount */
   const memoji = useMemo(() => MEMOJIS[Math.floor(Math.random() * MEMOJIS.length)], []);
@@ -202,21 +188,61 @@ export default function PortfolioPage() {
 
           {/* ══════ HOME ══════ */}
           <section id="home">
-            <h2 className="sr-only">Home</h2>
-            {/* 3 highlight boxes */}
-            <div className="sims-wip-wrapper">
-              <div className="sims-home-cards sims-wip-blur">
-                {HOME_CARDS.map((c, i) => (
-                  <div className="sims-home-card" key={i} style={{ background: c.bg }}>
-                    <span className="sims-home-card__emoji">{c.emoji}</span>
-                    <h3 className="sims-home-card__title">{c.title}</h3>
-                    <p className="sims-home-card__sub">{c.sub}</p>
+            <div className="sims-section-header">
+              <h2 className="sims-section-header__title">Hackathon Career</h2>
+            </div>
+            <p className="sims-journey__intro">
+              Regret #1: not joining physical hackathons sooner. So now I'm making up for it, one level at a time.
+            </p>
+
+            <ol className="sims-journey">
+              {hackathons.map(h => (
+                <li className="sims-journey__item" key={h.level}>
+                  <div className="sims-journey__level">
+                    <span className="sims-journey__level-num">Level {h.level}</span>
+                    <span className="sims-journey__level-name">{h.levelName}</span>
                   </div>
-                ))}
-              </div>
-              <div className="sims-wip-notice">
-                🚧 In Progress &nbsp;·&nbsp; Tengah Update &nbsp;·&nbsp; Sabo jap 🚧
-              </div>
+                  <div className="sims-journey__card">
+                    <div className="sims-journey__top">
+                      <span className="sims-journey__emoji">{h.emoji}</span>
+                      <span className="sims-journey__result">{h.result}</span>
+                      {h.year && <span className="sims-journey__year">{h.year}</span>}
+                    </div>
+                    <h3 className="sims-journey__event">{h.event}</h3>
+                    {h.built && (
+                      <p className="sims-journey__built"><strong>Built:</strong> {h.built}</p>
+                    )}
+                    <p className="sims-journey__story">{h.story}</p>
+                    {(h.projectSlug || h.githubUrl) && (
+                      <div className="sims-journey__links">
+                        {h.projectSlug && (
+                          <button
+                            className="sims-journey__link sims-journey__link--primary"
+                            onClick={() => navigate(`/projects/${h.projectSlug}`)}
+                          >
+                            View Project →
+                          </button>
+                        )}
+                        {h.githubUrl && (
+                          <a className="sims-journey__link" href={h.githubUrl} target="_blank" rel="noopener noreferrer">
+                            GitHub ↗
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <div className="sims-home-cards">
+              {HOME_CARDS.map((c, i) => (
+                <div className="sims-home-card" key={i} style={{ background: c.bg }}>
+                  <span className="sims-home-card__emoji">{c.emoji}</span>
+                  <h3 className="sims-home-card__title">{c.title}</h3>
+                  <p className="sims-home-card__sub">{c.sub}</p>
+                </div>
+              ))}
             </div>
           </section>
 
@@ -249,33 +275,36 @@ export default function PortfolioPage() {
                   tabIndex={0}
                   onKeyDown={e => e.key === 'Enter' && navigate(`/projects/${p.slug}`)}
                 >
-                  <div
-                    className="sims-pack__art"
-                    style={{ background: CAT_COLOR[p.category] || CAT_COLOR.Frontend }}
-                  >
-                    {p.image && (
+                  <div className="sims-pack__art">
+                    {p.image ? (
                       <img
                         src={p.image}
-                        alt={p.title}
+                        alt={`${p.title} screenshot`}
                         className="sims-pack__img"
+                        loading="lazy"
                         onError={e => { e.currentTarget.style.display = 'none'; }}
                       />
+                    ) : (
+                      <span className="sims-pack__placeholder">{p.title}</span>
                     )}
+                    {p.ribbon && <span className="sims-pack__ribbon">{p.ribbon}</span>}
                     <div className="sims-pack__overlay">
-                      <span className="sims-pack__overlay-title">{p.title}</span>
-                      {p.series && (
-                        <span className="sims-pack__overlay-series">{p.series}</span>
-                      )}
-                      <span className="sims-pack__overlay-cat">{p.category}</span>
+                      <span className="sims-pack__overlay-desc">{p.description}</span>
                       <span className="sims-pack__overlay-tech">
-                        {p.tech.slice(0, 3).join(' · ')}
+                        {p.tech.slice(0, 4).join(' · ')}
                       </span>
-                      <div className="sims-pack__overlay-links">
-                        <span className="sims-pack__overlay-btn sims-pack__overlay-btn--primary">
-                          View Details →
-                        </span>
-                      </div>
+                      <span className="sims-pack__overlay-btn sims-pack__overlay-btn--primary">
+                        View Details →
+                      </span>
                     </div>
+                  </div>
+                  <div className="sims-pack__label">
+                    <span className="sims-pack__title">{p.title}</span>
+                    <span className="sims-pack__cats">
+                      {p.categories.map(c => (
+                        <span className="sims-pack__cat" key={c}>{c}</span>
+                      ))}
+                    </span>
                   </div>
                 </div>
               ))}

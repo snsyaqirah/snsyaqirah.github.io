@@ -1,10 +1,11 @@
 # 🚀 TravelLuhh
 
-> A full-stack travel planning and budget management app — plan trips, track expenses, manage packing lists, and review your travel portfolio.
+> A full-stack trip planner and group budget tracker — plan trips, log expenses, split the bill with your travel geng, and keep itineraries and packing lists in one place.
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![Stack](https://img.shields.io/badge/stack-React%20%2B%20Spring%20Boot%20%2B%20PostgreSQL-0f4c45)
 
 ---
 
@@ -20,9 +21,6 @@
 - [API Structure](#-api-structure)
 - [Frontend Components](#-frontend-components)
 - [Feature Flows](#-feature-specific-flows)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Deployment](#-deployment)
 - [Project Structure](#-project-structure)
 - [Roadmap](#-roadmap)
 - [License](#-license)
@@ -31,7 +29,9 @@
 
 ## 🧭 Overview
 
-TravelLuhh is a personal travel management web app that keeps all your trip planning in one place — from budgeting and expense tracking to day-by-day itineraries, packing checklists, and a travel portfolio. Built for solo use with multi-user group trip support (shared budgets, split bills, member roles).
+TravelLuhh is a travel management web app that keeps the whole trip in one place: the budget, every ringgit (or yen) spent, a day-by-day itinerary, a packing checklist, and a "who owes whom" summary at the end. It works for solo trips and for group trips where several people pay for things and need to settle up afterwards.
+
+The backend is a stateless Spring Boot REST API secured with JWT (plus Google OAuth2). PostgreSQL triggers keep each trip's spent amount in sync with its expenses. The React frontend draws analytics charts from the expense data and pulls live exchange rates from the free Frankfurter API.
 
 **Type:** `Solo`
 **Brand:** `Luhh Series`
@@ -41,30 +41,34 @@ TravelLuhh is a personal travel management web app that keeps all your trip plan
 
 ## ✨ Features
 
-- ✅ Email signup with OTP verification + Google OAuth2
-- ✅ JWT authentication with silent token refresh
-- ✅ Trip CRUD (create, view, edit, delete, archive)
-- ✅ Expense tracking with category breakdown and bundle sub-items
-- ✅ Multi-currency support via live Frankfurter rates
+- ✅ Email signup in 3 steps (email → 6-digit OTP → name + password) and Google OAuth2 login
+- ✅ Forgot-password flow with an emailed OTP
+- ✅ JWT auth (24h access / 7d refresh) with an Axios interceptor that queues requests and refreshes silently
+- ✅ First-login onboarding modal to pick home country and currency
+- ✅ Trip CRUD with status (Planned / Ongoing / Completed), archive flag and filter tabs
+- ✅ Expense tracking across 6 categories, plus **bundle** expenses with sub-item breakdown (e.g. a JR Pass package)
+- ✅ DB-trigger-maintained `spent_amount` and a generated `remaining_budget` column
 - ✅ Budget modes: solo / shared / separated
-- ✅ Budget alerts at 75%, 90%, 100% spend thresholds
-- ✅ Analytics & charts — bento layout, pie, bar, and trend charts
-- ✅ Split bill / Settle Up with greedy debt simplification
-- ✅ Packing checklist with preset packs (general, beach, hiking, business, Umrah)
-- ✅ Day-by-day itinerary planner
-- ✅ Activity feed per trip
-- ✅ Trip data export (CSV + Print/PDF)
-- ✅ Travel portfolio (Year in Review, Timeline, Map)
-- ✅ User profile (name, country, currency, password)
-- ✅ Destination notes (localStorage)
-- ✅ Quick price currency converter on dashboard
-- 🚧 Trip member invite / remove / role change *(UI only — not wired to backend)*
-- 🚧 Edit expense *(not yet supported)*
-- 🚧 Separated budget per-member allocation *(DB + UI scaffolded, not wired)*
-- 💡 Notes persistence to database *(localStorage only currently)*
-- 💡 Refresh token revocation on logout *(planned)*
-- 💡 Real-time collaboration via WebSocket/SSE *(planned)*
-- 💡 Trip image upload *(planned)*
+- ✅ Budget alerts at 75% / 90% / 100% of total budget, plus per-category warnings
+- ✅ Analytics bento: top category, daily target, radial budget gauge, category donut, spending trend, top-spend bars
+- ✅ Settle Up: equal-share balances with greedy debt simplification (fewest transfers)
+- ✅ Day-by-day itinerary planner (time slots, location, category per item)
+- ✅ Packing checklist with progress bar and preset packs (general, beach, hiking, business, Umrah/Hajj)
+- ✅ Per-trip activity feed (expense added / removed, member joined)
+- ✅ Export: expenses CSV, full trip CSV, printable PDF report
+- ✅ Live FX: dashboard currency cards (favourite rates, quick convert, all rates) and a per-trip price converter (Frankfurter API)
+- ✅ Profile page: name, country, currency, change password
+- ✅ Destination notes and quick info per trip *(saved in localStorage)*
+- 🚧 Trip member invite / remove / role change *(dialog UI exists, but the backend has no member endpoints yet)*
+- 🚧 Separated-budget per-member allocation *(table, trigger and panel scaffolded, not wired)*
+- 🚧 Edit expense *(form opens, but there is no update endpoint yet)*
+- 🚧 Travel Portfolio: Year in Review, Timeline and Travel Map *(components built, page not routed yet)*
+- 💡 Membership checks on every trip sub-resource *(today they cover trip view/update/delete and expense delete)*
+- 💡 Notes persistence to the database (`destination_notes` table already exists)
+- 💡 Storing expenses in their original currency and converting to the trip currency
+- 💡 Refresh-token revocation on logout (`refresh_tokens` table already exists)
+- 💡 Real-time collaboration via WebSocket/SSE
+- 💡 Trip cover image upload
 
 ---
 
@@ -73,41 +77,44 @@ TravelLuhh is a personal travel management web app that keeps all your trip plan
 ```mermaid
 graph TD
     subgraph Frontend
-        FE["React 18 + TypeScript\nVite"]
-        UI["shadcn/ui + Tailwind CSS\nFramer Motion · Recharts"]
-        ST["TanStack React Query\nAxios · React Hook Form + Zod"]
+        FE["React 18 + TypeScript<br/>Vite 7"]
+        UI["shadcn/ui + Tailwind CSS<br/>Framer Motion · Recharts"]
+        ST["TanStack React Query<br/>Axios · React Hook Form + Zod"]
     end
     subgraph Backend
-        BE["Spring Boot 3.2.1\nJava 17 · Maven"]
-        AU["Spring Security\nJWT (JJWT) + Google OAuth2"]
+        BE["Spring Boot 3.2<br/>Java 17 · Maven"]
+        AU["Spring Security<br/>JWT (JJWT 0.12) + Google OAuth2"]
+        JPA["Spring Data JPA<br/>Hibernate"]
     end
     subgraph Infrastructure
-        DB[("PostgreSQL\nNeon Cloud")]
-        HO["Docker + Docker Compose"]
-        SMTP["Gmail SMTP"]
-        FX["Frankfurter API"]
+        DB[("PostgreSQL<br/>triggers + generated columns")]
+        HO["Docker<br/>multi-stage build"]
+        SMTP["SMTP<br/>JavaMailSender, async"]
+        FX["Frankfurter API<br/>live FX rates"]
     end
     FE --> BE
-    BE --> DB
+    BE --> JPA
+    JPA --> DB
     BE --> SMTP
     FE --> FX
 ```
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18 + TypeScript + Vite |
+| Frontend | React 18 + TypeScript + Vite 7 |
 | Routing | React Router v6 |
 | Server State | TanStack React Query |
 | Forms | React Hook Form + Zod |
-| UI | Tailwind CSS + shadcn/ui (Radix UI) · Framer Motion · Recharts |
-| HTTP Client | Axios (auto token-refresh interceptor) |
+| UI | Tailwind CSS + shadcn/ui (Radix UI) · Framer Motion · Recharts · Lucide |
+| HTTP Client | Axios (request queue + auto token refresh) |
 | Backend | Spring Boot 3.2.1 · Java 17 · Maven |
-| Security | Spring Security + JWT (JJWT 0.12.3) + Google OAuth2 |
+| Security | Spring Security + JWT (JJWT 0.12.3) + Google OAuth2 client |
 | ORM | Spring Data JPA + Hibernate |
-| Database | PostgreSQL (Neon cloud) |
-| Email | Gmail SMTP (`JavaMailSender`, async) |
-| Containerisation | Docker + Docker Compose |
-| Currency | Frankfurter API (live FX rates) |
+| Database | PostgreSQL (hosted on Neon in the owner's setup) |
+| Email | Spring Mail (`JavaMailSender`, `@Async`) |
+| Containerisation | Docker (multi-stage Maven → JRE Alpine) + Docker Compose |
+| Currency | Frankfurter API v2 (free, no key) |
+| Testing | Vitest + Testing Library (frontend scaffold) |
 
 ---
 
@@ -117,12 +124,12 @@ graph TD
 
 ```mermaid
 graph TD
-    U[User / Browser] --> FE[React Frontend]
-    FE -->|REST + JWT| BE[Spring Boot API]
-    BE --> DB[(PostgreSQL · Neon)]
-    BE --> SMTP[Gmail SMTP]
-    FE -->|OAuth2 redirect| GAUTH[Google OAuth2]
-    GAUTH -->|callback| BE
+    U[User / Browser] --> FE[React SPA]
+    FE -->|REST + Bearer JWT| BE[Spring Boot API]
+    BE --> DB[(PostgreSQL)]
+    BE -->|OTP emails| SMTP[SMTP Server]
+    FE -->|OAuth2 redirect| BE
+    BE <-->|OAuth2 code exchange| GAUTH[Google OAuth2]
     FE -->|live rates| FX[Frankfurter API]
 ```
 
@@ -131,17 +138,20 @@ graph TD
 ```mermaid
 graph TD
     subgraph Frontend
-        P[Pages] --> C[Components]
-        C --> H[Services / Hooks · Axios]
+        P[Pages] --> C[Feature Components]
+        C --> H[Hooks: useTrips · useExpenses]
+        H --> SV[Services]
+        SV --> AX[Axios instance + interceptors]
     end
     subgraph Backend
-        R[Controllers] --> MW[Spring Security Filter]
-        MW --> E[Services]
+        F[JwtAuthenticationFilter] --> R[REST Controllers]
+        R --> E[Services]
         E --> S[JPA Repositories]
         S --> DB[(PostgreSQL)]
+        E --> ACT[ActivityService @Async]
+        E --> ML[EmailService @Async]
     end
-    H --> R
-    E --> EXT[Gmail SMTP]
+    AX --> F
 ```
 
 ---
@@ -152,13 +162,15 @@ graph TD
 flowchart TD
     A([Start]) --> B[Landing Page]
     B --> C{Logged in?}
-    C -->|No| D[Login / Register]
+    C -->|No| D[Login / Register / Google]
     C -->|Yes| E[Dashboard]
-    D --> E
-    E --> F[Trips List]
+    D --> OB{Onboarded?}
+    OB -->|No| OM[Onboarding modal:<br/>country + currency]
+    OB -->|Yes| E
+    OM --> E
+    E --> F[My Trips]
     F --> G[Trip Detail]
-    G --> H[Expenses · Itinerary · Packing\nCharts · Activity · Settle Up · Notes]
-    E --> I[Portfolio]
+    G --> H[Expenses · Itinerary · Packing<br/>Charts · Activity · Settle Up · Notes]
     E --> J[Profile]
 ```
 
@@ -167,22 +179,20 @@ flowchart TD
 ```mermaid
 graph TD
     subgraph Public ["🌐 Public Routes"]
-        ROOT["/\nLanding"]
-        AUTH["/login · /register\n/forgot-password"]
-        OAUTH["/oauth2/callback"]
+        ROOT["/<br/>Landing"]
+        AUTH["/login · /register<br/>/forgot-password"]
+        OAUTH["/auth/callback"]
     end
     subgraph Protected ["🔐 Protected Routes"]
         DASH["/dashboard"]
         TRIPS["/trips"]
-        TD["/trips/:id"]
-        PORT["/portfolio"]
+        TD["/trips/:tripId"]
         PROF["/profile"]
     end
     ROOT --> AUTH
     AUTH --> DASH
     OAUTH --> DASH
     DASH --> TRIPS
-    DASH --> PORT
     DASH --> PROF
     TRIPS --> TD
 
@@ -200,39 +210,38 @@ sequenceDiagram
     participant FE as Frontend
     participant API as Spring Boot API
     participant DB as PostgreSQL
-    participant ML as Gmail SMTP
+    participant ML as SMTP
 
-    Note over U,ML: Email Signup (3 steps)
+    Note over U,ML: Email signup (3 steps)
     U->>FE: Enter email
     FE->>API: POST /api/auth/initiate-signup
-    API->>DB: Check email not taken
-    API-->>ML: Send OTP (async)
+    API->>DB: Check email not taken, store OTP
+    API-->>ML: Send 6-digit OTP (async)
     API-->>FE: 200 OK
-    U->>FE: Enter 6-digit OTP
+    U->>FE: Enter OTP
     FE->>API: POST /api/auth/verify-email
     API->>DB: Validate OTP, mark used
-    API-->>FE: verificationToken (JWT, 5 min)
+    API-->>FE: Short-lived verificationToken (JWT)
     U->>FE: Enter name + password
     FE->>API: POST /api/auth/complete-signup
-    API->>DB: Create user
+    API->>DB: Create user (BCrypt hash)
     API-->>FE: accessToken + refreshToken + user
 
-    Note over U,API: Email Login
+    Note over U,API: Email login
     U->>FE: Email + password
     FE->>API: POST /api/auth/login
     API->>DB: Validate credentials
     API-->>FE: accessToken (24h) + refreshToken (7d)
     FE->>FE: Store in localStorage
-    FE-->>U: Redirect to dashboard
 
     Note over U,API: Google OAuth2
-    U->>FE: Click "Login with Google"
-    FE->>API: GET /oauth2/authorize/google
-    API-->>U: Redirect to Google consent screen
-    U->>API: Google callback with auth code
-    API->>DB: Create or update user
-    API-->>FE: Redirect /oauth2/callback?token=...
-    FE-->>U: Redirect to dashboard
+    U->>FE: Click "Continue with Google"
+    FE->>API: GET /oauth2/authorization/google
+    API-->>U: Redirect to Google consent
+    U->>API: Callback with auth code
+    API->>DB: Create or link user
+    API-->>FE: Redirect /auth/callback?token&refresh&newUser
+    FE-->>U: Onboarding or Dashboard
 ```
 
 ### Token Lifecycle
@@ -243,11 +252,13 @@ sequenceDiagram
     participant API as Spring Boot API
 
     FE->>API: Request + Bearer accessToken
-    API-->>FE: 401 Token Expired
-    FE->>API: POST /api/auth/refresh + refreshToken
+    API-->>FE: 401 Unauthorized
+    FE->>FE: Queue other in-flight requests
+    FE->>API: POST /api/auth/refresh (Bearer refreshToken)
     API-->>FE: New accessToken
-    FE->>API: Retry original request
+    FE->>API: Replay original + queued requests
     API-->>FE: 200 OK
+    Note over FE: If refresh fails, clear session and go to /login
 ```
 
 ---
@@ -278,11 +289,11 @@ erDiagram
         varchar destination_country
         date start_date
         date end_date
+        varchar budget_type
         numeric total_budget
         numeric spent_amount
         numeric remaining_budget
         varchar currency
-        varchar budget_type
         varchar status
         boolean is_archived
         timestamp created_at
@@ -301,7 +312,7 @@ erDiagram
         varchar category
         numeric amount
         varchar currency
-        date expense_date
+        date date
         text description
         timestamp created_at
     }
@@ -309,6 +320,7 @@ erDiagram
     users ||--o{ trip_members : "member of"
     trips ||--o{ trip_members : "has"
     trips ||--o{ expenses : "has"
+    users ||--o{ expenses : "paid"
 ```
 
 ### Feature ERD
@@ -319,7 +331,8 @@ erDiagram
     trips ||--o{ packing_items : "has"
     trips ||--o{ itinerary_items : "has"
     trips ||--o{ trip_activities : "logs"
-    trips ||--o{ trip_member_budgets : "has"
+    trips ||--o{ trip_member_budgets : "allocates"
+    trips ||--o{ destination_notes : "has"
 
     expense_sub_items {
         bigserial sub_item_id PK
@@ -343,6 +356,7 @@ erDiagram
         time start_time
         time end_time
         varchar title
+        varchar location
         varchar category
         integer sort_order
     }
@@ -356,12 +370,19 @@ erDiagram
         timestamp created_at
     }
     trip_member_budgets {
-        bigserial id PK
+        bigserial budget_id PK
         bigint trip_id FK
         bigint user_id FK
         numeric allocated_budget
         numeric spent_amount
         numeric remaining_budget
+    }
+    destination_notes {
+        bigserial note_id PK
+        bigint trip_id FK
+        varchar note_type
+        varchar info_key
+        text content
     }
 ```
 
@@ -369,20 +390,21 @@ erDiagram
 
 | Table | Purpose | Key Relations |
 |---|---|---|
-| `users` | User accounts — local + Google OAuth | — |
-| `email_verification_codes` | OTP codes for signup + password reset | — |
-| `trips` | Travel trips with budget info | belongs to `users` |
-| `trip_members` | Links users to trips with roles | belongs to `users`, `trips` |
-| `trip_member_budgets` | Per-member budget allocation (separated mode) | belongs to `trips`, `users` |
-| `expenses` | Expenses per trip | belongs to `trips`, `users` |
-| `expense_sub_items` | Per-category breakdown for bundle expenses | belongs to `expenses` |
+| `users` | Accounts: local (BCrypt) + Google OAuth | — |
+| `email_verification_codes` | OTPs for signup and password reset | — |
+| `refresh_tokens` | Reserved for refresh-token revocation *(not used yet)* | belongs to `users` |
+| `trips` | Trips with budget, status and archive flag | belongs to `users` |
+| `trip_members` | Links users to trips with `owner` / `editor` / `viewer` role | belongs to `users`, `trips` |
+| `trip_member_budgets` | Per-member allocation for separated budgets | belongs to `trips`, `users` |
+| `expenses` | Expenses per trip, paid by a member | belongs to `trips`, `users` |
+| `expense_sub_items` | Breakdown lines for bundle expenses | belongs to `expenses` |
 | `packing_items` | Packing checklist items | belongs to `trips` |
 | `itinerary_items` | Day-by-day planned activities | belongs to `trips` |
-| `trip_activities` | Activity log / feed | belongs to `trips`, `users` |
+| `trip_activities` | Activity feed entries | belongs to `trips`, `users` |
+| `destination_notes` | Reserved for DB-backed notes *(frontend uses localStorage today)* | belongs to `trips` |
+| `budget_alerts` | Reserved for persisted alert dismissals | belongs to `users`, `trips` |
 
-> **DB Triggers:** `trg_update_trip_spent` auto-recalculates `trips.spent_amount` after any expense change. `remaining_budget` is a generated column (`total_budget − spent_amount`).
-
-Full schema with column definitions → [DOCS.md § Database Schema](DOCS.md#database-schema)
+> **DB triggers:** `trg_update_trip_spent` recalculates `trips.spent_amount` after any insert/update/delete on `expenses`. `trg_update_member_budget_spent` does the same per member for separated trips. `remaining_budget` is a generated column (`total_budget − spent_amount`), and every table has an `updated_at` trigger.
 
 ---
 
@@ -392,64 +414,67 @@ Full schema with column definitions → [DOCS.md § Database Schema](DOCS.md#dat
 
 ```mermaid
 mindmap
-  root((API))
+  root((/api))
     auth
-      POST /initiate-signup
-      POST /verify-email
-      POST /complete-signup
-      POST /login
-      POST /forgot-password
-      POST /reset-password
-      POST /refresh
+      POST initiate-signup
+      POST verify-email
+      POST complete-signup
+      POST login
+      POST forgot-password
+      POST reset-password
+      POST refresh
+      GET health
     trips
-      GET /
-      POST /
-      GET /:tripId
-      PUT /:tripId
-      DELETE /:tripId
+      GET list
+      POST create
+      GET by id
+      PUT update
+      DELETE remove
     expenses
-      POST /
-      GET /trip/:tripId
-      DELETE /:expenseId
-    itinerary
-      GET /:tripId/itinerary
-      POST /:tripId/itinerary
-      PUT /:tripId/itinerary/:itemId
-      DELETE /:tripId/itinerary/:itemId
-    packing
-      GET /:tripId/packing
-      POST /:tripId/packing
-      PATCH /:tripId/packing/:itemId/toggle
-      DELETE /:tripId/packing/:itemId
-      POST /:tripId/packing/preset
-    activity
-      GET /:tripId/activity
-    settlement
-      GET /:tripId/settlement
+      POST create
+      GET by trip
+      DELETE remove
+    trip sub-resources
+      itinerary CRUD
+      packing CRUD
+      packing toggle
+      packing preset
+      activity feed
+      settlement
     users
-      GET /me
-      PUT /profile
-      PUT /change-password
+      GET me
+      PUT profile
+      PUT change-password
 ```
+
+| Group | Endpoints |
+|---|---|
+| Auth | `POST /api/auth/{initiate-signup, verify-email, complete-signup, login, forgot-password, reset-password, refresh}` · `GET /api/auth/health` |
+| Trips | `GET/POST /api/trips` · `GET/PUT/DELETE /api/trips/{tripId}` |
+| Expenses | `POST /api/expenses` · `GET /api/expenses/trip/{tripId}` · `DELETE /api/expenses/{expenseId}` |
+| Itinerary | `GET/POST /api/trips/{tripId}/itinerary` · `PUT/DELETE /api/trips/{tripId}/itinerary/{itemId}` |
+| Packing | `GET/POST /api/trips/{tripId}/packing` · `PATCH .../{itemId}/toggle` · `DELETE .../{itemId}` · `POST .../preset?type=` |
+| Activity | `GET /api/trips/{tripId}/activity` |
+| Settlement | `GET /api/trips/{tripId}/settlement` |
+| Users | `GET /api/users/me` · `PUT /api/users/profile` · `PUT /api/users/change-password` |
+| OAuth2 | `GET /oauth2/authorization/google` → `/login/oauth2/code/google` |
 
 ### Request/Response Flow
 
 ```mermaid
 sequenceDiagram
     participant FE as Frontend
-    participant SF as Spring Security Filter
+    participant SF as JwtAuthenticationFilter
     participant API as Controller → Service
     participant DB as PostgreSQL
 
     FE->>SF: Request + Bearer accessToken
-    SF->>SF: Validate JWT
-    SF->>API: Pass user context
-    API->>DB: Query / mutate data
-    DB-->>API: Return rows
-    API-->>FE: JSON response
+    SF->>SF: Validate JWT, load user by email
+    SF->>API: SecurityContext populated
+    API->>DB: Query / mutate via JPA
+    DB-->>API: Rows (triggers update totals)
+    API-->>FE: JSON DTO
 ```
-
-Full endpoint table with request/response shapes → [DOCS.md § API Endpoints Reference](DOCS.md#api-endpoints-reference)
 
 ---
 
@@ -459,50 +484,51 @@ Full endpoint table with request/response shapes → [DOCS.md § API Endpoints R
 
 ```mermaid
 graph TD
-    App["App.tsx\n(Routes + AuthContext)"]
-    App --> LAYOUT["Layout\n(Navbar + outlet)"]
-    App --> AUTH_CTX["AuthContext\n(global auth state)"]
-    LAYOUT --> DASH["Dashboard\n/dashboard"]
-    LAYOUT --> TRIPS["Trips\n/trips"]
-    LAYOUT --> TD["TripDetail\n/trips/:id"]
-    LAYOUT --> PORT["Portfolio\n/portfolio"]
-    LAYOUT --> PROF["Profile\n/profile"]
+    App["App.tsx<br/>QueryClient · AuthProvider · Router"]
+    App --> PR["ProtectedRoute<br/>+ OnboardingModal"]
+    PR --> LAYOUT["Layout<br/>Navbar + Outlet"]
+    LAYOUT --> DASH["Dashboard"]
+    LAYOUT --> TRIPS["Trips"]
+    LAYOUT --> TD["TripDetail"]
+    LAYOUT --> PROF["Profile"]
+
+    DASH --> CC["CurrencyCards"]
+    TRIPS --> TF["TripFilters"]
+    TRIPS --> TC["TripCard + TripForm"]
 
     TD --> BUD["BudgetAlerts"]
     TD --> SHARE["TripSharing"]
     TD --> EXPORT["ExportMenu"]
+    TD --> TCC["TripCurrencyCard"]
     TD --> TABS["Tabs"]
 
-    TABS --> EXP["ExpenseListWithTotal\n+ ExpenseForm"]
+    TABS --> EXP["ExpenseListWithTotal<br/>+ ExpenseForm"]
     TABS --> ITIN["TripItinerary"]
     TABS --> PACK["PackingList"]
-    TABS --> CHART["BentoCharts\n+ Category Breakdown"]
+    TABS --> CHART["BentoCharts"]
     TABS --> ACT["ActivityFeed"]
     TABS --> SETTLE["SettlementSummary"]
     TABS --> NOTES["EditableDestinationNotes"]
-
-    DASH --> CC["CurrencyConverter"]
-    PORT --> YIR["YearInReview"]
-    PORT --> TL["TravelTimeline"]
-    PORT --> MAP["TravelMap"]
 ```
 
 ### Key Components
 
 | Component | Purpose |
 |---|---|
-| `AuthContext` | Global auth state — user, tokens, login/logout |
-| `ProtectedRoute` | Redirects to login if unauthenticated |
-| `TokenRefreshHandler` | Axios interceptor wrapper for silent token refresh |
-| `ExpenseForm` | Add expense with optional bundle sub-item support |
-| `ExpenseListWithTotal` | Expense list with expandable bundle rows |
-| `BentoCharts` | Analytics bento layout — radial gauge, pie, bar, trend |
-| `SettlementSummary` | Who owes whom via greedy debt simplification |
-| `PackingList` | Checklist with progress bar + preset pack loader |
-| `TripItinerary` | Day-by-day planner with per-day activity cards |
-| `TripSharing` | Member management dialog (UI only) |
-| `PermissionGate` | Conditionally renders UI based on trip member role |
-| `TravelMap` | Visual map of all visited destinations |
+| `AuthContext` | Global auth state: user, login/logout, Google login, onboarding, profile updates |
+| `ProtectedRoute` | Redirects guests to login, shows `OnboardingModal` for new users |
+| `lib/axios.ts` | Axios instance with bearer token, 401 refresh and request queue |
+| `CurrencyCards` | Dashboard FX widgets: favourite rates, quick convert, all rates |
+| `TripForm` | Create/edit trip with country picker, dates, budget type and currency |
+| `ExpenseForm` | Add expense, with optional bundle sub-items |
+| `ExpenseListWithTotal` | Expense table with expandable bundle rows and running total |
+| `BentoCharts` | Analytics bento: KPI tiles, radial gauge, donut, trend, top-spend bars |
+| `BudgetAlerts` | 75 / 90 / 100% threshold and category warnings, dismissible |
+| `SettlementSummary` | Who paid what + simplified "X → Y" transfers |
+| `TripItinerary` | Day-by-day planner generated from the trip's date range |
+| `PackingList` | Grouped checklist with progress bar and preset loader |
+| `ExportMenu` | Expenses CSV, trip CSV, printable PDF report |
+| `TripSharing` | Share link + collaborator list *(invite not wired to backend)* |
 
 ---
 
@@ -513,17 +539,17 @@ graph TD
 ```mermaid
 flowchart TD
     A([User creates trip]) --> B[POST /api/trips]
-    B --> C[Insert into trips\nInsert creator as owner in trip_members]
+    B --> C[Insert trip<br/>Insert creator as owner in trip_members]
     C --> D([TripResponse])
 
     E([User views trips]) --> F[GET /api/trips]
-    F --> G[Trips where user is owner OR member\nis_archived = false]
-    G --> H([Trips array])
+    F --> G[Trips where user is owner OR member<br/>and not archived]
+    G --> H([Trips with members + totalExpenses])
 
     I([User deletes trip]) --> J[DELETE /api/trips/:id]
     J --> K{Is owner?}
-    K -->|No| L[403 Forbidden]
-    K -->|Yes| M[Hard delete — cascades to all child tables]
+    K -->|No| L[Access denied]
+    K -->|Yes| M[Delete, cascades to child tables]
     M --> N([204 No Content])
 ```
 
@@ -532,140 +558,81 @@ flowchart TD
 ```mermaid
 flowchart TD
     A([User adds expense]) --> B[POST /api/expenses]
-    B --> C[Insert expense row]
-    C --> D{category = bundle?}
-    D -->|Yes| E[Insert expense_sub_items rows]
+    B --> C[Insert expense, added_by = current user]
+    C --> D{Has sub-items?}
+    D -->|Yes| E[Insert expense_sub_items]
     D -->|No| F[DB trigger fires]
     E --> F
     F --> G[trips.spent_amount recalculated]
-    G --> H[Log to trip_activities async]
+    G --> H[ActivityService logs entry async]
     H --> I([ExpenseResponse + subItems])
 
     J([User deletes expense]) --> K[DELETE /api/expenses/:id]
-    K --> L{Creator or trip owner?}
-    L -->|No| M[403 Forbidden]
-    L -->|Yes| N[Hard delete + cascade sub_items]
-    N --> O[DB trigger recalculates spent_amount]
+    K --> L{Payer or trip owner?}
+    L -->|No| M[Access denied]
+    L -->|Yes| N[Delete + cascade sub-items]
+    N --> O[Trigger recalculates spent_amount]
     O --> P([204 No Content])
+```
+
+### Settle Up Algorithm
+
+```mermaid
+flowchart TD
+    A([GET /trips/:id/settlement]) --> B[Load members + expenses]
+    B --> C[total = sum of expenses<br/>share = total / member count]
+    C --> D[For each member:<br/>net = paid − share]
+    D --> E[Debtors: net below 0<br/>Creditors: net above 0]
+    E --> F{Any debtor and creditor left?}
+    F -->|Yes| G[Match largest debtor with largest creditor<br/>transfer = min of the two]
+    G --> H[Reduce both balances]
+    H --> F
+    F -->|No| I([balances + transactions])
 ```
 
 ### Budget System
 
 ```mermaid
 flowchart LR
-    subgraph DB ["Database — always authoritative"]
+    subgraph DB ["Database (source of truth)"]
         T["trips.total_budget"]
-        S["trips.spent_amount\n← trigger on expenses"]
-        R["trips.remaining_budget\n= total_budget − spent_amount\n(generated column)"]
+        S["trips.spent_amount<br/>trigger on expenses"]
+        R["trips.remaining_budget<br/>generated column"]
         T --> R
         S --> R
     end
 
     subgraph Modes ["Budget Types"]
-        SOLO["solo\nOne person · one pot"]
-        SHARED["shared\nGroup · shared pool\nSettle Up available"]
-        SEP["separated\nPer-member allocation\nin trip_member_budgets"]
+        SOLO["solo<br/>one person, one pot"]
+        SHARED["shared<br/>group pool, Settle Up tab"]
+        SEP["separated<br/>per-member allocation"]
     end
 
     subgraph FE ["Frontend"]
-        ALERTS["BudgetAlerts\n75% · 90% · 100% thresholds\ndismissible per session"]
-        SETTLE["SettlementSummary\nGreedy debt simplification\nEqual-share model"]
+        ALERTS["BudgetAlerts<br/>75 / 90 / 100%"]
+        BENTO["BentoCharts<br/>gauge · donut · trend"]
+        SETTLE["SettlementSummary<br/>equal-share model"]
     end
 
-    DB --> FE
     Modes --> DB
+    DB --> FE
 ```
 
 ### Role & Permission Matrix
 
+What the backend enforces today:
+
 | Action | Owner | Editor | Viewer |
 |---|---|---|---|
-| View trip + expenses | ✅ | ✅ | ✅ |
+| View trip details | ✅ | ✅ | ✅ |
 | Edit trip details | ✅ | ✅ | ❌ |
 | Delete trip | ✅ | ❌ | ❌ |
-| Add expense | ✅ | ✅ | ❌ |
-| Delete own expense | ✅ | ✅ | ❌ |
-| Delete any expense | ✅ | ❌ | ❌ |
-| Manage packing + itinerary | ✅ | ✅ | ❌ |
-| View settle up | ✅ | ✅ | ✅ |
-| Manage members *(UI only)* | ✅ | ❌ | ❌ |
+| Add expense | ✅ | ✅ | ✅ *(not role-checked yet)* |
+| Delete own expense | ✅ | ✅ | ✅ |
+| Delete anyone's expense | ✅ | ❌ | ❌ |
+| Manage members | 🚧 *(no endpoint yet)* | ❌ | ❌ |
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Docker + Docker Compose
-- Node.js `>=18`
-
-### Installation
-
-```bash
-git clone https://github.com/snsyaqirah/travelluhh.git
-cd travelluhh
-```
-
-### Running locally
-
-```bash
-# Start backend (Docker)
-docker compose up --build -d
-
-# Start frontend
-cd frontend
-npm install
-npm run dev
-```
-
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:5173 |
-| Backend API | http://localhost:8080 |
-
----
-
-## 🔑 Environment Variables
-
-### Backend — `backend/src/main/resources/application.yml`
-
-```yaml
-# Database
-spring.datasource.url: jdbc:postgresql://<neon-host>/travelluhh
-spring.datasource.username: <username>
-spring.datasource.password: <password>
-
-# JWT
-jwt.secret: <secret>
-jwt.expiration: 86400000          # 24 hours
-jwt.refresh-expiration: 604800000 # 7 days
-
-# Google OAuth2
-spring.security.oauth2.client.registration.google.client-id: <client-id>
-spring.security.oauth2.client.registration.google.client-secret: <client-secret>
-
-# Email
-spring.mail.username: <gmail-address>
-spring.mail.password: <gmail-app-password>
-```
-
-### Frontend — `frontend/.env`
-
-```env
-VITE_API_BASE_URL=http://localhost:8080
-```
-
----
-
-## ☁️ Deployment
-
-> Not yet deployed to production. Planned targets:
-
-| Service | Platform | Purpose |
-|---|---|---|
-| Frontend | Vercel | React SPA hosting |
-| Backend | Railway | Spring Boot API |
-| Database | Neon | PostgreSQL (already cloud-hosted) |
+> A `PermissionGate` component exists on the frontend for role-based UI. Stricter membership checks on expenses, itinerary, packing and settlement are on the roadmap.
 
 ---
 
@@ -673,29 +640,35 @@ VITE_API_BASE_URL=http://localhost:8080
 
 ```
 TravelLuhh/
-├── docker-compose.yml
+├── docker-compose.yml          Backend container
+├── TravelLuhh.drawio           Architecture diagrams
+├── DOCS.pdf                    Long-form technical docs
 │
 ├── backend/
+│   ├── Dockerfile              Multi-stage Maven → JRE Alpine
+│   ├── schema.sql              Full DDL, triggers, migration notes
 │   └── src/main/java/com/travelluhh/
-│       ├── controller/     REST endpoints
-│       ├── service/        Business logic
-│       ├── repository/     JPA repositories
-│       ├── entity/         JPA entities → DB tables
-│       ├── dto/            Request + response DTOs
-│       ├── security/       JWT filter, OAuth2 handlers
-│       └── exception/      Global exception handler
-│   └── src/main/resources/
-│       ├── application.yml App config
-│       └── schema.sql      Full DB DDL (manual migrations)
+│       ├── controller/         Auth, Trip, Expense, Itinerary, Packing,
+│       │                       Activity, Settlement, User
+│       ├── service/            Business logic (+ async email / activity)
+│       ├── repository/         Spring Data JPA repositories
+│       ├── entity/             JPA entities
+│       ├── dto/                Request / response DTOs
+│       ├── security/           SecurityConfig, JWT filter, OAuth2 handlers
+│       ├── util/               JwtUtil
+│       └── exception/          Global exception handler
 │
 └── frontend/src/
-    ├── pages/              Route-level components
-    ├── components/         Feature UI components
-    ├── services/           API call layer
-    ├── hooks/              useTrips, useExpenses
-    ├── context/            AuthContext
-    ├── lib/                axios.ts, currency.ts, export.ts
-    └── types/              TypeScript interfaces
+    ├── pages/                  Landing, Login, Register, ForgotPassword,
+    │                           Dashboard, Trips, TripDetail, Profile, Portfolio
+    ├── components/             expenses, charts, settlement, itinerary,
+    │                           packing, currency, portfolio, sharing, ui ...
+    ├── services/               API call layer + Frankfurter client
+    ├── hooks/                  useTrips, useExpenses
+    ├── context/                AuthContext
+    ├── lib/                    axios.ts, currency.ts, export.ts
+    ├── data/                   Countries + currencies
+    └── types/                  TypeScript interfaces
 ```
 
 ---
@@ -704,35 +677,34 @@ TravelLuhh/
 
 - [x] Email signup with OTP + Google OAuth2
 - [x] JWT auth with silent token refresh
-- [x] Trip CRUD with archive
+- [x] Onboarding (home country + currency)
+- [x] Trip CRUD with status and archive
 - [x] Expense tracking with bundle sub-items
-- [x] Multi-currency support (Frankfurter live rates)
+- [x] DB triggers for spent / remaining budget
 - [x] Budget modes (solo / shared / separated)
 - [x] Budget alerts (75% / 90% / 100%)
-- [x] Analytics & charts (bento layout)
-- [x] Split bill / Settle Up
+- [x] Analytics bento charts
+- [x] Settle Up with debt simplification
 - [x] Packing checklist with preset packs
 - [x] Day-by-day itinerary planner
 - [x] Activity feed
-- [x] Trip data export (CSV + PDF)
-- [x] Travel portfolio (Year in Review · Timeline · Map)
-- [x] User profile settings
-- [x] Quick price currency converter
-- [ ] Trip member invite / remove / role change (backend)
+- [x] CSV + printable PDF export
+- [x] Live FX currency cards and converter
+- [x] Profile settings + change password
+- [ ] Member invite / remove / role change (backend endpoints)
+- [ ] Membership checks on all trip sub-resources
 - [ ] Edit expense
 - [ ] Separated budget allocation per member
+- [ ] Route the Travel Portfolio page (Year in Review · Timeline · Map)
 - [ ] Notes persistence to database
-- [ ] Refresh token revocation on logout
+- [ ] Multi-currency expenses converted to the trip currency
+- [ ] Refresh-token revocation on logout
 - [ ] Real-time collaboration (WebSocket/SSE)
 - [ ] Trip image upload
-- [ ] Push/email notifications for budget alerts
+- [ ] Email notifications for budget alerts
 
 ---
 
 ## 📄 License
 
-[MIT](LICENSE) © 2025 Siti Nursyaqirah
-
----
-
-> Full technical docs, flow diagrams, and known issues → [DOCS.md](DOCS.md)
+MIT © 2025 Siti Nursyaqirah · Source on [GitHub](https://github.com/snsyaqirah/TravelLuhh)
