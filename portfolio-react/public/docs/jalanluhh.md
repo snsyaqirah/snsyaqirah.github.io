@@ -30,7 +30,7 @@
 
 Most transit apps tell you how to get to a station. JalanLuhh starts from the other end: it shows what's around each station once you arrive. Every stop on a line has a list of nearby places (masjid, temples, churches, malls, parks, hospitals, schools, gyms and food spots), each with its walking distance, a short description and a one-tap **Open in Maps** link.
 
-The app was first called **JalanKit**, and the UI and storage keys still use that name. Right now it's a frontend-only Progressive Web App. All the station and amenity data is bundled as typed TypeScript, and personal data (favourites, theme) is kept in `localStorage`. The `backend/` folder is a placeholder for a planned API.
+The app was originally called **JalanKit**. Right now it's a frontend-only, installable Progressive Web App with a Workbox service worker. All the station and amenity data is bundled as typed TypeScript, and personal data (favourites, theme) is kept in `localStorage`. The `backend/` folder is a placeholder for a planned API.
 
 **Current coverage**
 
@@ -62,12 +62,12 @@ The app was first called **JalanKit**, and the UI and storage keys still use tha
 - ✅ Fare calculator: pick a line, origin and destination, and passenger type (Adult / Student / Senior / OKU / Child) to get an estimated fare, travel time, distance and stop count
 - ✅ Nearby Stops: browser geolocation plus Haversine distance to list the 5 closest stations within 3 km
 - ✅ Light / dark theme toggle (follows the system setting on first visit)
+- ✅ Installable PWA via `vite-plugin-pwa`: generated web manifest (standalone, portrait, 192/512 px and maskable icons, `#1967D2` theme colour)
+- ✅ Workbox service worker with auto-update: precaches the app shell (JS, CSS, HTML, icons, fonts) and caches Google Fonts with CacheFirst, so the app and its bundled station data keep working offline
 - ✅ Install page that hooks into `beforeinstallprompt`, with manual steps for iOS Safari
 - ✅ Responsive layout with a collapsible mobile nav
 - 🚧 Station data for the remaining 12 lines *(cards show "Coming Soon")*
-- 🚧 Offline caching via service worker *(`vite-plugin-pwa` is installed but not configured yet; the manifest exists)*
 - 🚧 Line service status widget (operating hours, peak/off-peak frequency, facilities) *(`LineStatus` component is built but not mounted on any page)*
-- 🚧 Rebrand UI copy from JalanKit to JalanLuhh
 - 💡 Backend API for stations, amenities and crowd-sourced place submissions *(currently a Google Form link)*
 - 💡 Cross-line journeys with interchanges and transfer-aware fares
 - 💡 Live arrivals from open GTFS-Realtime feeds
@@ -93,6 +93,7 @@ graph TD
         GEO["Geolocation API"]
         SHARE["Web Share API"]
         PWA["Web App Manifest<br/>beforeinstallprompt"]
+        SW["Workbox Service Worker<br/>precache + runtime cache"]
     end
     subgraph Planned["Planned"]
         BE["Backend API"]
@@ -102,6 +103,7 @@ graph TD
     FE --> GEO
     FE --> SHARE
     FE --> PWA
+    FE --> SW
     FE -.-> BE
 ```
 
@@ -110,13 +112,13 @@ graph TD
 | Framework | React 18 + TypeScript |
 | Build tool | Vite 7 with `@vitejs/plugin-react-swc` |
 | Routing | React Router v6 |
-| UI | Tailwind CSS · shadcn/ui (Radix UI primitives) · Lucide icons |
+| UI | Tailwind CSS · shadcn/ui (Radix UI primitives) · Lucide icons · Plus Jakarta Sans |
 | Animation | Framer Motion |
 | Server state | TanStack React Query (provider wired, ready for the API) |
 | Data | Typed static TypeScript modules |
 | Persistence | `localStorage` (favourites, theme) |
 | Geo | Browser Geolocation API + Haversine formula |
-| PWA | Web App Manifest · install prompt handling · `vite-plugin-pwa` (pending) |
+| PWA | `vite-plugin-pwa` · Workbox service worker (auto-update) · Web App Manifest · install prompt handling |
 | Backend | 🚧 Planned |
 
 ---
@@ -127,7 +129,8 @@ graph TD
 
 ```mermaid
 graph LR
-    U[Commuter / Browser] --> SPA[React SPA]
+    U[Commuter / Browser] --> SW[Service Worker<br/>Workbox cache]
+    SW --> SPA[React SPA]
     SPA --> DATA[Bundled transit data]
     SPA --> LS[(localStorage)]
     SPA --> GEO[Geolocation API]
@@ -302,8 +305,8 @@ erDiagram
 
 | Key | Contents |
 |---|---|
-| `jalankit_favorites` | Array of `Favorite` objects (stops and amenities) |
-| `jalankit_theme` | `"light"` or `"dark"` |
+| `jalanluhh_favorites` | Array of `Favorite` objects (stops and amenities) |
+| `jalanluhh_theme` | `"light"` or `"dark"` |
 
 ---
 
@@ -420,10 +423,34 @@ flowchart LR
     A[Heart on StopCard / StopDetail / AmenityCard] --> B{isFavorite?}
     B -->|Yes| C[removeFavorite]
     B -->|No| D[addFavorite]
-    C --> E[(localStorage<br/>jalankit_favorites)]
+    C --> E[(localStorage<br/>jalanluhh_favorites)]
     D --> E
     E --> F[FavoritesPage<br/>Saved Stops · Saved Places]
     F -->|resolve ids across all lines| G[Stop / Amenity details]
+```
+
+### PWA and Offline
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant SW as Workbox Service Worker
+    participant C as Cache Storage
+    participant N as Network
+
+    U->>B: First visit
+    B->>SW: registerSW.js registers the worker
+    SW->>N: Fetch app shell (JS, CSS, HTML, icons)
+    SW->>C: Precache app shell
+    B-->>U: Install prompt (beforeinstallprompt / iOS Add to Home Screen)
+    Note over U,N: Later, offline or on a weak signal underground
+    U->>B: Open JalanLuhh from home screen
+    B->>SW: Request app
+    SW->>C: Serve precached shell + bundled station data
+    C-->>U: App loads offline
+    SW->>N: Google Fonts (CacheFirst, 1 year)
+    Note over SW,N: registerType autoUpdate swaps in new builds automatically
 ```
 
 ---
@@ -437,7 +464,9 @@ JalanLuhh/
 │
 └── frontend/
     ├── public/
-    │   └── manifest.json    PWA manifest
+    │   ├── manifest.json    Static web manifest
+    │   └── pwa-*.png        PWA icons (192 / 512)
+    ├── vite.config.ts       Vite + VitePWA (manifest, Workbox caching)
     └── src/
         ├── pages/
         │   ├── home/        Landing, stats, popular stops
@@ -473,11 +502,11 @@ JalanLuhh/
 - [x] Favourites for stops and places
 - [x] Fare calculator with concession types
 - [x] Geolocation-based Nearby Stops
-- [x] PWA manifest and install page
+- [x] Installable PWA (manifest, icons, install page)
+- [x] Workbox service worker for offline access and auto-updates
+- [x] Rebrand from JalanKit to JalanLuhh
 - [ ] Station and amenity data for MRT Kajang, LRT Kelana Jaya / Ampang / Sri Petaling, Monorail, KTM, ERL and BRT
-- [ ] Service worker for offline access (`vite-plugin-pwa`)
 - [ ] Mount `LineStatus` on line pages
-- [ ] Complete JalanKit to JalanLuhh rebrand in the UI
 - [ ] Backend API and database for stations, amenities and submissions
 - [ ] In-app "Submit a Place" form with moderation
 - [ ] Cross-line routing with interchanges

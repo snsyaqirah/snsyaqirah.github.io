@@ -269,7 +269,7 @@ export const projects = [
             "Station timeline with combined search (stop or amenity name) and multi-select category filters",
             "Fare calculator with distance-based estimates and 50% Student/Senior/OKU/Child concessions, plus travel time and stop count",
             "Nearby Stops uses browser geolocation and the Haversine formula to find the 5 closest stations within 3 km",
-            "Favourites saved in localStorage, light/dark theme, Web Share and a PWA install flow",
+            "Installable, offline-capable PWA (vite-plugin-pwa + Workbox service worker), plus favourites in localStorage, light/dark theme and Web Share",
         ],
     },
     {
