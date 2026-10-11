@@ -11,7 +11,7 @@ on:
 
 # Set to 'true' to serve maintenance/ instead of the portfolio build
 env:
-  MAINTENANCE_MODE: 'true'
+  MAINTENANCE_MODE: 'false'
 
 permissions:
   contents: read
